@@ -84,8 +84,8 @@ static int WriteTIFF(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,
   TIFFSetField(tif, TIFFTAG_ROWSPERSTRIP, h);
 
   TIFFSetField(tif, TIFFTAG_RESOLUTIONUNIT, (int)2);
-  TIFFSetField(tif, TIFFTAG_XRESOLUTION, (float)1200.0);
-  TIFFSetField(tif, TIFFTAG_YRESOLUTION, (float)1200.0);
+  TIFFSetField(tif, TIFFTAG_XRESOLUTION, (float) 72.0);
+  TIFFSetField(tif, TIFFTAG_YRESOLUTION, (float) 72.0);
 
 
   /* write the image data */
