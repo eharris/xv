@@ -14,28 +14,53 @@
 #define NEEDSTIME
 #include "xv.h"
 
-static byte *grabPic = (byte *) NULL;
-static int  gbits;                              /* either '8' or '24' */
-static byte grabmapR[256], grabmapG[256], grabmapB[256];  /* colormap */
-static int  gWIDE,gHIGH;
-static int  grabInProgress=0;
-static int  hidewins = 0;
-static GC   rootGC;
 
-static void   flashrect       PARM((int, int, int, int, int));
-static void   startflash      PARM((void));
-static void   endflash        PARM((void));
-static int    grabImage       PARM((Window, int, int, int, int));
-static void   ungrabX         PARM((void));
-static int    convertImage    PARM((XImage *, XColor *, int,
-				    XWindowAttributes *));
-
-static int    lowbitnum       PARM((unsigned long));
-static int    getxcolors      PARM((XWindowAttributes *, XColor **));
-static Window xvClientWindow  PARM((Display *, Window));
+union swapun {
+  CARD32 l;
+  CARD16 s;
+  CARD8  b[sizeof(CARD32)];
+};
 
 
+struct rectlist {
+  int x,y,w,h;
+  struct rectlist *next;
+};
 
+
+static byte            *grabPic = (byte *) NULL;
+static int              gptype;
+static byte             grabmapR[256], grabmapG[256], grabmapB[256];
+static int              gXOFF, gYOFF, gWIDE,gHIGH;
+static int              grabInProgress=0;
+static int              hidewins = 0;
+static GC               rootGC;
+static struct rectlist *regrabList;
+
+
+static void   flashrect           PARM((int, int, int, int, int));
+static void   startflash          PARM((void));
+static void   endflash            PARM((void));
+static void   ungrabX             PARM((void));
+static int    lowbitnum           PARM((unsigned long));
+static int    getxcolors          PARM((XWindowAttributes *, XColor **));
+
+static void   printWinTree        PARM((Window, int));
+static void   errSpace            PARM((int));
+
+static int    grabRootRegion      PARM((int, int, int, int));
+static int    grabWinImage        PARM((Window, VisualID, Colormap, int));
+static int    convertImageAndStuff PARM((XImage *, XColor *, int,
+					 XWindowAttributes *,
+					 int,int,int,int));
+
+static int    RectIntersect       PARM((int,int,int,int, int,int,int,int));
+
+static int    CountColors24       PARM((byte *, int, int,
+					int, int, int, int));
+
+static int    Trivial24to8        PARM((byte *, int, int, byte *,
+					byte *, byte *, byte *, int));
 
 /***********************************/
 int Grab()
@@ -175,36 +200,7 @@ int Grab()
       }
     }
 
-    if (!cW || cW == rootW) clickWin = rootW;
-    else {
-      int xr, yr;    Window chwin;
-      XTranslateCoordinates(theDisp, rW, cW, rx, ry, &xr, &yr, &chwin);
-      if (chwin != None) {
-	XWindowAttributes clickxwa, parentxwa;
-
-	clickWin = xvClientWindow(theDisp, chwin);
-
-	/* decide if we want to just grab clickWin, or cW.
-	   basically, if they're different in any important way
-	   (depth, visual, colormap), grab 'clickWin' only,
-	   as it's the important part */
-
-	if (!clickWin ||
-	    (XGetWindowAttributes(theDisp, clickWin, &clickxwa)  &&
-	     XGetWindowAttributes(theDisp, cW,       &parentxwa) &&
-	     clickxwa.visual->class == parentxwa.visual->class   &&
-	     clickxwa.colormap      == parentxwa.colormap        &&
-	     clickxwa.depth         == parentxwa.depth)
-	    )
-	  clickWin = cW;   	  /* close enough! */
-      }
-      else clickWin = cW;
-
-      if (DEBUG)
-	fprintf(stderr, "rW = %x, cW = %x, chwin = %x, clickWin = %x\n",
-		(u_int) rW, (u_int) cW, (u_int) chwin, (u_int) clickWin);
-    }
-
+    clickWin = (cW) ? cW : rootW;
 
     if (clickWin == rootW) {   /* grab entire screen */
       if (DEBUG) fprintf(stderr,"Grab: clicked on root window.\n");
@@ -253,7 +249,7 @@ int Grab()
     int    origrx, origry;
     Window origcW;
 
-    clickWin = rootW;  origcW = cW;
+    clickWin = rootW;
     origrx = ix = x2 = rx;
     origry = iy = y2 = ry;
     iw = ih = 0;
@@ -280,46 +276,31 @@ int Grab()
     }
 
     flashrect(ix, iy, iw, ih, 0);                  /* turn off rect */
+
+    /* flash the rectangle a bit... */
+    for (i=0; i<5; i++) {
+      flashrect(ix, iy, iw, ih, 1);
+      XFlush(theDisp);  Timer(100);
+      flashrect(ix, iy, iw, ih, 0);
+      XFlush(theDisp);  Timer(100);
+    }
     endflash();
 
     XUngrabServer(theDisp);
-
-
-    if (origcW == cW) {  /* maybe it's entirely in one window??? */
-      if (cW) {    /* will be 0 if clicked in rootW */
-	Window stwin, enwin, stwin1, enwin1;
-	if (DEBUG) fprintf(stderr,"origcW=%x cW=%x   ",
-			   (u_int) origcW, (u_int) cW);
-	XTranslateCoordinates(theDisp,rootW,cW, origrx,origry,&x,&y,&stwin);
-	XTranslateCoordinates(theDisp,rootW,cW, rx,    ry,    &x,&y,&enwin);
-
-	if (DEBUG) fprintf(stderr,"stwin=%x enwin=%x   ",
-			   (u_int) stwin, (u_int) enwin);
-	if (stwin == enwin && stwin != None) {
-	  stwin1 = xvClientWindow(theDisp, stwin);
-	  enwin1 = xvClientWindow(theDisp, enwin);
-	  if (DEBUG) fprintf(stderr,"stwin1=%x enwin1=%x   ",
-			     (u_int) stwin1, (u_int) enwin1);
-
-	  if (stwin1 == enwin1 && stwin1) clickWin = stwin1;
-	  else clickWin = stwin;
-	}
-	if (DEBUG) fprintf(stderr,"\n");
-      }
-      else clickWin = rootW;
-    }
   }
 
 
   /***
-   ***  now that clickWin,ix,iy,iw,ih are known, try to grab the bits...
+   ***  grab screen area (ix,iy,iw,ih)
    ***/
 
 
+  if (DEBUG>1) printWinTree(clickWin, 0);
+
   WaitCursor();
 
-  if (!autograb) XGrabServer(theDisp);	 /* until we've done the grabImage */
-  rv = grabImage(clickWin,ix,iy,iw,ih);  /* ungrabs the server & button */
+  if (!autograb) XGrabServer(theDisp);   /* until we've done the grabImage */
+  rv = grabRootRegion(ix, iy, iw, ih);   /* ungrabs the server & button */
 
   SetCursors(-1);
 
@@ -363,6 +344,45 @@ int Grab()
 
 
 /***********************************/
+int LoadGrab(pinfo)
+     PICINFO *pinfo;
+{
+  /* loads up (into XV structures) last image successfully grabbed.
+     returns '0' on failure, '1' on success */
+
+  int	i;
+
+  if (!grabPic) return 0;   /* no image to use */
+
+  pinfo->type = gptype;
+  if (pinfo->type == PIC8) {
+    for (i=0; i<256; i++) {
+      pinfo->r[i] = grabmapR[i];
+      pinfo->g[i] = grabmapG[i];
+      pinfo->b[i] = grabmapB[i];
+    }
+  }
+
+  pinfo->pic	 = grabPic;
+  pinfo->normw	 = pinfo->w   = gWIDE;
+  pinfo->normh	 = pinfo->h   = gHIGH;
+  pinfo->frmType = -1;
+  pinfo->colType = -1;
+
+  sprintf(pinfo->fullInfo,"<%s internal>",
+	  (pinfo->type == PIC8) ? "8-bit" : "24-bit");
+
+  sprintf(pinfo->shrtInfo,"%dx%d image.",gWIDE, gHIGH);
+
+  pinfo->comment = (char *) NULL;
+
+  grabPic = (byte *) NULL;
+
+  return 1;
+}
+
+
+/***********************************/
 static void flashrect(x,y,w,h,show)
      int x,y,w,h,show;
 {
@@ -396,6 +416,7 @@ static void startflash()
   XSetSubwindowMode(theDisp, rootGC, IncludeInferiors);
 }
 
+
 /***********************************/
 static void endflash()
 {
@@ -407,81 +428,6 @@ static void endflash()
 
 
 /***********************************/
-static int grabImage(clickWin, x, y, w, h)
-     Window clickWin;
-     int    x, y, w, h;
-{
-  /* attempts to grab the specified rectangle of the root window
-     returns '1' on success.  clickWin is used to figure out the depth
-     and colormap to use */
-
-  XImage *image;
-  XWindowAttributes xwa;
-  XColor *colors;
-  int ncolors, i, ix, iy;
-  char str[256];
-  Window win;
-
-
-  /* range checking */
-  if (x<0) { w += x;  x = 0; }
-  if (y<0) { h += y;  y = 0; }
-  if (x+w>dispWIDE) w = dispWIDE-x;
-  if (y+h>dispHIGH) h = dispHIGH-y;
-
-  if (w==0 || h==0) {  /* selected nothing */
-    ungrabX();
-    return 0;
-  }
-
-  if (!XGetWindowAttributes(theDisp, clickWin, &xwa)) {
-    sprintf(str,"Unable to get window attributes for clicked-on window\n");
-    ungrabX();
-    ErrPopUp(str, "\nThat Sucks!");
-    return 0;
-  }
-
-
-  XTranslateCoordinates(theDisp, rootW, clickWin, x, y, &ix, &iy, &win);
-
-  xerrcode = 0;
-  image = XGetImage(theDisp, clickWin, ix, iy, (u_int) w, (u_int) h,
-		    AllPlanes, ZPixmap);
-  if (xerrcode || !image || !image->data) {
-    sprintf(str, "Unable to get image (%d,%d %dx%d) from display", ix,iy,w,h);
-    ungrabX();
-    ErrPopUp(str, "\nThat Sucks!");
-    return 0;
-  }
-
-  ncolors = getxcolors(&xwa, &colors);
-
-  ungrabX();
-
-  if (ncolors && DEBUG) {
-    fprintf(stderr, "Colormap:\n");
-    for (i=0; i<ncolors; i++)
-      fprintf(stderr,"%02x%02x%02x  ",colors[i].red>>8, colors[i].green>>8,
-	      colors[i].blue>>8);
-    fprintf(stderr,"\n");
-  }
-
-
-  XBell(theDisp, 0);    /* beep twice at end of grab */
-  XBell(theDisp, 0);
-
-  i = convertImage(image, colors, ncolors, &xwa);
-
-  /* DO *NOT* use xvDestroyImage(), as the 'data' field was alloc'd by X, not
-     necessarily through 'malloc() / free()' */
-  XDestroyImage(image);
-
-  if (colors) free((char *) colors);
-
-  return i;
-}
-
-
 static void ungrabX()
 {
   XUngrabServer(theDisp);
@@ -489,26 +435,403 @@ static void ungrabX()
 }
 
 
+/**************************************/
+static int lowbitnum(ul)
+     unsigned long ul;
+{
+  /* returns position of lowest set bit in 'ul' as an integer (0-31),
+   or -1 if none */
+
+  int i;
+  for (i=0; ((ul&1) == 0) && i<32;  i++, ul>>=1);
+  if (i==32) i = -1;
+  return i;
+}
 
 
 
-union swapun {
-  CARD32 l;
-  CARD16 s;
-  CARD8  b[sizeof(CARD32)];
-};
+/**********************************************/
+/* getxcolors() function snarfed from 'xwd.c' */
+/**********************************************/
+
+#define lowbit(x) ((x) & (~(x) + 1))
+
+static int getxcolors(win_info, colors)
+     XWindowAttributes *win_info;
+     XColor **colors;
+{
+  int i, ncolors;
+  Colormap cmap;
+
+  *colors = (XColor *) NULL;
+
+  if (win_info->visual->class == TrueColor) {
+    if (DEBUG>1) fprintf(stderr,"TrueColor visual:  no colormap needed\n");
+    return 0;
+  }
+
+  else if (!win_info->colormap) {
+    if (DEBUG>1) fprintf(stderr,"no colormap associated with window\n");
+    return 0;
+  }
+
+  ncolors = win_info->visual->map_entries;
+  if (DEBUG>1) fprintf(stderr,"%d entries in colormap\n", ncolors);
+
+  if (!(*colors = (XColor *) malloc (sizeof(XColor) * ncolors)))
+    FatalError("malloc failed in getxcolors()");
+
+
+  if (win_info->visual->class == DirectColor) {
+    Pixel red, green, blue, red1, green1, blue1;
+
+    if (DEBUG>1) fprintf(stderr,"DirectColor visual\n");
+
+    red = green = blue = 0;
+    red1   = lowbit(win_info->visual->red_mask);
+    green1 = lowbit(win_info->visual->green_mask);
+    blue1  = lowbit(win_info->visual->blue_mask);
+    for (i=0; i<ncolors; i++) {
+      (*colors)[i].pixel = red|green|blue;
+      (*colors)[i].pad = 0;
+      red += red1;
+      if (red > win_info->visual->red_mask)	red = 0;
+      green += green1;
+      if (green > win_info->visual->green_mask) green = 0;
+      blue += blue1;
+      if (blue > win_info->visual->blue_mask)	blue = 0;
+    }
+  }
+  else {
+    for (i=0; i<ncolors; i++) {
+      (*colors)[i].pixel = i;
+      (*colors)[i].pad = 0;
+    }
+  }
+
+  XQueryColors(theDisp, win_info->colormap, *colors, ncolors);
+
+  return(ncolors);
+}
+
+
+
+/*******************************************/
+static void printWinTree(win,tab)
+     Window win;
+     int    tab;
+{
+  u_int		    i, nchildren;
+  Window		    root, parent, *children, chwin;
+  XWindowAttributes xwa;
+  int			    xr, yr;
+
+  if (!XGetWindowAttributes(theDisp, win, &xwa)) {
+    errSpace(tab);
+    fprintf(stderr,"pWT: can't XGetWindowAttributes(%08x)\n", (u_int) win);
+    return;
+  }
+
+  XTranslateCoordinates(theDisp, win, rootW, 0,0, &xr,&yr, &chwin);
+  if (xwa.map_state==IsViewable) {
+    errSpace(tab);
+    fprintf(stderr,"%08x: %4d,%4d %4dx%4d vis: %02x  cm=%x  %s\n",
+	    (u_int) win, xr,yr, xwa.width, xwa.height,
+	    (u_int) XVisualIDFromVisual(xwa.visual),
+	    (u_int) xwa.colormap,
+	    ((xwa.map_state==IsUnmapped)      ? "unmapped  "  :
+	     (xwa.map_state==IsUnviewable)    ? "unviewable"  :
+	     (xwa.map_state==IsViewable)      ? "viewable  "  :
+	     "<unknown> ")	 );
+
+    if (!XQueryTree(theDisp, win, &root, &parent, &children, &nchildren)) {
+      errSpace(tab);
+      fprintf(stderr,"pWT: XQueryTree(%08x) failed\n", (u_int) win);
+      if (children) XFree((char *)children);
+      return;
+    }
+
+    for (i=0; i<nchildren; i++) printWinTree(children[i], tab+1);
+    if (children) XFree((char *)children);
+  }
+
+  return;
+}
+
+
+/***********************************/
+static void errSpace(n)
+     int n;
+{
+  for ( ; n>0; n--) putc(' ', stderr);
+}
+
+
+
+
+/***********************************/
+static int grabRootRegion(x, y, w, h)
+     int    x, y, w, h;
+{
+  /* attempts to grab the specified rectangle of the root window
+     returns '1' on success */
+
+  XImage		    *image;
+  XWindowAttributes  xwa;
+  XColor		    *colors;
+  int			     ncolors, i, ix, iy;
+  char			     str[256];
+  Window		     win;
+
+  regrabList = (struct rectlist *) NULL;
+
+  /* range checking */
+  if (x<0) { w += x;  x = 0; }
+  if (y<0) { h += y;  y = 0; }
+  if (x+w>dispWIDE) w = dispWIDE-x;
+  if (y+h>dispHIGH) h = dispHIGH-y;
+
+  if (w<=0 || h<=0) {  /* selected nothing */
+    ungrabX();
+    return 0;
+  }
+
+
+  /* grab this region, using the default (root's) visual */
+
+  /* now for all top-level windows (children of root), in bottom->top order
+     if they intersect the grabregion
+       are they drawn entirely (including children) using default visual+cmap?
+       yes: if they intersect 'regrab' list, grab'em - else skip'em
+       no:  grab them, add their rectangle to 'regrab' list
+   */
+
+
+  /* make a 24bit grabPic */
+  gptype = PIC24;
+  gXOFF = x;  gYOFF = y;  gWIDE = w;  gHIGH = h;
+  grabPic = (byte *) malloc((size_t) gWIDE * gHIGH * 3);
+  if (!grabPic) {
+    ungrabX();
+    ErrPopUp("Unable to malloc() space for grabbed image!", "\nBite Me!");
+    return 0;
+  }
+
+  if (!XGetWindowAttributes(theDisp, rootW, &xwa)) {
+    ungrabX();
+    ErrPopUp("Can't get window attributes for root window!", "\nBite Me!");
+    return 0;
+  }
+
+  i = grabWinImage(rootW, XVisualIDFromVisual(xwa.visual), xwa.colormap,0);
+
+  ungrabX();
+
+  XBell(theDisp, 0);    /* beep twice at end of grab */
+  XBell(theDisp, 0);
+
+  { /* free regrabList */
+    struct rectlist *rr, *tmprr;
+    rr = regrabList;
+    while (rr) {
+      tmprr = rr->next;
+      free((char *) rr);
+      rr = tmprr;
+    }
+    regrabList = (struct rectlist *) NULL;
+  }
+
+  if (i) {
+    ErrPopUp("Warning: Problems occurred during grab.","\nWYSInWYG!");
+    return 0;
+  }
+
+
+  /* if 256 or fewer colors in grabPic, make it a PIC8 */
+  i = CountColors24(grabPic, gWIDE, gHIGH, 0,0,gWIDE,gHIGH);
+  if (i<=256) {
+    byte *pic8;
+    pic8 = (byte *) malloc((size_t) (gWIDE * gHIGH));
+    if (pic8) {
+      if (Trivial24to8(grabPic, gWIDE,gHIGH, pic8,
+		       grabmapR,grabmapG,grabmapB,256)) {
+	free((char *) grabPic);
+	grabPic = pic8;
+	gptype = PIC8;
+      }
+    }
+  }
+
+  return 1;  /* full success */
+}
+
+
+/***********************************/
+static int grabWinImage(win, parentVid, parentCmap, toplevel)
+     Window win;
+     VisualID			parentVid;
+     Colormap			parentCmap;
+     int				toplevel;
+{
+  /* grabs area of window (and its children) that intersects
+   * grab region (root coords: gXOFF,gYOFF,gWIDE,gHIGH), and stuffs
+   * relevant bits into the grabPic (a gWIDE*gHIGH PIC24)
+   *
+   * Note: special kludge for toplevel windows (children of root):
+   * since that's the only case where a window can be obscuring something
+   * that isn't its parent
+   *
+   * returns 0 if okay, 1 if problems occurred
+   */
+
+
+  int			    i, rv, dograb;
+  int			    wx, wy, ww, wh;	 /* root coords of window */
+  int			    gx, gy, gw, gh;	 /* root coords of grab region of win*/
+  Window		    chwin;			 /* unused */
+  u_int		    nchildren;
+  Window		    root, parent, *children;
+  XWindowAttributes xwa;
+  int			    xr, yr;
+
+  /* first, quick checks to avoid recursing down useless branches */
+
+  if (!XGetWindowAttributes(theDisp, win, &xwa)) {
+    if (DEBUG) fprintf(stderr,"gWI: can't get win attr (%08x)\n", (u_int) win);
+    return 1;
+  }
+
+  if (xwa.class == InputOnly || xwa.map_state != IsViewable) return 0;
+
+  rv	 = 0;
+  dograb = 1;
+  wx = 0;  wy = 0;  ww = (int) xwa.width;  wh = (int) xwa.height;
+
+  /* if this window doesn't intersect, none of its children will, either */
+  XTranslateCoordinates(theDisp, win, rootW, 0,0, &wx, &wy, &chwin);
+  if (!RectIntersect(wx,wy,ww,wh, gXOFF,gYOFF,gWIDE,gHIGH)) return 0;
+
+  gx = wx;  gy = wy;  gw = ww;	gh = wh;
+  CropRect2Rect(&gx,&gy,&gw,&gh, gXOFF,gYOFF,gWIDE,gHIGH);
+
+  if (win==rootW) {
+    /* always grab */
+  }
+
+  else if (XVisualIDFromVisual(xwa.visual) == parentVid &&
+	   ((xwa.visual->class==TrueColor) || xwa.colormap == parentCmap)) {
+
+    /* note: if both visuals are TrueColor, don't compare cmaps */
+
+    /* normally, if the vis/cmap info of a window is the same as its parent,
+       no need to regrab window.  special case if this is a toplevel
+       window, as it can be obscuring windows that *aren't* its parent */
+
+    if (toplevel) {
+      /* we probably already have this region.	Check it against regrabList
+	 If it intersects none, no need to grab.
+	 If it intersects one,	crop to that rectangle and grab
+	 if it intersects >1,	don't crop, just grab gx,gy,gw,gh */
+
+      struct rectlist *rr, *cr;
+
+      i=0; cr=rr=regrabList;
+      while (rr) {
+	if (RectIntersect(gx,gy,gw,gh, rr->x,rr->y,rr->w,rr->h)) {
+	  i++;	cr = rr;
+	}
+	rr = rr->next;
+      }
+
+      if (i==0) dograb=0;   /* no need to grab */
+
+      if (i==1) CropRect2Rect(&gx,&gy,&gw,&gh, cr->x,cr->y,cr->w,cr->h);
+    }
+    else dograb = 0;
+  }
+
+  else {
+    /* different vis/cmap from parent:
+       add to regrab list, if not already fully contained in list */
+    struct rectlist *rr;
+
+    /* check to see if fully contained... */
+    rr=regrabList;
+    while (rr && RectIntersect(gx,gy,gw,gh, rr->x,rr->y,rr->w,rr->h)!=2)
+      rr = rr->next;
+
+    if (!rr) {	 /* add to list */
+      if (DEBUG)
+	fprintf(stderr,"added to regrabList: %d,%d %dx%d\n",gx,gy,gw,gh);
+
+      rr = (struct rectlist *) malloc(sizeof(struct rectlist));
+      if (!rr) return 1;
+      else {
+	rr->x = gx;  rr->y = gy;  rr->w = gw;  rr->h = gh;
+	rr->next = regrabList;
+	regrabList = rr;
+      }
+    }
+  }
+
+  /* at this point, we have to grab gx,gy,gw,gh from 'win' */
+
+  if (dograb) {
+    int     ix, iy, ncolors;
+    XColor *colors;
+    XImage *image;
+
+    XTranslateCoordinates(theDisp, rootW, win, gx, gy, &ix, &iy, &chwin);
+
+    if (DEBUG)
+      fprintf(stderr,"Grabbing win (%08x) %d,%d %dx%d\n",
+	      (u_int) win, gx,gy,gw,gh);
+
+    WaitCursor();
+
+    xerrcode = 0;
+    image = XGetImage(theDisp, win, ix, iy, (u_int) gw, (u_int) gh,
+		      AllPlanes, ZPixmap);
+    if (xerrcode || !image || !image->data) return 1;
+
+    ncolors = getxcolors(&xwa, &colors);
+    rv = convertImageAndStuff(image, colors, ncolors, &xwa,
+			      gx - gXOFF, gy - gYOFF, gw, gh);
+    XDestroyImage(image);   /* can't use xvDestroyImage: alloc'd by X! */
+    if (colors) free((char *) colors);
+  }
+
+
+  /* recurse into children to see if any of them are 'different'... */
+
+  if (!XQueryTree(theDisp, win, &root, &parent, &children, &nchildren)) {
+    if (DEBUG) fprintf(stderr,"XQueryTree(%08x) failed\n", (u_int) win);
+    if (children) XFree((char *)children);
+    return rv+1;
+  }
+
+  for (i=0; i<nchildren; i++) {
+    rv += grabWinImage(children[i], XVisualIDFromVisual(xwa.visual),
+		       xwa.colormap, (win==rootW));
+  }
+  if (children) XFree((char *)children);
+
+  return rv;
+}
+
 
 
 /**************************************/
-static int convertImage(image, colors, ncolors, xwap)
+static int convertImageAndStuff(image, colors, ncolors, xwap, gx,gy,gw,gh)
      XImage *image;
      XColor *colors;
      int     ncolors;
      XWindowAttributes *xwap;
+     int     gx,gy,gw,gh;      /* position within grabPic (guaranteed OK) */
 {
-  /* attempts to conver the image from whatever weird-ass format it might
-     be in into something E-Z to deal with (either an 8-bit colormapped
-     image, or a 24-bit image).  Returns '1' on success. */
+  /* attempts to convert the image from whatever weird-ass format it might
+     be in into a 24-bit RGB image, and stuff it into grabPic
+     Returns 0 on success, 1 on failure */
 
   /* this code owes a lot to 'xwdtopnm.c', part of the pbmplus package,
      written by Jef Poskanzer */
@@ -535,17 +858,16 @@ static int convertImage(image, colors, ncolors, xwap)
   pixvalue  = 0;
   rmask  = gmask  = bmask = 0;
   rshift = gshift = bshift = 0;
-  b8shift = g8shift = r8shift = 0;
-
+  r8shift = g8shift = b8shift = 0;
 
   /* determine byte order of the machine we're running on */
   sw.l = 1;
   isLsbMachine = (sw.b[0]) ? 1 : 0;
 
-  if (xwap && xwap->visual) visual = xwap->visual;
-		       else visual = theVisual;
+  visual = xwap->visual;
 
-  if (DEBUG) {
+
+  if (DEBUG>1) {
     fprintf(stderr,"convertImage:\n");
     fprintf(stderr,"  %dx%d (offset %d), %s\n",
 	    image->width, image->height, image->xoffset,
@@ -573,39 +895,15 @@ static int convertImage(image, colors, ncolors, xwap)
     sprintf(errstr, "%s\nReturned image bitmap_unit (%d) non-standard.",
 	    "Can't deal with this display.", image->bitmap_unit);
     ErrPopUp(errstr, "\nThat Sucks!");
-    return 0;
+    return 1;
   }
 
   if (!ncolors && visual->class != TrueColor) {
     sprintf(errstr, "%s\nOnly TrueColor displays can have no colormap.",
 	    "Can't deal with this display.");
     ErrPopUp(errstr, "\nThat Sucks!");
-    return 0;
+    return 1;
   }
-
-
-  /* build the 'global' grabPic stuff */
-  gWIDE = image->width;  gHIGH = image->height;
-
-  if (visual->class == TrueColor || visual->class == DirectColor ||
-      ncolors > 256) {
-    grabPic = (byte *) malloc((size_t) gWIDE * gHIGH * 3);
-    gbits = 24;
-  }
-  else {
-    grabPic = (byte *) malloc((size_t) gWIDE * gHIGH);
-    gbits = 8;
-
-    /* load up the colormap */
-    for (i=0; i<ncolors; i++) {
-      grabmapR[i] = colors[i].red   >> 8;
-      grabmapG[i] = colors[i].green >> 8;
-      grabmapB[i] = colors[i].blue  >> 8;
-    }
-  }
-
-  if (!grabPic) FatalError("unable to malloc grabPic in convertImage()");
-  pptr = grabPic;
 
 
   if (visual->class == TrueColor || visual->class == DirectColor) {
@@ -632,13 +930,14 @@ static int convertImage(image, colors, ncolors, xwap)
     while (tmp >= 256) { tmp >>= 1;  b8shift -= 1; }
     while (tmp < 128)  { tmp <<= 1;  b8shift += 1; }
 
-    if (DEBUG)
+    if (DEBUG>1)
       fprintf(stderr,"True/DirectColor: shifts=%d,%d,%d  8shifts=%d,%d,%d\n",
 	      rshift, gshift, bshift, r8shift, g8shift, b8shift);
   }
 
 
-  bits_per_item = image->bitmap_unit;
+  bits_per_item  = image->bitmap_unit;
+  bits_used	 = bits_per_item;
   bits_per_pixel = image->bits_per_pixel;
 
 
@@ -672,11 +971,12 @@ static int convertImage(image, colors, ncolors, xwap)
      lsbfirst machine *and* the image came from an lsbfirst machine,
      *don't* flip bytes, as it should work out */
 
-  /* pity we don't have a logical exclusive-or */
   flipBytes = ( isLsbMachine && byte_order != LSBFirst) ||
 	      (!isLsbMachine && byte_order == LSBFirst);
 
   for (i=0; i<image->height; i++) {
+    pptr = grabPic + ((i+gy) * gWIDE + gx) * 3;
+
     lineptr = (byte *) image->data + (i * image->bytes_per_line);
     bptr = ((CARD8  *) lineptr) - 1;
     sptr = ((CARD16 *) lineptr) - 1;
@@ -684,7 +984,6 @@ static int convertImage(image, colors, ncolors, xwap)
     bits_used = bits_per_item;
 
     for (j=0; j<image->width; j++) {
-
       /* get the next pixel value from the image data */
 
       if (bits_used == bits_per_item) {  /* time to move on to next b/s/l */
@@ -758,144 +1057,38 @@ static int convertImage(image, colors, ncolors, xwap)
 	/* use pixel value as an index into colors array */
 
 	if (pixvalue >= ncolors) {
-	  FatalError("convertImage(): pixvalue >= ncolors");
+	  fprintf(stderr, "WARNING: convertImage(): pixvalue >= ncolors\n");
+	  return 1;
 	}
 
-	if (gbits == 24) {   /* too many colors for 8-bit colormap */
-	  *pptr++ = (colors[pixvalue].red)   >> 8;
-	  *pptr++ = (colors[pixvalue].green) >> 8;
-	  *pptr++ = (colors[pixvalue].blue)  >> 8;
-	}
-	else *pptr++ = pixvalue & 0xff;
-
+	*pptr++ = (colors[pixvalue].red)   >> 8;
+	*pptr++ = (colors[pixvalue].green) >> 8;
+	*pptr++ = (colors[pixvalue].blue)  >> 8;
       }
     }
   }
 
-  return 1;
+  return 0;
 }
-
-
-
-/**************************************/
-static int lowbitnum(ul)
-     unsigned long ul;
-{
-  /* returns position of lowest set bit in 'ul' as an integer (0-31),
-   or -1 if none */
-
-  int i;
-  for (i=0; ((ul&1) == 0) && i<32;  i++, ul>>=1);
-  if (i==32) i = -1;
-  return i;
-}
-
-
-
-/**************************************/
-/* following code snarfed from 'xwd.c' */
-/**************************************/
-
-#define lowbit(x) ((x) & (~(x) + 1))
-
-
-static int getxcolors(win_info, colors)
-     XWindowAttributes *win_info;
-     XColor **colors;
-{
-  int i, ncolors;
-
-  *colors = (XColor *) NULL;
-
-  if (win_info->visual->class == TrueColor) {
-    if (DEBUG) fprintf(stderr,"TrueColor visual:  no colormap needed\n");
-    return 0;
-  }
-
-  else if (!win_info->colormap) {
-    if (DEBUG) fprintf(stderr,"no colormap associated with window\n");
-    return 0;
-  }
-
-  ncolors = win_info->visual->map_entries;
-  if (DEBUG) fprintf(stderr,"%d entries in colormap\n", ncolors);
-
-  if (!(*colors = (XColor *) malloc (sizeof(XColor) * ncolors)))
-    FatalError("malloc failed in getxcolors()");
-
-
-  if (win_info->visual->class == DirectColor) {
-    Pixel red, green, blue, red1, green1, blue1;
-
-    if (DEBUG) fprintf(stderr,"DirectColor visual\n");
-
-    red = green = blue = 0;
-    red1   = lowbit(win_info->visual->red_mask);
-    green1 = lowbit(win_info->visual->green_mask);
-    blue1  = lowbit(win_info->visual->blue_mask);
-    for (i=0; i<ncolors; i++) {
-      (*colors)[i].pixel = red|green|blue;
-      (*colors)[i].pad = 0;
-      red += red1;
-      if (red > win_info->visual->red_mask)     red = 0;
-      green += green1;
-      if (green > win_info->visual->green_mask) green = 0;
-      blue += blue1;
-      if (blue > win_info->visual->blue_mask)   blue = 0;
-    }
-  }
-  else {
-    for (i=0; i<ncolors; i++) {
-      (*colors)[i].pixel = i;
-      (*colors)[i].pad = 0;
-    }
-  }
-
-  XQueryColors(theDisp, win_info->colormap, *colors, ncolors);
-
-  return(ncolors);
-}
-
-
 
 
 
 /***********************************/
-int LoadGrab(pinfo)
-     PICINFO *pinfo;
+static int RectIntersect(ax,ay,aw,ah, bx,by,bw,bh)
+     int ax,ay,aw,ah, bx,by,bw,bh;
 {
-  /* loads up (into XV structures) last image successfully grabbed.
-     returns '0' on failure, '1' on success */
+  /* returns 0 if rectangles A and B do not intersect
+     returns 1 if A partially intersects B
+     returns 2 if rectangle A is fully enclosed by B */
 
-  int   i;
+  int ax1,ay1, bx1,by1;
 
-  if (!grabPic) return 0;   /* no image to use */
+  ax1 = ax+aw-1;  ay1 = ay+ah-1;
+  bx1 = bx+bw-1;  by1 = by+bh-1;
 
-  if (gbits == 24) pinfo->type = PIC24;
-  else {
-    pinfo->type = PIC8;
+  if (ax1<bx || ax>bx1 || ay1<by || ay>by1) return 0;
 
-    for (i=0; i<256; i++) {
-      pinfo->r[i] = grabmapR[i];
-      pinfo->g[i] = grabmapG[i];
-      pinfo->b[i] = grabmapB[i];
-    }
-  }
-
-  pinfo->pic     = grabPic;
-  pinfo->normw   = pinfo->w   = gWIDE;
-  pinfo->normh   = pinfo->h   = gHIGH;
-  pinfo->frmType = -1;
-  pinfo->colType = -1;
-
-  sprintf(pinfo->fullInfo,"<%s internal>",
-	  (pinfo->type == PIC8) ? "8-bit" : "24-bit");
-
-  sprintf(pinfo->shrtInfo,"%dx%d image.",gWIDE, gHIGH);
-
-  pinfo->comment = (char *) NULL;
-
-  grabPic = (byte *) NULL;
+  if (ax>=bx && ax1<=bx1 && ay>=by && ay1<=by) return 2;
 
   return 1;
 }
@@ -904,65 +1097,129 @@ int LoadGrab(pinfo)
 
 
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
+/** stuff needed to make new xvgrab work in 3.10a. **/
 
-static Window TryChildren PARM((Display *, Window, Atom));
-
-/* Find a window with WM_STATE, else return '0' */
-
-static Window xvClientWindow (dpy, win)
-    Display *dpy;
-    Window win;
+/********************************************/
+static int CountColors24(pic, pwide, phigh, x, y, w, h)
+     byte *pic;
+     int   pwide, phigh, x,y,w,h;
 {
-    Atom WM_STATE;
-    Atom type = None;
-    int format;
-    unsigned long nitems, after;
-    unsigned char *data;
-    Window inf;
+  /* counts the # of unique colors in a selected rect of a PIC24
+     returns '0-256' or >256 */
 
-    WM_STATE = XInternAtom(dpy, "WM_STATE", True);
-    if (!WM_STATE) return win;
+  int	 i, j, k, nc;
+  int	 low, high, mid;
+  u_int  colors[257], col;
+  byte	 *pp;
 
-    XGetWindowProperty(dpy, win, WM_STATE, 0L, 0L, False, AnyPropertyType,
-		       &type, &format, &nitems, &after, &data);
-    if (type) return win;
+  nc = 0;
 
-    inf = TryChildren(dpy, win, WM_STATE);
+  for (i=y; nc<257 && i<y+h; i++) {
+    pp = pic + (i*pwide + x)*3;
 
-    return inf;
+    for (j=x; nc<257 && j<x+w; j++, pp+=3) {
+      col = (((u_int) pp[0])<<16) + (((u_int) pp[1])<<8) + pp[2];
+
+      /* binary search the 'colors' array to see if it's in there */
+      low = 0;  high = nc-1;
+      while (low <= high) {
+	mid = (low+high)/2;
+	if      (col < colors[mid]) high = mid - 1;
+	else if (col > colors[mid]) low  = mid + 1;
+	else break;
+      }
+
+      if (high < low) { /* didn't find color in list, add it. */
+	xvbcopy((char *) &colors[low], (char *) &colors[low+1],
+		(nc - low) * sizeof(u_int));
+	colors[low] = col;
+	nc++;
+      }
+    }
+  }
+
+  return nc;
 }
 
-static Window TryChildren (dpy, win, WM_STATE)
-    Display *dpy;
-    Window win;
-    Atom WM_STATE;
+
+/****************************/
+static int Trivial24to8(pic24, w,h, pic8, rmap,gmap,bmap, maxcol)
+     byte *pic24, *pic8, *rmap, *gmap, *bmap;
+     int   w,h,maxcol;
 {
-    Window root, parent;
-    Window *children;
-    unsigned int nchildren;
-    unsigned int i;
-    Atom type = None;
-    int format;
-    unsigned long nitems, after;
-    unsigned char *data;
-    Window inf = 0;
+  /* scans picture until it finds more than 'maxcol' different colors.  If it
+     finds more than 'maxcol' colors, it returns '0'.  If it DOESN'T, it does
+     the 24-to-8 conversion by simply sticking the colors it found into
+     a colormap, and changing instances of a color in pic24 into colormap
+     indicies (in pic8) */
 
-    if (!XQueryTree(dpy, win, &root, &parent, &children, &nchildren))
-	return 0;
+  unsigned long colors[256],col;
+  int           i, nc, low, high, mid;
+  byte         *p, *pix;
 
-    for (i = 0; !inf && (i < nchildren); i++) {
-	XGetWindowProperty(dpy, children[i], WM_STATE, 0L, 0L, False,
-			   AnyPropertyType, &type, &format, &nitems,
-			   &after, &data);
-	if (type)
-	  inf = children[i];
+  if (maxcol>256) maxcol = 256;
+
+  /* put the first color in the table by hand */
+  nc = 0;  mid = 0;
+
+  for (i=w*h,p=pic24; i; i--) {
+    col  = (((u_long) *p++) << 16);
+    col += (((u_long) *p++) << 8);
+    col +=  *p++;
+
+    /* binary search the 'colors' array to see if it's in there */
+    low = 0;  high = nc-1;
+    while (low <= high) {
+      mid = (low+high)/2;
+      if      (col < colors[mid]) high = mid - 1;
+      else if (col > colors[mid]) low  = mid + 1;
+      else break;
     }
 
-    for (i = 0; !inf && (i < nchildren); i++)
-      inf = TryChildren(dpy, children[i], WM_STATE);
+    if (high < low) { /* didn't find color in list, add it. */
+      if (nc>=maxcol) return 0;
+      xvbcopy((char *) &colors[low], (char *) &colors[low+1],
+	      (nc - low) * sizeof(u_long));
+      colors[low] = col;
+      nc++;
+    }
+  }
 
-    if (children) XFree((char *)children);
-    return inf;
+
+  /* run through the data a second time, this time mapping pixel values in
+     pic24 into colormap offsets into 'colors' */
+
+  for (i=w*h,p=pic24, pix=pic8; i; i--,pix++) {
+    col  = (((u_long) *p++) << 16);
+    col += (((u_long) *p++) << 8);
+    col +=  *p++;
+
+    /* binary search the 'colors' array.  It *IS* in there */
+    low = 0;  high = nc-1;
+    while (low <= high) {
+      mid = (low+high)/2;
+      if      (col < colors[mid]) high = mid - 1;
+      else if (col > colors[mid]) low  = mid + 1;
+      else break;
+    }
+
+    if (high < low) {
+      fprintf(stderr,"Trivial24to8:  impossible situation!\n");
+      exit(1);
+    }
+    *pix = mid;
+  }
+
+  /* and load up the 'desired colormap' */
+  for (i=0; i<nc; i++) {
+    rmap[i] =  colors[i]>>16;
+    gmap[i] = (colors[i]>>8) & 0xff;
+    bmap[i] =  colors[i]     & 0xff;
+  }
+
+  return 1;
 }
+
+
+
+
