@@ -956,6 +956,7 @@ static void setBrowStr(br, str)
      char *str;
 {
   strncpy(br->dispstr, str, (size_t) 256);
+  br->dispstr[255] = '\0';
   drawBrowStr(br);
   XFlush(theDisp);
 }
@@ -1490,6 +1491,7 @@ static void drawIcon(br, num)
   if (StringWidth(str) > ISPACE_WIDE-6) {
     int dotpos;
     strncpy(tmpstr, str, (size_t) 56);
+    tmpstr[56] = '\0'; /* MR: otherwise it dies on long file names */
     dotpos = strlen(tmpstr);
     strcat(tmpstr,"...");
 

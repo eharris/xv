@@ -1200,6 +1200,7 @@ void SetDirFName(st)
      char *st;
 {
   strncpy(deffname, st, (size_t) MAXFNLEN-1);
+  deffname[MAXFNLEN-1] = '\0';
   setFName(st);
 }
 

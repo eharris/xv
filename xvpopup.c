@@ -560,6 +560,7 @@ static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
 	nams[*lenp] = (char *) malloc((size_t) 32);
 	if (!nams[*lenp]) { free(vals[*lenp]); continue; }
 	strncpy(nams[*lenp], vals[*lenp], (size_t) 31);
+	nams[*lenp][31] = '\0';
       }
 
       if (strlen(nams[*lenp]) > (size_t) 20) {   /* fix long names */

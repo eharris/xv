@@ -293,6 +293,7 @@ void OpenTextView(text, len, title, freeonclose)
   tv->textlen     = len;
   tv->freeonclose = freeonclose;
   strncpy(tv->title, title, (size_t) TITLELEN-1);
+  tv->title[TITLELEN-1] = '\0';
 
   computeText(tv);      /* compute # lines and linestarts array */
 
