@@ -240,9 +240,6 @@ xvclean:
 
 clean:  xvclean
 	rm -f bggen vdcomp xcmap xvpictoppm
-	./cleandir $(JPEGDIR)
-	rm -f $(JPEGDIR)/jconfig.h $(JPEGDIR)/Makefile
-	./cleandir $(TIFFDIR)
 
 
 install: all
