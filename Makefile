@@ -257,6 +257,7 @@ install: all
 	install -o root -g root -m 0644 docs/vdcomp.man $(MANDIR)/vdcomp.$(MANSUF)
 	install -o root -g root -m 0644 docs/xvdocs.ps $(DOCDIR)/usr/share/doc/xv-doc/
 	cp -a docs/html/* $(DOCDIR)/usr/share/doc/xv-doc/html/
+	uudeview -i -o -c -p $(DOCDIR)/usr/share/doc/xv-doc/html/images -m -f $(DOCDIR)/usr/share/doc/xv-doc/html/images/*.uue; \
 	chown -Rh 0:0 $(DOCDIR)/usr/share/doc/xv-doc/html
 	chmod -R a=rX,u+w $(DOCDIR)/usr/share/doc/xv-doc/html
 
