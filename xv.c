@@ -332,31 +332,46 @@ int main(argc, argv)
      and if so, use that as the default visual (prefer TrueColor) */
 
   if (!visualstr && !useroot) {
+    VisualID	 defvid;
     XVisualInfo *vinfo, rvinfo;
     int          best,  numvis;
     long         flags;
 
-    best = -1;
+    best		  = -1;
     rvinfo.class  = TrueColor;
     rvinfo.screen = theScreen;
-    flags = VisualClassMask | VisualScreenMask;
+    flags	  = VisualClassMask | VisualScreenMask;
+    defvid	  = XVisualIDFromVisual(DefaultVisual(theDisp,
+						      DefaultScreen(theDisp)));
 
     vinfo = XGetVisualInfo(theDisp, flags, &rvinfo, &numvis);
-    if (vinfo) {     /* look for a TrueColor, 24-bit or more (pref 24) */
-      for (i=0, best = -1; i<numvis; i++) {
+    if (vinfo) {
+      /* Check list, use 'default', first 24-bit, or first >24-bit */
+      for (i=0; i<numvis && best==-1; i++) {   /* default? */
+	if ((vinfo[i].visualid == defvid) && (vinfo[i].depth >= 24)) best=i;
+      }
+      for (i=0; i<numvis && best==-1; i++) {   /* 24-bit ? */
 	if (vinfo[i].depth == 24) best = i;
-	else if (vinfo[i].depth>24 && best<0) best = i;
+      }
+      for (i=0; i<numvis && best==-1; i++) {   /* >24-bit ? */
+	if (vinfo[i].depth >= 24) best = i;
       }
     }
 
     if (best == -1) {   /* look for a DirectColor, 24-bit or more (pref 24) */
       rvinfo.class = DirectColor;
       if (vinfo) XFree((char *) vinfo);
+
       vinfo = XGetVisualInfo(theDisp, flags, &rvinfo, &numvis);
       if (vinfo) {
-	for (i=0, best = -1; i<numvis; i++) {
+	for (i=0; i<numvis && best==-1; i++) {	 /* default? */
+	  if ((vinfo[i].visualid == defvid) && (vinfo[i].depth >= 24)) best=i;
+	}
+	for (i=0; i<numvis && best==-1; i++) {	 /* 24-bit ? */
 	  if (vinfo[i].depth == 24) best = i;
-	  else if (vinfo[i].depth>24 && best<0) best = i;
+	}
+	for (i=0; i<numvis && best==-1; i++) {	 /* >24-bit ? */
+	  if (vinfo[i].depth >= 24) best = i;
 	}
       }
     }
