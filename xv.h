@@ -115,7 +115,7 @@
 #ifndef VMS
 #  include <errno.h>
    extern int   errno;             /* SHOULD be in errno.h, but often isn't */
-#  ifndef __NetBSD__
+#  if !defined(__NetBSD__) && !defined(LINUX)
      extern char *sys_errlist[];     /* this too... */
 #  endif
 #endif
@@ -753,6 +753,13 @@
 #else
 #define WHERE
 #endif
+
+/* Needed for repositionning with negative geometries */
+typedef struct {
+  int negativeX;
+  int negativeY;
+} winRepositionningInfoST;
+extern winRepositionningInfoST winRepositionningInfo;
 
 typedef unsigned char byte;
 

@@ -13,13 +13,13 @@
  * definition appropriately. (use 'which gunzip' to find if you have gunzip,
  * and where it lives)
  */
-#undef USE_GUNZIP
+#define USE_GUNZIP
 
 #ifdef USE_GUNZIP
 #  ifdef VMS
 #    define GUNZIP "UNCOMPRESS"
 #  else
-#    define GUNZIP "/usr/local/bin/gunzip -q"
+#    define GUNZIP "/bin/gunzip -q"
 #  endif
 #endif
 
@@ -88,9 +88,9 @@
  * should not need to be changed
  */
 
-/* #define GS_PATH "/usr/local/bin/gs" */
-/* #define GS_LIB  "."                 */
-/* #define GS_DEV  "ppmraw"            */
+#define GS_PATH "/usr/bin/gs"
+#define GS_LIB  "."
+#define GS_DEV  "ppmraw"
 
 
 /***************************************************************************

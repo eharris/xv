@@ -49,6 +49,9 @@
 
 #define BUTTH	 24
 
+#define LF	 10   /* a.k.a. '\n' on ASCII machines */
+#define CR	 13   /* a.k.a. '\r' on ASCII machines */
+
 /*** local functions ***/
 static	  void drawPD	      PARM((int, int, int, int));
 static	  void clickPD	      PARM((int, int));
@@ -57,8 +60,10 @@ static	  void writePNG       PARM((void));
 static	  int  WritePNG       PARM((FILE *, byte *, int, int, int,
 				    byte *, byte *, byte *, int));
 
-static	  void png_xv_error   PARM((png_struct *png_ptr, char *message));
-static	  void png_xv_warning PARM((png_struct *png_ptr, char *message));
+static	  void png_xv_error   PARM((png_structp png_ptr,
+				    png_const_charp message));
+static	  void png_xv_warning PARM((png_structp png_ptr,
+				    png_const_charp message));
 
 /*** local variables ***/
 static char *filename;
@@ -87,7 +92,7 @@ void CreatePNGW()
   XSelectInput(theDisp, pngW, ExposureMask | ButtonPressMask | KeyPressMask);
 
   DCreate(&cDial, pngW,  12, 25, DWIDE, DHIGH, (double)Z_NO_COMPRESSION,
-	  (double)Z_BEST_COMPRESSION, COMPRESSION, 1.0, 2.0,
+	  (double)Z_BEST_COMPRESSION, COMPRESSION, 1.0, 3.0,
 	  infofg, infobg, hicol, locol, "Compression", NULL);
 
   DCreate(&gDial, pngW, DWIDE+27, 25, DWIDE, DHIGH, 1.0, 3.5,DISPLAY_GAMMA,0.01,0.2,
@@ -594,14 +599,13 @@ int WritePNG(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols)
     int j;
     p = pic;
     for(j = 0; j < h; j++) {
-  fflush(stdout);
       if(info_ptr->color_type == PNG_COLOR_TYPE_GRAY) {
 	int k;
 	for(k = 0; k < w; k++)
 	  png_line[k] = ptype==PIC24 ? MONO(p[k*3], p[k*3+1], p[k*3+2]) :
 				       remap[p[k]];
 	png_write_row(png_ptr, png_line);
-      } else  /* rbg or palette */
+      } else  /* RGB or palette */
 	png_write_row(png_ptr, p);
       if((j & 0x1f) == 0) WaitCursor();
       p += linesize;
@@ -642,6 +646,7 @@ int WritePNG(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols)
 	}
 
 	/* See if it looks like a PNG keyword from LoadPNG */
+	/* GRR: should test for strictly < 80, right? (key = 1-79 chars only) */
 	if(comment && comment[1] == ':' && comment - key <= 80) {
 	  *(comment++) = '\0';
 	  *(comment++) = '\0';
@@ -690,11 +695,25 @@ int WritePNG(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols)
 	    tp++;
 	  }
 	}
-	/* It is just a generic comment */
+	/* Just a generic comment:  make sure line-endings are valid for PNG */
 	else {
+	  char *p=key, *q=key;	   /* only deleting chars, not adding any */
+
+	  while (*p) {
+	    if (*p == CR) {	   /* lone CR or CR/LF:  EOL either way */
+	      *q++ = LF;		   /* LF is the only allowed PNG line-ending */
+	      if (p[1] == LF)	   /* get rid of any original LF */
+		++p;
+	    } else if (*p == LF)   /* lone LF */
+	      *q++ = LF;
+	    else
+	      *q++ = *p;
+	    ++p;
+	  }
+	  *q = '\0';			   /* unnecessary...but what the heck */
 	  tp->key = "Comment";
 	  tp->text = key;
-	  tp->text_length = strlen(tp->text);
+	  tp->text_length = q - key;
 	  tp->compression = tp->text_length > 750 ? 0 : -1;
 	  info_ptr->num_text++;
 	  key = NULL;
@@ -712,14 +731,21 @@ int WritePNG(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols)
   info_ptr->valid |= PNG_INFO_tIME;
 
   png_write_end(png_ptr, info_ptr);
-  png_destroy_write_struct(&png_ptr, &info_ptr);
+  fflush(fp);	/* just in case we core-dump before finishing... */
 
   if (text)
   {
     free(text);
+    /* must do this or png_destroy_write_struct() 0.97+ will free text again: */
+    info_ptr->text = (png_textp)NULL;
     if (savecmnt)
+    {
       free(savecmnt);
+      savecmnt = (char *)NULL;
+    }
   }
+
+  png_destroy_write_struct(&png_ptr, &info_ptr);
 
   return 0;
 }
@@ -941,8 +967,8 @@ int LoadPNG(fname, pinfo)
 /*******************************************/
 static void
 png_xv_error(png_ptr, message)
-     png_struct *png_ptr;
-     char *message;
+     png_structp png_ptr;
+     png_const_charp message;
 {
   SetISTR(ISTR_WARNING,"%s:  libpng error: %s", fbasename, message);
 
@@ -953,8 +979,8 @@ png_xv_error(png_ptr, message)
 /*******************************************/
 static void
 png_xv_warning(png_ptr, message)
-     png_struct *png_ptr;
-     char *message;
+     png_structp png_ptr;
+     png_const_charp message;
 {
   if (!png_ptr)
     return;

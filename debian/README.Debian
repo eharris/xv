@@ -1,0 +1,16 @@
+xv for Debian
+-------------
+
+This is the Debian GNU/Linux prepackaged version of the XV image
+viewer. XV is Copyright 1989, 1994 by John Bradley.
+
+Electronic Mail regarding XV should be sent to one of these three addresses:
+     xv@devo.dccs.upenn.edu			  - general XV questions
+     xvbiz@devo.dccs.upenn.edu			  - all XV licensing questions
+     xvtech@devo.dccs.upenn.edu		  - bug reports, technical questions
+
+This package was maintained by Philippe Troin <phil@fifi.org>. Now it is not
+anymore in debian because the license. So I take over it to hold it apt-getable
+and usable with the newest distributions.
+
+ -- Klaus Ethgen <Klaus@Ethgen.de>, Wed, 25 Feb 2004 11:49:51 +0100

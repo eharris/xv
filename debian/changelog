@@ -1,0 +1,206 @@
+xv (3.10a-26) unstable; urgency=low
+
+  * New imported from original source
+  * Replying grab patch -- fix grab
+  * Applying vis patch -- FB problem on sun
+  * Applying mp-tiff patch -- Multipage tiff
+  * Reapplying longname patch -- names > 32
+  * Applying xpm patch -- xpm missing break
+  * Applying deepcolor patch -- colordisplayproblem
+  * Reapplying gif patch -- gif reading problem
+  * Applying exceed_grab patch -- another grab fix
+  * Applying tiff1200 patch -- tiff now 72dpi
+  * Reapplying gssafer patch -- cann gs with -dSAFER
+  * Reapplying JPEG patch -- Use newer jpeglib
+  * Reapplying TIFF patch -- Use newer tifflib
+  * Applying pdf patch -- show pdf
+  * Applying windowid patch -- usable in netscape window
+  * Applying bmp32 patch -- read 32bit bmp
+  * Reapplying png patch -- read png
+  * Applying some patches done by Philippe Troin <phil@fifi.org>
+  * Add watch file
+
+ -- Klaus Ethgen <Klaus@Ethgen.de>  Wed, 25 Feb 2004 16:22:53 +0100
+
+xv (3.10a-25) frozen unstable; urgency=medium
+
+  * Applied patch for invoking gs with -dSAFER option to defeat potential
+    trojanned postscript files.
+
+ -- Philippe Troin <phil@fifi.org>  Fri, 12 May 2000 14:13:19 -0700
+
+xv (3.10a-24) unstable; urgency=low
+
+  * Changed the Section in the doc-base files to conform to usage (used to
+    be Apps/Viewer, now Apps/Viewers).
+
+ -- Philippe Troin <phil@fifi.org>  Sun, 17 Oct 1999 00:31:39 -0700
+
+xv (3.10a-23) unstable; urgency=low
+
+  * Fixed a bug in PNG handling for new libpng 1.0.3.
+
+ -- Philippe Troin <phil@fifi.org>  Tue,  5 Oct 1999 01:07:21 -0700
+
+xv (3.10a-22) unstable; urgency=low
+
+  * FHS compliance.
+  * New standards 3.0.1.
+  * Lintianized.
+  * Added a patch to GIF reader to correct rare bug with image depth.
+
+ -- Philippe Troin <phil@fifi.org>  Sun,  3 Oct 1999 23:37:44 -0700
+
+xv (3.10a-21) unstable; urgency=low
+
+  * Added patch for better TIFF LZW compression (fixes bug #31356).
+  * Added doc-base support (fixes bug #31154).
+
+ -- Philippe Troin <phil@fifi.org>  Sun,  1 Aug 1999 20:35:12 -0700
+
+xv (3.10a-20slink1) stable; urgency=medium
+
+  * Applied patch for invoking gs with -dSAFER option to defeat potential
+    trojanned postscript files.
+
+ -- Philippe Troin <phil@fifi.org>  Fri, 12 May 2000 16:02:24 -0500
+
+xv (3.10a-20) frozen unstable; urgency=low
+
+  * Recompiled with new libtiff to avoid having to different libjpeg
+    loaded in the memory.
+  * Removed prerm.
+
+ -- Philippe Troin <phil@fifi.org>  Sun,  8 Nov 1998 12:42:06 -0800
+
+xv (3.10a-19) unstable; urgency=low
+
+  * Postinst and postrm scripts exit correcly even if update-mime fails
+    (which can happen if update-mime 2.0 is unpacked but not configured
+    yet). Fixes bugs #26990, #27012.
+
+ -- Philippe Troin <phil@fifi.org>  Thu, 24 Sep 1998 00:58:05 -0700
+
+xv (3.10a-18) unstable; urgency=low
+
+  * Now uses mime 2.0 (fixes bug #25946, #26533, #11226, #12338).
+  * xv-doc now just recommends xv and no more html-viewer.
+
+ -- Philippe Troin <phil@fifi.org>  Sun, 20 Sep 1998 16:33:44 -0700
+
+xv (3.10a-17) unstable; urgency=low
+
+  * Postinst now uses /usr/X11R6/bin/xv (fixes bug #20406).
+  * Fixed trivial changes in PNG prototypes.
+  * Added HTML documentation.
+  * Added grab patch.
+
+ -- Philippe Troin <phil@fifi.org>  Mon, 10 Aug 1998 21:55:31 -0700
+
+xv (3.10a-16) unstable; urgency=low
+
+  * Recompiled with libc6 2.0.6-2 (fixes minor problems with random number
+    generator).
+  * Adapted to standards-version 2.3.0.1.
+  * Removed shlibs.local now that libjpegg and libtiffg are fixed.
+
+ -- Philippe Troin <phil@fifi.org>  Sun, 18 Jan 1998 20:38:49 -0800
+
+xv (3.10a-15) unstable; urgency=low
+
+  * Libc6'ized (includes patching, forwarded to upstream author) (fixes
+    bug #11755).
+  * Fixed neagtive geometries bug #12439 (awful kludge, forwarded to
+    upstream author).
+  * Made install-mime quieter.
+  * Fixed shlibs.local for broken libtiff3g and libjpegg6a.
+
+ -- Philippe Troin <phil@fifi.org>  Sat, 27 Sep 1997 02:23:45 -0700
+
+xv (3.10a-14) non-free; urgency=low
+
+  * Added the PNG patch (fixes bug #9174).
+
+ -- Philippe Troin <phil@fifi.org>  Fri, 13 Jun 1997 00:29:36 -0700
+
+xv (3.10a-13) frozen-non-free non-free; urgency=low
+
+  * Fixed a problem with negative numbers and xvgif.c which caused xv to
+    dump core on empty GIF files. Patch forwarded to upstream
+    author. Fixes bug #8521.
+  * Added a menu entry in /usr/lib/menu.
+  * Will add PNG patch in next release (this one goes into frozen, I don't
+    want to add new code). (If bugs stop flowing).
+
+ -- Philippe Troin <phil@fifi.org>  Fri, 4 Apr 1997 19:18:26 -0800
+
+xv (3.10a-12) frozen-non-free non-free; urgency=low
+
+  * Fixed a buffer overflow which caused core dumps with long filenames in
+    the Visaul Shnauzer. Sent patch to upstream author
+    (xvtech@trilon.com). Fixes bug #8015.
+  * Added a Conflicts: xvdoc to the control file so that xvdoc gets
+    removed when installing this new xv version (previously, only a
+    Replace:xvdoc was done). Fixes bug #8404.
+  * Will add PNG patch in next release (this one goes into frozen, I don't
+    want to add new code).
+
+ -- Philippe Troin <phil@fifi.org>  Sun, 30 Mar 1997 18:45:16 -0800
+
+xv (3.10a-11) non-free; urgency=low
+
+  * After some discussions with the mime-support maintainer, xv should
+    always remove the MIME types when desintalling (even upgrading) and
+    reask them when installing (even) upgrading.
+    This release brings us back to 3.10a-9 basically.
+  * Popped the libtiff version in the shlibs.local from 034 to 035.
+  * Added the libjpeg6a in shlibs.local as the provided shlib fails to add
+    the dependency.
+
+ -- Philippe Troin <phil@fifi.org>  Fri, 7 Mar 1997 15:40:08 -0800
+
+xv (3.10a-10) non-free; urgency=low
+
+  * Checked that we're not doing an upgrade before calling
+    install-mime. Upgrading now won't ask the MIME stuff...
+
+ -- Philippe Troin <phil@fifi.org>  Mon, 27 Jan 1997 13:52:19 -0800
+
+xv (3.10a-9) non-free; urgency=low
+
+  * Now that libjpeg6a and zlib1 provide shlibs, removed them from
+    shlibs.local (fixes bug #5766).
+
+ -- Philippe Troin <phil@fifi.org>  Tue, 7 Jan 1997 00:45:28 -0800
+
+xv (3.10a-8) non-free; urgency=low
+
+  * Xv now register corretly the image extensions to install-mime.
+
+ -- Philippe Troin <phil@fifi.org>  Tue, 12 Nov 1996 23:00:47 -0800
+
+xv (3.10a-7) non-free; urgency=low
+
+  * Fixed the postinst script so that install-mime can query the user (it
+    had stdin redirected previously, and install-mime wouldn't get
+    anything).
+
+ -- Philippe Troin <phil@fifi.org>  Mon, 4 Nov 1996 18:38:26 -0800
+
+xv (3.10a-6) non-free; urgency=low
+
+  * New maintainer.
+  * Repackaged to new debian standards.
+  * Added upstream patches for libtiff3 and libjpeg6, and purged the tiff
+    and jpeg directories from the .orig sources.
+  * Uploading the .orig as part of v3.10a-6 (because of new packaging).
+  * Now dynamically links to (and requires) libtiff3 and libjpeg6a (closes
+    bug #3837)
+  * Now registers with the mime package (closes bug #4900)
+  * Merged the xv-docs package with this one, and trimmed the docs.
+
+ -- Philippe Troin <phil@fifi.org>  Mon, 4 Nov 1996 01:39:23 -0800
+
+Local variables:
+mode: debian-changelog
+End:

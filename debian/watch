@@ -1,0 +1,5 @@
+#
+version=2
+http://www.trilon.com/xv/downloads.html \
+ftp://ftp\.cis\.upenn\.edu/pub/xv/xv-(\d\.\d.)\.tar\.gz
+debian debian/myupdate

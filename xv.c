@@ -126,6 +126,7 @@ int  curstype, stdinflag, browseMode, savenorm, preview, pscomp, preset,
      rmodeset, gamset, cgamset, perfect, owncmap, rwcolor, stdcmap;
 int  nodecor;
 double gamval, rgamval, ggamval, bgamval;
+winRepositionningInfoST winRepositionningInfo = { 0, 0};
 
 
 
@@ -3251,8 +3252,18 @@ static void createMainWindow(geom, name)
   hints.flags = 0;
   if ((i&XValue || i&YValue)) hints.flags = USPosition;
 
-  if (i&XValue && i&XNegative) x = vrWIDE - eWIDE - abs(x);
-  if (i&YValue && i&YNegative) y = vrHIGH - eHIGH - abs(y);
+  if (i&XValue && i&XNegative) {
+    x = vrWIDE - eWIDE - abs(x);
+    if (firstTime) {
+      winRepositionningInfo.negativeX=x-dispWIDE+eWIDE;
+    }
+  }
+  if (i&YValue && i&YNegative) {
+    y = vrHIGH - eHIGH - abs(y);
+    if (firstTime) {
+      winRepositionningInfo.negativeY=y-dispHIGH+eHIGH;
+    }
+  }
 
   if (x+eWIDE > vrWIDE) x = vrWIDE - eWIDE;   /* keep on screen */
   if (y+eHIGH > vrHIGH) y = vrHIGH - eHIGH;

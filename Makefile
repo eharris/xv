@@ -28,10 +28,10 @@ CCOPTS = -O
 
 
 ### Installation locations
-BINDIR = /usr/local/bin
-MANDIR = /usr/local/man/man1
+BINDIR = $(DESTDIR)/usr/X11R6/bin
+MANDIR = $(DESTDIR)/usr/X11R6/man/man1
 MANSUF = 1
-LIBDIR = /usr/local/lib
+LIBDIR = $(DESTDIR)/usr/X11R6/lib
 
 
 buildit: all
@@ -46,13 +46,8 @@ buildit: all
 ### on your machine, *COMMENT OUT* the following lines
 ###
 JPEG    = -DDOJPEG
-JPEGDIR = jpeg
-JPEGINC = -I$(JPEGDIR)
-JPEGLIB = $(JPEGDIR)/libjpeg.a
-$(JPEGDIR)/jconfig.h:
-	cd $(JPEGDIR) ; ./configure CC='$(CC)'
-$(JPEGLIB):  $(JPEGDIR)/jconfig.h
-	cd $(JPEGDIR) ; make
+JPEGINC =
+JPEGLIB = -ljpeg
 
 
 ###
@@ -60,18 +55,16 @@ $(JPEGLIB):  $(JPEGDIR)/jconfig.h
 ### on your machine, *COMMENT OUT* the following lines
 ###
 PNG    = -DDOPNG
-PNGDIR = /usr/local/src/libpng
-PNGINC = -I$(PNGDIR)
-PNGLIB = -L$(PNGDIR) -lpng
+PNGINC =
+PNGLIB = -lpng
 
 
 ###
 ### if, for whatever reason, you're unable to get the PNG library to compile
 ### on your machine, *COMMENT OUT* the following lines
 ###
-ZLIBDIR = /usr/local/src/zlib
-ZLIBINC = -I$(ZLIBDIR)
-ZLIBLIB = -L$(ZLIBDIR) -lz
+ZLIBINC =
+ZLIBLIB = -lz
 
 
 ###
@@ -79,11 +72,8 @@ ZLIBLIB = -L$(ZLIBDIR) -lz
 ### on your machine, *COMMENT OUT* the following lines
 ###
 TIFF    = -DDOTIFF
-TIFFDIR = tiff
-TIFFINC = -I$(TIFFDIR)
-TIFFLIB = $(TIFFDIR)/libtiff.a
-$(TIFFLIB):
-	( cd $(TIFFDIR) ; make CC='$(CC)' )
+TIFFINC =
+TIFFLIB = -ltiff
 
 
 ###
@@ -121,7 +111,7 @@ PDS = -DDOPDS
 
 
 ### for LINUX, uncomment the following line
-#MCHN = -DLINUX
+MCHN = -DLINUX
 
 
 # For SCO 1.1 (UNIX 3.2v2) machines, uncomment the following:
@@ -163,7 +153,7 @@ PDS = -DDOPDS
 
 # if your machine has the usleep() function, uncomment the following line:
 # if it doesn't, or you're not sure, leave this line alone.
-#TIMERS = -DUSLEEP
+TIMERS = -DUSLEEP
 
 
 # if XV locks up whenever you click on *any* of the buttons, the Timer()
@@ -203,11 +193,11 @@ PDS = -DDOPDS
 
 
 
-CFLAGS = $(CCOPTS) $(JPEG) $(JPEGINC) $(TIFF) $(TIFFINC) $(PDS) \
-	$(NODIRENT) $(VPRINTF) $(TIMERS) $(UNIX) $(BSDTYPES) $(RAND) \
-	$(DXWM) $(MCHN) $(PNG) $(PNGINC) $(ZLIBINC)
+CFLAGS = $(CCOPTS) $(JPEG) $(JPEGINC) $(TIFF) $(TIFFINC) $(PNG) $(PNGINC) \
+	$(PDS) $(NODIRENT) $(VPRINTF) $(TIMERS) $(UNIX) $(BSDTYPES) $(RAND) \
+	$(DXWM) $(MCHN)
 
-LIBS = -lX11 $(JPEGLIB) $(TIFFLIB) $(PNGLIB) $(ZLIBLIB) -lm
+LIBS = -L/usr/X11R6/lib -lX11 $(JPEGLIB) $(TIFFLIB) $(PNGLIB) $(ZLIBLIB) -lm
 
 OBJS = 	xv.o xvevent.o xvroot.o xvmisc.o xvimage.o xvcolor.o xvsmooth.o \
 	xv24to8.o xvgif.o xvpm.o xvinfo.o xvctrl.o xvscrl.o xvalg.o \
@@ -225,10 +215,10 @@ MISC = README INSTALL CHANGELOG IDEAS
 
 
 
-all: $(JPEGLIB) $(TIFFLIB) xv bggen vdcomp xcmap xvpictoppm
+all: xv bggen vdcomp xcmap xvpictoppm
 
 
-xv: $(OBJS) $(JPEGLIB) $(TIFFLIB)
+xv: $(OBJS)
 	$(CC) -o xv $(CFLAGS) $(OBJS) $(LIBS)
 
 bggen: bggen.c
@@ -256,17 +246,23 @@ clean:  xvclean
 
 
 install: all
-	cp xv bggen vdcomp xcmap xvpictoppm $(BINDIR)
-	cp docs/xv.man     $(MANDIR)/xv.$(MANSUF)
-	cp docs/bggen.man  $(MANDIR)/bggen.$(MANSUF)
-	cp docs/xcmap.man  $(MANDIR)/xcmap.$(MANSUF)
-	cp docs/xvp2p.man  $(MANDIR)/xvpictoppm.$(MANSUF)
-	cp docs/vdcomp.man $(MANDIR)/vdcomp.$(MANSUF)
-	cp docs/xvdocs.ps* $(LIBDIR)
+	install -d -o root -g root $(BINDIR)
+	install -d -o root -g root $(MANDIR)
+	install -d -o root -g root $(DOCDIR)/usr/share/doc/xv-doc/html
+	install -o root -g root -s xv bggen vdcomp xcmap xvpictoppm $(BINDIR)
+	install -o root -g root -m 0644 docs/xv.man     $(MANDIR)/xv.$(MANSUF)
+	install -o root -g root -m 0644 docs/bggen.man  $(MANDIR)/bggen.$(MANSUF)
+	install -o root -g root -m 0644 docs/xcmap.man  $(MANDIR)/xcmap.$(MANSUF)
+	install -o root -g root -m 0644 docs/xvp2p.man  $(MANDIR)/xvpictoppm.$(MANSUF)
+	install -o root -g root -m 0644 docs/vdcomp.man $(MANDIR)/vdcomp.$(MANSUF)
+	install -o root -g root -m 0644 docs/xvdocs.ps $(DOCDIR)/usr/share/doc/xv-doc/
+	cp -a docs/html/* $(DOCDIR)/usr/share/doc/xv-doc/html/
+	chown -Rh 0:0 $(DOCDIR)/usr/share/doc/xv-doc/html
+	chmod -R a=rX,u+w $(DOCDIR)/usr/share/doc/xv-doc/html
 
 tar:
 	tar cvf xv.tar Makefile* Imakefile *.c *.h bits \
-		docs unsupt vms $(JPEGDIR) $(TIFFDIR) $(MISC)
+		docs unsupt vms $(MISC)
 
 xvtar:
 	tar cvf xv.tar Makefile* Imakefile *.c *.h bits

@@ -1,0 +1,15 @@
+#! /bin/sh
+# called with '--upstream-version' <version> <file>
+set -e
+package=`dpkg-parsechangelog | sed -n 's/^Source: //p'`
+opwd=`pwd`
+cd ..
+cvs-upgrade -xdebian -W. $package $2
+cd $opwd
+cvs -Q update -d -jsource-dist:yesterday -jsource-dist:today
+cat <<EOF
+
+Please check for conflicts now and update the changelog.
+You have also to tag the new Version of debian_version.
+
+EOF

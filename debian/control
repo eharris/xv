@@ -1,0 +1,37 @@
+Source: xv
+Section: non-free/graphics
+Priority: optional
+Maintainer: Klaus Ethgen <Klaus@Ethgen.de>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: xv
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: xvdoc
+Suggests: xv-doc
+Description: An image viewer and manipulator for the X Window System.
+ The xv program displays images in the GIF, JPEG, TIFF, PBM, PGM, PPM,
+ X11 bitmap, Utah Raster Toolkit RLE, PDS/VICAR, Sun Rasterfile, BMP,
+ PCX, PNG, IRIS RGB, XPM, Targa, XWD, possibly PostScript, and PM formats
+ on workstations and terminals running the X11 Window System.
+ .
+ The creators of the GIF format require the following
+ acknowledgement:
+ .
+  The Graphics Interchange Format(c) is the Copyright property of
+  CompuServe Incorporated. GIF(sm) is a Service Mark property of
+  CompuServe Incorporated.
+
+Package: xv-doc
+Architecture: all
+Suggests: xv
+Replaces: xvdoc
+Conflicts: xvdoc, xv (<< 3.10a-17)
+Description: XV Documentation in Postscript and HTML formats.
+ The xv program displays images in the GIF, JPEG, TIFF, PBM, PGM, PPM,
+ X11 bitmap, Utah Raster Toolkit RLE, PDS/VICAR, Sun Rasterfile, BMP,
+ PCX, PNG, IRIS RGB, XPM, Targa, XWD, possibly PostScript, and PM formats
+ on workstations and terminals running the X11 Window System.
+ .
+ This package contains the xv documentation in postscript and HTML formats.

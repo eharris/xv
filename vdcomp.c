@@ -174,9 +174,10 @@ int  free_node    PARM((NODE *, int));
 
 /* global variables                                                 */
 
+#define BUFSIZE 1024
 int                infile;
 FILE               *outfile;
-char               inname[1024],outname[1024];
+char               inname[BUFSIZE],outname[BUFSIZE];
 int                output_format;
 int                record_bytes, max_lines;
 int                line_samples, fits_pad;
@@ -222,8 +223,8 @@ int main(argc,argv)
     exit(1);
   }
   else {
-    strcpy(inname,argv[1]);
-    if (argc >= 3) strcpy(outname,argv[2]);
+    strncpy(inname,argv[1],BUFSIZE);
+    if (argc >= 3) strncpy(outname,argv[2],BUFSIZE);
     if (argc == 3) output_format = 1;
     if (argc == 4) sscanf(argv[3],"%d",&output_format);
   }
@@ -432,7 +433,7 @@ int host;
 
   if (inname[0] == ' ') {
     printf("\nEnter name of file to be decompressed: ");
-    gets (inname);
+    fgets (inname, BUFSIZE, stdin);
   }
 
   if (host == 1 | host == 2) {
@@ -474,13 +475,13 @@ int host;
       printf("\n  3.  VICAR format.");
       printf("\n  4.  Unlabelled binary array.\n");
       printf("\n  Enter format number:");
-      gets(inname);
+      fgets(inname,BUFSIZE,stdin);
       output_format = atoi(inname);
     } while (output_format < 1 || output_format > 4);
 
   if (outname[0] == ' ') {
     printf("\nEnter name of uncompressed output file: ");
-    gets (outname);
+    fgets (outname, BUFSIZE, stdin);
   }
 
   return(host);

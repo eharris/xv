@@ -64,6 +64,9 @@ static void   blurPixel        PARM((int, int));
 
 static void   annotatePic      PARM((void));
 
+static int    debkludge_offx;
+static int    debkludge_offy;
+
 
 /****************/
 int EventLoop()
@@ -657,6 +660,29 @@ int HandleEvent(event, donep)
 	p_offy = xwa.y;
       }
 
+      /* Gather info to keep right border inside */
+      {
+       Window current;
+       Window root_r;
+       Window parent_r;
+       Window *children_r;
+       int nchildren_r;
+       XWindowAttributes xwa;
+
+       parent_r=mainW;
+       current=mainW;
+       do {
+	 current=parent_r;
+	 XQueryTree(theDisp, current, &root_r, &parent_r,
+		    &children_r, &nchildren_r);
+	 if (children_r!=NULL) {
+	   XFree(children_r);
+	 }
+       } while(parent_r!=root_r);
+       XGetWindowAttributes(theDisp, current, &xwa);
+       debkludge_offx=eWIDE-xwa.width+p_offx;
+       debkludge_offy=eHIGH-xwa.height+p_offy;
+      }
 
       /* move window around a bit... */
       {
@@ -2050,6 +2076,26 @@ XWindowAttributes *xwa;
 
   if (xwa->width  < dispWIDE && xwc.x < p_offx) xwc.x = p_offx;
   if (xwa->height < dispHIGH && xwc.y < p_offy) xwc.y = p_offy;
+
+  /* Try to keep bottom right decorations inside */
+  if (xwc.x+eWIDE-debkludge_offx>dispWIDE) {
+    xwc.x=dispWIDE-eWIDE+debkludge_offx;
+    if (xwc.x<0) xwc.x=0;
+  }
+  if (xwc.y+eHIGH-debkludge_offy>dispHIGH) {
+    xwc.y=dispHIGH-eHIGH+debkludge_offy;
+    if (xwc.y<0) xwc.y=0;
+  }
+
+  /* In case of negative offset for first image */
+  if (winRepositionningInfo.negativeX) {
+    xwc.x+=winRepositionningInfo.negativeX;
+    winRepositionningInfo.negativeX=0;
+  }
+  if (winRepositionningInfo.negativeY) {
+    xwc.y+=winRepositionningInfo.negativeY;
+    winRepositionningInfo.negativeY=0;
+  }
 
   xwc.width  = xwa->width;
   xwc.height = xwa->height;
