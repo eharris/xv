@@ -641,8 +641,27 @@ static int convertImage(image, colors, ncolors, xwap)
 
 
   bits_per_item = image->bitmap_unit;
-  bits_used = bits_per_item;
   bits_per_pixel = image->bits_per_pixel;
+
+
+  /* add code for freako 'exceed' server, where bitmapunit = 8
+     and bitsperpix = 32 (and depth=24)... */
+
+  if (bits_per_item < bits_per_pixel) {
+    bits_per_item = bits_per_pixel;
+
+    /* round bits_per_item up to next legal value, if necc */
+    if	    (bits_per_item <  8) bits_per_item = 8;
+    else if (bits_per_item < 16) bits_per_item = 16;
+    else						 bits_per_item = 32;
+  }
+
+
+  /* which raises the question:  how (can?) you ever have a 24 bits per pix,
+     (ie, 3 bytes, no alpha/padding) */
+
+
+  bits_used = bits_per_item;  /* so it will get a new item first time */
 
   if (bits_per_pixel == 32) pixmask = 0xffffffff;
   else pixmask = (((CARD32) 1) << bits_per_pixel) - 1;

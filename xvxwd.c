@@ -396,10 +396,29 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
     h11P->pixmap_width;
 
   bits_per_item  = h11P->bitmap_unit;
-  bits_used      = bits_per_item;
   bits_per_pixel = h11P->bits_per_pixel;
   byte_order     = h11P->byte_order;
   bit_order      = h11P->bitmap_bit_order;
+
+
+  /* add sanity-code for freako 'exceed' server, where bitmapunit = 8
+     and bitsperpix = 32 (and depth=24)... */
+
+  if (bits_per_item < bits_per_pixel) {
+    bits_per_item = bits_per_pixel;
+
+    /* round bits_per_item up to next legal value, if necc */
+    if	    (bits_per_item <  8) bits_per_item = 8;
+    else if (bits_per_item < 16) bits_per_item = 16;
+    else						 bits_per_item = 32;
+  }
+
+
+  /* which raises the question:  how (can?) you ever have a 24 bits per pix,
+     (ie, 3 bytes, no alpha/padding) */
+
+
+  bits_used	 = bits_per_item;
 
   if (bits_per_pixel == sizeof(pixel_mask) * 8)  pixel_mask = (CARD32) -1;
   else pixel_mask = (1 << bits_per_pixel) - 1;
