@@ -539,6 +539,10 @@ static	float   *refBlackWhite;
 static	byte **BWmap;
 static	byte **PALmap;
 
+/* XXXX Work around some collisions with the new library. */
+#define tileContigRoutine _tileContigRoutine
+#define tileSeparateRoutine _tileSeparateRoutine
+
 typedef void (*tileContigRoutine)   PARM((byte*, u_char*, RGBvalue*,
 					  uint32, uint32, int, int));
 
@@ -578,7 +582,7 @@ static void   put2bitbwtile            PARM((byte *, u_char *, RGBvalue *,
 					     uint32, uint32, int, int));
 static void   put4bitbwtile            PARM((byte *, u_char *, RGBvalue *,
 					     uint32, uint32, int, int));
-static void   put16bitbwtile           PARM((byte *, u_char *, RGBvalue *,
+static void   put16bitbwtile	       PARM((byte *, u_short *, RGBvalue *,
 					     uint32, uint32, int, int));
 
 static void   putRGBcontig8bittile     PARM((byte *, u_char *, RGBvalue *,
@@ -1456,7 +1460,7 @@ static void put4bitbwtile(cp, pp, Map, w, h, fromskew, toskew)
  */
 static void put16bitbwtile(cp, pp, Map, w, h, fromskew, toskew)
      byte  *cp;
-     u_char *pp;
+     u_short *pp;
      RGBvalue *Map;
      uint32 w, h;
      int fromskew, toskew;
@@ -1465,8 +1469,7 @@ static void put16bitbwtile(cp, pp, Map, w, h, fromskew, toskew)
 
   while (h-- > 0) {
     for (x=w; x>0; x--) {
-      *cp++ = Map[(pp[0] << 8) + pp[1]];
-      pp += 2;
+      *cp++ = Map[*pp++];
     }
     cp += toskew;
     pp += fromskew;
@@ -1752,7 +1755,7 @@ static tileContigRoutine pickTileContigCase(Map)
   case PHOTOMETRIC_MINISWHITE:
   case PHOTOMETRIC_MINISBLACK:
     switch (bitspersample) {
-    case 16: put = put16bitbwtile; break;
+    case 16: put = (tileContigRoutine) put16bitbwtile; break;
     case 8:  put = putgreytile;    break;
     case 4:  put = put4bitbwtile;  break;
     case 2:  put = put2bitbwtile;  break;
