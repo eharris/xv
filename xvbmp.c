@@ -32,7 +32,7 @@ static long filesize;
 static int   loadBMP1   PARM((FILE *, byte *, u_int, u_int));
 static int   loadBMP4   PARM((FILE *, byte *, u_int, u_int, u_int));
 static int   loadBMP8   PARM((FILE *, byte *, u_int, u_int, u_int));
-static int   loadBMP24  PARM((FILE *, byte *, u_int, u_int));
+static int   loadBMP24  PARM((FILE *, byte *, u_int, u_int, u_int));
 static u_int getshort   PARM((FILE *));
 static u_int getint     PARM((FILE *));
 static void  putshort   PARM((FILE *, int));
@@ -127,7 +127,8 @@ int LoadBMP(fname, pinfo)
 
 
   /* error checking */
-  if ((biBitCount!=1 && biBitCount!=4 && biBitCount!=8 && biBitCount!=24) ||
+  if ((biBitCount!=1 && biBitCount!=4 && biBitCount!=8 &&
+       biBitCount!=24 && biBitCount!=32) ||
       biPlanes!=1 || biCompression>BI_RLE4) {
 
     sprintf(buf,"Bogus BMP File!  (bitCount=%d, Planes=%d, Compression=%d)",
@@ -137,7 +138,8 @@ int LoadBMP(fname, pinfo)
     goto ERROR;
   }
 
-  if (((biBitCount==1 || biBitCount==24) && biCompression != BI_RGB) ||
+  if (((biBitCount==1 || biBitCount==24 || biBitCount==32)
+       && biCompression != BI_RGB) ||
       (biBitCount==4 && biCompression==BI_RLE8) ||
       (biBitCount==8 && biCompression==BI_RLE4)) {
 
@@ -159,7 +161,7 @@ int LoadBMP(fname, pinfo)
   }
 
   /* load up colormap, if any */
-  if (biBitCount!=24) {
+  if (biBitCount!=24 && biBitCount!=32) {
     int i, cmaplen;
 
     cmaplen = (biClrUsed) ? biClrUsed : 1 << biBitCount;
@@ -197,7 +199,7 @@ int LoadBMP(fname, pinfo)
 
   /* create pic8 or pic24 */
 
-  if (biBitCount==24) {
+  if (biBitCount==24 || biBitCount==32) {
     pic24 = (byte *) calloc((size_t) biWidth * biHeight * 3, (size_t) 1);
     if (!pic24) return (bmpError(bname, "couldn't malloc 'pic24'"));
   }
@@ -214,14 +216,15 @@ int LoadBMP(fname, pinfo)
 					  biCompression);
   else if (biBitCount == 8) rv = loadBMP8(fp,pic8,biWidth,biHeight,
 					  biCompression);
-  else                      rv = loadBMP24(fp,pic24,biWidth,biHeight);
+  else                      rv = loadBMP24(fp,pic24,biWidth,biHeight,
+					  biBitCount);
 
   if (rv) bmpError(bname, "File appears truncated.  Winging it.\n");
 
   fclose(fp);
 
 
-  if (biBitCount == 24) {
+  if (biBitCount == 24 || biBitCount == 32) {
     pinfo->pic  = pic24;
     pinfo->type = PIC24;
   }
@@ -384,9 +387,11 @@ static int loadBMP8(fp, pic8, w, h, comp)
      u_int  w,h,comp;
 {
   int   i,j,c,c1,padw,x,y,rv;
-  byte *pp;
+  byte *pp, *pend;
 
   rv = 0;
+
+  pend = pic8 + w * h;
 
   if (comp == BI_RGB) {   /* read uncompressed data */
     padw = ((w + 3)/4) * 4; /* 'w' padded to a multiple of 4pix (32 bits) */
@@ -407,12 +412,12 @@ static int loadBMP8(fp, pic8, w, h, comp)
     x = y = 0;
     pp = pic8 + x + (h-y-1)*w;
 
-    while (y<h) {
+    while (y<h && pp<=pend) {
       c = getc(fp);  if (c == EOF) { rv = 1;  break; }
 
       if (c) {                                   /* encoded mode */
 	c1 = getc(fp);
-	for (i=0; i<c; i++,x++,pp++) *pp = c1;
+	for (i=0; i<c && pp<=pend; i++,x++,pp++) *pp = c1;
       }
 
       else {    /* c==0x00  :  escape codes */
@@ -431,7 +436,7 @@ static int loadBMP8(fp, pic8, w, h, comp)
 	}
 
 	else {                                   /* absolute mode */
-	  for (i=0; i<c; i++, x++, pp++) {
+	  for (i=0; i<c && pp<=pend; i++, x++, pp++) {
 	    c1 = getc(fp);
 	    *pp = c1;
 	  }
@@ -454,10 +459,10 @@ static int loadBMP8(fp, pic8, w, h, comp)
 
 
 /*******************************************/
-static int loadBMP24(fp, pic24, w, h)
+static int loadBMP24(fp, pic24, w, h, bits)
      FILE *fp;
      byte *pic24;
-     u_int  w,h;
+     u_int  w,h, bits;
 {
   int   i,j,padb,rv;
   byte *pp;
@@ -465,6 +470,7 @@ static int loadBMP24(fp, pic24, w, h)
   rv = 0;
 
   padb = (4 - ((w*3) % 4)) & 0x03;  /* # of pad bytes to read at EOscanline */
+  if (bits==32) padb = 0;
 
   for (i=h-1; i>=0; i--) {
     pp = pic24 + (i * w * 3);
@@ -474,6 +480,7 @@ static int loadBMP24(fp, pic24, w, h)
       pp[2] = getc(fp);   /* blue */
       pp[1] = getc(fp);   /* green */
       pp[0] = getc(fp);   /* red */
+      if (bits==32) getc(fp);
       pp += 3;
     }
 
