@@ -75,6 +75,7 @@ static void epsPreview     PARM((FILE *, byte *, int, int, int, int,
 				 byte *, byte *, byte *, int));
 static int  writeBWStip    PARM((FILE *, byte *, char *, int, int, int));
 
+static void buildCmdStr    PARM((char *, char *, char *, int, int));
 
 
 /* local variables */
@@ -1536,12 +1537,15 @@ int LoadPS(fname, pinfo, quick)
      the first one is loaded (but not deleted) */
 
 
-  char tmp[512], tmp1[512], tmpname[64];
-  int  gsresult, nump, i, filetype;
+  char tmp[512], gscmd[512], cmdstr[512], tmpname[64];
+  int  gsresult, nump, i, filetype, doalert, epsf;
+  char *rld;
 
   pinfo->pic     = (byte *) NULL;
   pinfo->comment = (char *) NULL;
 
+  doalert = (!quick && !ctrlUp && !infoUp);  /* open alert if no info wins */
+  epsf	  = 0;
 
 #ifdef GS_PATH
 
@@ -1560,13 +1564,13 @@ int LoadPS(fname, pinfo, quick)
   strcat(tmpname,".");
 
 
-  /* build command string */
+  /* build 'gscmd' string */
 
 #ifndef VMS  /* VMS needs quotes around mixed case command lines */
-  sprintf(tmp, "%s -sDEVICE=%s -r%d -q -dNOPAUSE -sOutputFile=%s%%d ",
+  sprintf(gscmd, "%s -sDEVICE=%s -r%d -q -dNOPAUSE -sOutputFile=%s%%d ",
 	  GS_PATH, gsDev, gsRes, tmpname);
 #else
-  sprintf(tmp,
+  sprintf(gscmd,
 	  "%s \"-sDEVICE=%s\" -r%d -q \"-dNOPAUSE\" \"-sOutputFile=%s%%d\" ",
 	  GS_PATH, gsDev, gsRes, tmpname);
 #endif
@@ -1574,11 +1578,11 @@ int LoadPS(fname, pinfo, quick)
 
 #ifdef GS_LIB
 #  ifndef VMS
-     sprintf(tmp1, "-I%s ", GS_LIB);
+     sprintf(tmp, "-I%s ", GS_LIB);
 #  else
-     sprintf(tmp1, "\"-I%s\" ", GS_LIB);
+     sprintf(tmp, "\"-I%s\" ", GS_LIB);
 #  endif
-   strcat(tmp, tmp1);
+   strcat(gscmd, tmp);
 #endif
 
 
@@ -1591,66 +1595,43 @@ int LoadPS(fname, pinfo, quick)
 
 
   if (gsGeomStr) {
-    sprintf(tmp1, "-g%s ", gsGeomStr);
-    strcat(tmp, tmp1);
+    sprintf(tmp, "-g%s ", gsGeomStr);
+    strcat(gscmd, tmp);
   }
 
-  /* if 'quick' is set, stop processing after first page by tacking
-     some PostScript commands that break the 'showpage' operator onto
-     the front of the stream passed to the ghostscript interpreter */
 
-#ifndef VMS
-  if (quick) {
-    sprintf(tmp1, "echo '%s' | cat - %s | %s -",
-	    "/showpage { showpage quit } bind def",   /* mk showpage exit */
-	    fname,  tmp);
-    strcpy(tmp, tmp1);
-  }
-  else {
-    strcat(tmp, " -- ");
-    strcat(tmp, fname);
-  }
-#else /* VMS */
-  /* VMS doesn't have pipes or an 'echo' command and GS doesn't like
-     Unix-style file names as input files in the VMS version */
-  strcat(tmp, " -- ");
-  rld = strrchr(fname, '/');     /* Pointer to last '/' */
-  if (rld) rld++;                /* Pointer to filename */
-      else rld = fname;          /* No path - use original string */
-  strcat(tmp, rld);
+  do {
+    buildCmdStr(cmdstr, gscmd, fname, quick, epsf);
+
+    if (DEBUG) fprintf(stderr,"LoadPS:	executing command '%s'\n", cmdstr);
+    SetISTR(ISTR_INFO, "Running '%s'...", GS_PATH);
+    sprintf(tmp, "Running %s", cmdstr);
+    if (doalert && epsf==0) OpenAlert(tmp);  /* open alert first time only */
+
+    WaitCursor();
+    gsresult = system(cmdstr);
+    WaitCursor();
+#ifdef VMS
+    gsresult = !gsresult;   /* VMS returns non-zero if OK */
 #endif
 
+    /* count # of files produced... */
+    for (i=1; i<1000; i++) {
+      struct stat st;
+      sprintf(tmp, "%s%d", tmpname, i);
+      if (stat(tmp, &st)!=0) break;
+    }
+    nump = i-1;
+    WaitCursor();
 
+    /* EPSF hack:  if gsresult==0 (OK) and 0 pages produced,
+       try tacking a 'showpage' onto the end of the file, do it again... */
 
+    if (!gsresult && !nump && !epsf) epsf++;
+  } while (!gsresult && !nump && epsf<2);
 
-  WaitCursor();
+  if (doalert) CloseAlert();
 
-  if (DEBUG) fprintf(stderr,"LoadPS:  executing command '%s'\n", tmp);
-  SetISTR(ISTR_INFO, "Running '%s'...", GS_PATH);
-
-  sprintf(tmp1, "Running %s", tmp);
-  if (!quick && !ctrlUp && !infoUp) OpenAlert(tmp1);
-
-#ifndef VMS
-  gsresult = system(tmp);
-#else
-  gsresult = !system(tmp);
-#endif
-
-  WaitCursor();
-
-  if (!quick && !ctrlUp && !infoUp) CloseAlert();
-
-  /* figure out how many page files were created, by stating files.
-     breaks out on first failure, assuming there won't be any more after
-     that, and it would complicate matters too much anyhow... */
-
-  for (i=1; i<1000; i++) {
-    struct stat st;
-    sprintf(tmp, "%s%d", tmpname, i);
-    if (stat(tmp, &st)!=0) break;
-  }
-  nump = i-1;
 
   WaitCursor();
 
@@ -1719,4 +1700,39 @@ int LoadPS(fname, pinfo, quick)
   return 1;   /* can safely return '1' as this should never be called if
 		 we don't have 'gs' package */
 }
+
+
+
+/******************************************************************/
+void buildCmdStr(str, gscmd, fname, quick, espf)
+     char *str, *gscmd, *fname;
+     int   quick, espf;
+{
+  /* note 'epsf' only set on files that don't have a showpage cmd */
+
+#ifdef GS_PATH
+#ifndef VMS
+
+  if	  (espf)  sprintf(str, "echo '\n showpage ' | cat '%s' - | %s -",
+			  fname, gscmd);
+
+  else if (quick) sprintf(str, "echo '%s' | cat - '%s' | %s -",
+			  "/showpage { showpage quit } bind def",
+			  fname,  gscmd);
+
+  else			  sprintf(str, "%s -- %s", gscmd, fname);
+
+#else /* VMS */
+  /* VMS doesn't have pipes or an 'echo' command and GS doesn't like
+     Unix-style file names as input files in the VMS version */
+  strcat(tmp, " -- ");
+  rld = strrchr(fname, '/');	 /* Pointer to last '/' */
+  if (rld) rld++;			 /* Pointer to filename */
+  else rld = fname;	     /* No path - use original string */
+  strcat(tmp, rld);
+#endif	/* VMS */
+#endif	/* GS_PATH */
+}
+
+
 
