@@ -341,16 +341,16 @@ int Grab()
 	 ConfigureNotify on mainW */
 
       state = 0;
-      while (1) {
+      while (state != 3) {
 	XEvent event;
 	XNextEvent(theDisp, &event);
 	HandleEvent(&event, &i);
 
-	if (state==0 && event.type == MapNotify &&
-	    event.xmap.window == mainW) state = 1;
+	if (!(state&1) && event.type == MapNotify &&
+	    event.xmap.window == mainW) state |= 1;
 
-	if (state==1 && event.type == ConfigureNotify &&
-	    event.xconfigure.window == mainW) break;
+	if (!(state&2) && event.type == ConfigureNotify &&
+	    event.xconfigure.window == mainW) state |= 2;
       }
 
       if (DEBUG) fprintf(stderr,"==after remapping mainW, GOT Config.\n");
