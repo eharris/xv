@@ -224,7 +224,12 @@ int main(argc,argv)
   }
   else {
     strncpy(inname,argv[1],BUFSIZE);
-    if (argc >= 3) strncpy(outname,argv[2],BUFSIZE);
+    inname[BUFSIZE-1] = '\0';
+    if (argc >= 3)
+    {
+       strncpy(outname,argv[2],BUFSIZE);
+       outname[BUFSIZE-1] = '\0';
+    }
     if (argc == 3) output_format = 1;
     if (argc == 4) sscanf(argv[3],"%d",&output_format);
   }
