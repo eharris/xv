@@ -8,7 +8,7 @@ From: kaczowka@apollo.hp.com
 Subject: Re: diffs of changes to xv
 To: xvtech@devo.dccs.upenn.edu
 Date: Wed, 20 Jul 94 15:09:14 EDT
-X-Hpvue$Revision: 1.8 $
+X-Hpvue$Revision$
 Mime-Version: 1.0
 Content-Type: Message/rfc822
 X-Vue-Mime-Level: 4
@@ -16,7 +16,7 @@ Mailer: Elm [revision: 70.85]
 
 Forwarded message:
 
-Snarfer: $Revision: 1.1.2.9 $ $Date: 1992/11/13 23:40:23 $
+Snarfer: $Revision$ $Date$
 Date: Wed, 20 Jul 1994 14:04:39 -0400
 From: John Bradley <bradley@central.cis.upenn.edu>
 Posted-Date: Wed, 20 Jul 1994 14:04:39 -0400

@@ -1,4 +1,4 @@
-/* $Header: /usr/people/sam/tiff/libtiff/RCS/tif_ccittrle.c,v 1.20 1994/07/26 18:21:34 sam Exp $ */
+/* $Header$ */
 
 /*
  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994 Sam Leffler

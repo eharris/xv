@@ -1,4 +1,4 @@
-/* "$Header: /usr/people/sam/tiff/libtiff/RCS/mkg3states.c,v 1.23 1994/09/29 17:13:36 sam Exp $ */
+/* "$Header$ */
 
 /*
  * Copyright (c) 1991, 1992, 1993, 1994 Sam Leffler
@@ -41,7 +41,7 @@
  *	code without payment of royalties or the necessity of notification as
  *	long as this notice (all the text under "LEGAL") is included.
  *
- *	Reference: $Id: mkg3states.c,v 1.23 1994/09/29 17:13:36 sam Exp $
+ *	Reference: $Id$
  *
  *	This program is offered without any warranty of any kind. It includes
  *	no warranty of merchantability or fitness for any purpose. Testing and

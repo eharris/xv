@@ -1,4 +1,4 @@
-/* $Header: /usr/people/sam/tiff/libtiff/RCS/tif_fax4.c,v 1.25 1994/09/17 23:22:37 sam Exp $ */
+/* $Header$ */
 
 /*
  * Copyright (c) 1990, 1991, 1992, 1993, 1994 Sam Leffler

@@ -1,4 +1,4 @@
-#	$Header: /usr/people/sam/tiff/libtiff/RCS/Makefile.sun,v 1.46 93/08/25 09:05:53 sam Exp $
+#	$Header$
 #
 # modified for use with XV by jhb 4/26/94
 

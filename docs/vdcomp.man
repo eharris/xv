@@ -1,7 +1,7 @@
 .\"
-.\" $Id: vdcomp.man,v 1.2 1995/01/12 23:35:28 qralston Exp $
+.\" $Id$
 .\"
-.\" $Log: vdcomp.man,v $
+.\" $Log$
 .\" Revision 1.2  1995/01/12  23:35:28  qralston
 .\" Created from the information in the comments in vdcomp.c.
 .\" James Ralston Crawford <qralston+@pitt.edu>

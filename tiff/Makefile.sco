@@ -1,4 +1,4 @@
-#	$Header: /usr/people/sam/tiff/libtiff/RCS/Makefile.sco,v 1.5 1994/07/26 16:47:20 sam Exp $
+#	$Header$
 # Makefile for SCO Unix 3.2.4 on Intel 386/486.
 #
 # Tag Image File Format Library

@@ -1,4 +1,4 @@
-/* $Header: /usr/people/sam/tiff/libtiff/RCS/mkspans.c,v 1.8 1994/07/26 18:00:00 sam Exp $ */
+/* $Header$ */
 
 /*
  * Copyright (c) 1991, 1992, 1993, 1994 Sam Leffler

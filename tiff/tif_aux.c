@@ -1,4 +1,4 @@
-/* $Header: /usr/people/sam/tiff/libtiff/RCS/tif_aux.c,v 1.25 1994/09/28 00:54:41 sam Exp $ */
+/* $Header$ */
 
 /*
  * Copyright (c) 1991, 1992, 1993, 1994 Sam Leffler
