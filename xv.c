@@ -309,7 +309,11 @@ int main(argc, argv)
 
   theScreen = DefaultScreen(theDisp);
   theCmap   = DefaultColormap(theDisp, theScreen);
-  rootW     = RootWindow(theDisp,theScreen);
+  if (spec_window) {
+	rootW = spec_window;
+  } else {
+	rootW = RootWindow(theDisp,theScreen);
+  }
   theGC     = DefaultGC(theDisp,theScreen);
   theVisual = DefaultVisual(theDisp,theScreen);
   ncells    = DisplayCells(theDisp, theScreen);
@@ -965,7 +969,11 @@ static void useOtherVisual(vinfo, best)
 
   dispDEEP  = vinfo[best].depth;
   theScreen = vinfo[best].screen;
-  rootW     = RootWindow(theDisp, theScreen);
+  if (spec_window) {
+	rootW = spec_window;
+  } else {
+	rootW = RootWindow(theDisp,theScreen);
+  }
   ncells    = vinfo[best].colormap_size;
   theCmap   = XCreateColormap(theDisp, rootW, theVisual, AllocNone);
 
@@ -1196,6 +1204,14 @@ static void parseCmdLine(argc, argv)
 	if (sscanf(argv[i],"%d:%d",&n,&d)!=2 || n<1 || d<1)
 	  fprintf(stderr,"%s: bad aspect ratio '%s'\n",cmd,argv[i]);
 	else defaspect = (float) n / (float) d;
+      }
+    }
+
+    else if (!argcmp(argv[i],"-windowid",3,0,&pm)) {
+      if (++i<argc) {
+	if (sscanf(argv[i], "%ld", &spec_window) != 1) {
+		fprintf(stderr,"%s: bad argument to -windowid '%s'\n",cmd,argv[i]);
+	}
       }
     }
 
@@ -1661,6 +1677,7 @@ static void cmdSyntax()
   printoption("[-/+vsperfect]");
   printoption("[-wait seconds]");
   printoption("[-white color]");
+  printoption("[-windowid windowid]");
   printoption("[-/+wloop]");
   printoption("[filename ...]");
   fprintf(stderr,"\n\n");
@@ -1683,6 +1700,7 @@ static void rmodeSyntax()
   fprintf(stderr,"\t7: centered on a 'brick' background\n");
   fprintf(stderr,"\t8: symmetrical tiling\n");
   fprintf(stderr,"\t9: symmetrical mirrored tiling\n");
+  fprintf(stderr,"\t10: upper left corner\n");
   fprintf(stderr,"\n");
   Quit(1);
 }
@@ -4062,16 +4080,30 @@ int rd_str_cl (name_str, class_str, reinit)
       unsigned long nitems, nleft;
       byte *data;
 
+      if (spec_window) {
+      i = XGetWindowProperty(theDisp, spec_window,
+			     resAtom, 0L, 1L, False,
+			     XA_STRING, &actType, &actFormat, &nitems, &nleft,
+			     (unsigned char **) &data);
+      } else {
       i = XGetWindowProperty(theDisp, RootWindow(theDisp, 0),
 			     resAtom, 0L, 1L, False,
 			     XA_STRING, &actType, &actFormat, &nitems, &nleft,
 			     (unsigned char **) &data);
+      }
       if (i==Success && actType==XA_STRING && actFormat==8) {
 	if (nitems>0 && data) XFree(data);
+	if (spec_window) {
+	i = XGetWindowProperty(theDisp, spec_window, resAtom, 0L,
+			       (long) ((nleft+4+3)/4),
+			       False, XA_STRING, &actType, &actFormat,
+			       &nitems, &nleft, (unsigned char **) &data);
+	} else {
 	i = XGetWindowProperty(theDisp, RootWindow(theDisp, 0), resAtom, 0L,
 			       (long) ((nleft+4+3)/4),
 			       False, XA_STRING, &actType, &actFormat,
 			       &nitems, &nleft, (unsigned char **) &data);
+	}
 	if (i==Success && actType==XA_STRING && actFormat==8 && data) {
 	  def_resource = XrmGetStringDatabase((char *) data);
 	  XFree(data);

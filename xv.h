@@ -563,7 +563,8 @@
 #define RM_CBRICK  7     /* centered on a 'brick' bg */
 #define RM_ECENTER 8     /* symmetrical tiled */
 #define RM_ECMIRR  9     /* symmetrical mirror tiled */
-#define RM_MAX     RM_ECMIRR
+#define RM_UPLEFT 10     /* just in upper left corner */
+#define RM_MAX     RM_UPLEFT
 
 
 /* values of colorMapMode */
@@ -613,7 +614,8 @@
 #define RMB_CBRICK   8
 #define RMB_ECENTER  9
 #define RMB_ECMIRR   10
-#define RMB_MAX      11
+#define RMB_UPLEFT   11
+#define RMB_MAX      12
 
 
 /* indicies into conv24MB */
@@ -935,7 +937,7 @@ WHERE int           theScreen;
 WHERE unsigned int  ncells, dispWIDE, dispHIGH, dispDEEP;
 WHERE unsigned int  vrWIDE, vrHIGH, maxWIDE, maxHIGH;
 WHERE Colormap      theCmap, LocalCmap;
-WHERE Window        rootW, mainW, vrootW;
+WHERE Window        spec_window, rootW, mainW, vrootW;
 WHERE GC            theGC;
 WHERE u_long        black, white, fg, bg, infofg, infobg;
 WHERE u_long        hicol, locol;

@@ -101,7 +101,8 @@ static char *rootMList[] = { "Window",
 			     "Root: centered, warp",
 			     "Root: centered, brick",
 			     "Root: symmetrical tiled",
-			     "Root: symmetrical mirrored" };
+			     "Root: symmetrical mirrored",
+			     "Root: upper left corner" };
 
 static char *conv24MList[] = { "8-bit mode\t\2448",
 			       "24-bit mode\t\2448",

@@ -44,6 +44,7 @@ void MakeRootPic()
   case RM_MIRROR:
   case RM_IMIRROR: rpixw = 2*eWIDE;  rpixh = 2*eHIGH;  break;
   case RM_CSOLID:
+  case RM_UPLEFT:
   case RM_CWARP:
   case RM_CBRICK:  rpixw = dispWIDE; rpixh = dispHIGH; break;
 
@@ -101,7 +102,7 @@ void MakeRootPic()
 
 
   else if (rmode == RM_CENTER || rmode == RM_CENTILE || rmode == RM_CSOLID ||
-	   rmode == RM_CWARP || rmode == RM_CBRICK) {
+	   rmode == RM_CWARP || rmode == RM_CBRICK || rmode == RM_UPLEFT) {
     /* do some stuff to set up the border around the picture */
 
     if (rmode != RM_CENTILE) {
@@ -138,6 +139,12 @@ void MakeRootPic()
 
     else if (rmode == RM_CSOLID) { }
 
+    else if (rmode == RM_UPLEFT) {
+
+      XPutImage(theDisp, tmpPix, theGC, theImage, 0,0, 0,0,
+		(u_int) eWIDE, (u_int) eHIGH);
+    }
+
     else if (rmode == RM_CWARP) {          /* warp effect */
       XSetForeground(theDisp, theGC, rootfg);
       for (i=0; i<=dispWIDE; i+=8)
@@ -157,7 +164,7 @@ void MakeRootPic()
 
 
     /* draw the image centered on top of the background */
-    if (rmode != RM_CENTILE)
+    if ((rmode != RM_CENTILE) && (rmode != RM_UPLEFT))
       XPutImage(theDisp, tmpPix, theGC, theImage, 0,0,
 		((int) dispWIDE-eWIDE)/2, ((int) dispHIGH-eHIGH)/2,
 		(u_int) eWIDE, (u_int) eHIGH);
