@@ -62,6 +62,9 @@ static char *saveFormats[] = { "GIF",
 #ifdef HAVE_TIFF
 			       "TIFF",
 #endif
+#ifdef HAVE_PNG
+			       "PNG",
+#endif
 			       "PostScript",
 			       "PBM/PGM/PPM (raw)",
 			       "PBM/PGM/PPM (ascii)",
@@ -1115,6 +1118,15 @@ int DoSave()
   }
 #endif
 
+#ifdef HAVE_PNG
+  else if (fmt == F_PNG) {   /* PNG */
+    PNGSaveParams(fullname, col);
+    PNGDialog(1);			    /* open PNG Dialog box */
+    dbut[S_BOK].lit = 0;  BTRedraw(&dbut[S_BOK]);
+    return 0;					   /* always 'succeeds' */
+  }
+#endif
+
 
 
 
@@ -1382,14 +1394,21 @@ static void changeSuffix()
       (strcmp(lowsuf,"eps" )==0) ||
       (strcmp(lowsuf,"rgb" )==0) ||
       (strcmp(lowsuf,"tga" )==0) ||
-      (strcmp(lowsuf,"xpm" )==0) ||
       (strcmp(lowsuf,"fits")==0) ||
       (strcmp(lowsuf,"fts" )==0) ||
+#ifdef HAVE_JPEG
       (strcmp(lowsuf,"jpg" )==0) ||
       (strcmp(lowsuf,"jpeg")==0) ||
       (strcmp(lowsuf,"jfif")==0) ||
+#endif
+#ifdef HAVE_TIFF
       (strcmp(lowsuf,"tif" )==0) ||
-      (strcmp(lowsuf,"tiff")==0)) {
+      (strcmp(lowsuf,"tiff")==0) ||
+#endif
+#ifdef HAVE_PNG
+      (strcmp(lowsuf,"png" )==0) ||
+#endif
+      (strcmp(lowsuf,"xpm" )==0)) {
 
     /* found one.  set lowsuf = to the new suffix, and tack on to filename */
 
@@ -1424,6 +1443,10 @@ static void changeSuffix()
 
 #ifdef HAVE_TIFF
     case F_TIFF:     strcpy(lowsuf,"tif");  break;
+#endif
+
+#ifdef HAVE_PNG
+    case F_PNG:      strcpy(lowsuf,"png");  break;
 #endif
     }
 

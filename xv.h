@@ -8,8 +8,8 @@
 #include "config.h"
 
 
-#define REVDATE   "Version 3.10a  Rev: 12/29/94"
-#define VERSTR    "3.10a"
+#define REVDATE   "Version 3.10a  Rev: 12/29/94 (PNG patch 1.2)"
+#define VERSTR    "3.10a(PNG)"
 
 /*
  * uncomment the following, and modify for your site, but only if you've
@@ -327,6 +327,10 @@
 #define HAVE_TIFF
 #endif
 
+#ifdef DOPNG
+#define HAVE_PNG
+#endif
+
 #ifdef DOPDS
 #define HAVE_PDS
 #endif
@@ -458,24 +462,31 @@
 #define F_TIFINC  0
 #endif
 
+#ifdef HAVE_PNG
+#define F_PNGINC  1
+#else
+#define F_PNGINC  0
+#endif
+
 
 #define F_GIF         0
 #define F_JPEG      ( 0 + F_JPGINC)
 #define F_TIFF      ( 0 + F_JPGINC + F_TIFINC)
-#define F_PS        ( 1 + F_JPGINC + F_TIFINC)
-#define F_PBMRAW    ( 2 + F_JPGINC + F_TIFINC)
-#define F_PBMASCII  ( 3 + F_JPGINC + F_TIFINC)
-#define F_XBM       ( 4 + F_JPGINC + F_TIFINC)
-#define F_XPM       ( 5 + F_JPGINC + F_TIFINC)
-#define F_BMP       ( 6 + F_JPGINC + F_TIFINC)
-#define F_SUNRAS    ( 7 + F_JPGINC + F_TIFINC)
-#define F_IRIS      ( 8 + F_JPGINC + F_TIFINC)
-#define F_TARGA     ( 9 + F_JPGINC + F_TIFINC)
-#define F_FITS      (10 + F_JPGINC + F_TIFINC)
-#define F_PM        (11 + F_JPGINC + F_TIFINC)
-#define F_DELIM1    (12 + F_JPGINC + F_TIFINC)     /* ----- */
-#define F_FILELIST  (13 + F_JPGINC + F_TIFINC)
-#define F_MAXFMTS   (14 + F_JPGINC + F_TIFINC)     /* 15, normally */
+#define F_PNG       ( 0 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_PS        ( 1 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_PBMRAW    ( 2 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_PBMASCII  ( 3 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_XBM       ( 4 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_XPM       ( 5 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_BMP       ( 6 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_SUNRAS    ( 7 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_IRIS      ( 8 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_TARGA     ( 9 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_FITS      (10 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_PM        (11 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_DELIM1    (12 + F_JPGINC + F_TIFINC + F_PNGINC)     /* ----- */
+#define F_FILELIST  (13 + F_JPGINC + F_TIFINC + F_PNGINC)
+#define F_MAXFMTS   (14 + F_JPGINC + F_TIFINC + F_PNGINC)     /* 17, normally */
 
 
 
@@ -505,6 +516,7 @@
 #define RFT_XPM      17
 #define RFT_XWD      18
 #define RFT_FITS     19
+#define RFT_PNG      20
 
 /* definitions for page up/down, arrow up/down list control */
 #define LS_PAGEUP   0
@@ -767,9 +779,10 @@ typedef struct scrl {
 typedef struct { Window win;            /* window ID */
 		 int x,y,w,h;           /* window coords in parent */
 		 int active;            /* true if can do anything*/
-		 int min,max;           /* min/max values 'pos' can take */
-		 int val;               /* 'value' of dial */
-		 int page;              /* amt val change on pageup/pagedown */
+		 double min,max;        /* min/max values 'pos' can take */
+		 double val;            /* 'value' of dial */
+		 double inc;            /* amt val change on up/down */
+		 double page;           /* amt val change on pageup/pagedown */
 		 char *title;           /* title for this guage */
 		 char *units;           /* string appended to value */
 		 u_long fg,bg,hi,lo;    /* colors */
@@ -1156,6 +1169,13 @@ WHERE int           tiffUp;       /* is tiffW mapped, or what? */
 #endif
 
 
+#ifdef HAVE_PNG
+/* stuff used for 'png' box */
+WHERE Window	    pngW;
+WHERE int	    pngUp;	  /* is pngW mapped, or what? */
+#endif
+
+
 #undef WHERE
 
 
@@ -1468,12 +1488,12 @@ void SCTrack               PARM((SCRL *, int, int));
 
 
 /*************************** XVDIAL.C ***************************/
-void DCreate               PARM((DIAL *, Window, int, int, int, int, int,
-				 int, int, int, u_long, u_long, u_long,
-				 u_long, char *, char *));
+void DCreate               PARM((DIAL *, Window, int, int, int, int, double,
+				 double, double, double, double, u_long,
+				 u_long, u_long, u_long, char *, char *));
 
-void DSetRange             PARM((DIAL *, int, int, int, int));
-void DSetVal               PARM((DIAL *, int));
+void DSetRange             PARM((DIAL *, double, double, double, double, double));
+void DSetVal               PARM((DIAL *, double));
 void DSetActive            PARM((DIAL *, int));
 void DRedraw               PARM((DIAL *));
 int  DTrack                PARM((DIAL *, int, int));
@@ -1615,6 +1635,13 @@ void  CreateTIFFW          PARM((void));
 void  TIFFDialog           PARM((int));
 int   TIFFCheckEvent       PARM((XEvent *));
 void  TIFFSaveParams       PARM((char *, int));
+
+/**************************** XVPNG.C ***************************/
+int  LoadPNG			   PARM((char *, PICINFO *));
+void CreatePNGW		   PARM((void));
+void PNGDialog			   PARM((int));
+int  PNGCheckEvent	   PARM((XEvent *));
+void PNGSaveParams	   PARM((char *, int));
 
 /**************************** XVPDS.C ***************************/
 int LoadPDS                PARM((char *, PICINFO *));

@@ -154,7 +154,7 @@ int HandleEvent(event, donep)
      int    *donep;
 {
   static int wasInfoUp=0, wasCtrlUp=0, wasDirUp=0, wasGamUp=0, wasPsUp=0;
-  static int wasJpegUp=0, wasTiffUp=0;
+  static int wasJpegUp=0, wasTiffUp=0, wasPngUp=0;
 
   static int mainWKludge=0;  /* force first mainW expose after a mainW config
 				to redraw all of mainW */
@@ -231,6 +231,10 @@ int HandleEvent(event, donep)
 
 #ifdef HAVE_TIFF
     if (TIFFCheckEvent(event)) break;   /* event has been processed */
+#endif
+
+#ifdef HAVE_PNG
+    if (PNGCheckEvent (event)) break;   /* event has been processed */
 #endif
 
     if (GamCheckEvent (event)) break;   /* event has been processed */
@@ -357,6 +361,10 @@ int HandleEvent(event, donep)
 
 #ifdef HAVE_TIFF
       else if (client_event->window == tiffW) TIFFDialog(0);
+#endif
+
+#ifdef HAVE_PNG
+      else if (client_event->window == pngW)  PNGDialog(0);
 #endif
 
       else if (client_event->window == mainW) Quit(0);
@@ -538,6 +546,10 @@ int HandleEvent(event, donep)
 #ifdef HAVE_TIFF
 	if (wasTiffUp) { TIFFDialog(wasTiffUp);  wasTiffUp=0; }
 #endif
+
+#ifdef HAVE_PNG
+	if (wasPngUp)  { PNGDialog(wasJpegUp);	 wasPngUp=0; }
+#endif
       }
     }
   }
@@ -575,6 +587,10 @@ int HandleEvent(event, donep)
 
 #ifdef HAVE_TIFF
 	  if (tiffUp) { wasTiffUp = tiffUp;  TIFFDialog(0); }
+#endif
+
+#ifdef HAVE_PNG
+	  if (pngUp)  { wasPngUp  = pngUp;   PNGDialog(0); }
 #endif
 	}
       }
@@ -1147,6 +1163,10 @@ static void handleButtonEvent(event, donep, retvalp)
     if (TIFFCheckEvent(event)) break;
 #endif
 
+#ifdef HAVE_PNG
+    if (PNGCheckEvent (event)) break;
+#endif
+
     if (GamCheckEvent (event)) break;
     if (BrowseCheckEvent (event, &retval, &done)) break;
     if (TextCheckEvent   (event, &retval, &done)) break;
@@ -1364,6 +1384,10 @@ static void handleKeyEvent(event, donep, retvalp)
 
 #ifdef HAVE_TIFF
     if (TIFFCheckEvent(event)) break;
+#endif
+
+#ifdef HAVE_PNG
+    if (PNGCheckEvent (event)) break;
 #endif
 
     if (GamCheckEvent (event)) break;
@@ -2370,6 +2394,10 @@ static void onInterrupt(i)
 
 #ifdef HAVE_TIFF
   if (tiffUp) TIFFDialog(0);  /* close tiff window */
+#endif
+
+#ifdef HAVE_PNG
+  if (pngUp) PNGDialog(0);    /* close png window */
 #endif
 
   ClosePopUp();

@@ -56,6 +56,25 @@ $(JPEGLIB):  $(JPEGDIR)/jconfig.h
 
 
 ###
+### if, for whatever reason, you're unable to get the PNG library to compile
+### on your machine, *COMMENT OUT* the following lines
+###
+PNG    = -DDOPNG
+PNGDIR = /usr/local/src/libpng
+PNGINC = -I$(PNGDIR)
+PNGLIB = -L$(PNGDIR) -lpng
+
+
+###
+### if, for whatever reason, you're unable to get the PNG library to compile
+### on your machine, *COMMENT OUT* the following lines
+###
+ZLIBDIR = /usr/local/src/zlib
+ZLIBINC = -I$(ZLIBDIR)
+ZLIBLIB = -L$(ZLIBDIR) -lz
+
+
+###
 ### if, for whatever reason, you're unable to get the TIFF library to compile
 ### on your machine, *COMMENT OUT* the following lines
 ###
@@ -186,9 +205,9 @@ PDS = -DDOPDS
 
 CFLAGS = $(CCOPTS) $(JPEG) $(JPEGINC) $(TIFF) $(TIFFINC) $(PDS) \
 	$(NODIRENT) $(VPRINTF) $(TIMERS) $(UNIX) $(BSDTYPES) $(RAND) \
-	$(DXWM) $(MCHN)
+	$(DXWM) $(MCHN) $(PNG) $(PNGINC) $(ZLIBINC)
 
-LIBS = -lX11 $(JPEGLIB) $(TIFFLIB) -lm
+LIBS = -lX11 $(JPEGLIB) $(TIFFLIB) $(PNGLIB) $(ZLIBLIB) -lm
 
 OBJS = 	xv.o xvevent.o xvroot.o xvmisc.o xvimage.o xvcolor.o xvsmooth.o \
 	xv24to8.o xvgif.o xvpm.o xvinfo.o xvctrl.o xvscrl.o xvalg.o \
@@ -196,7 +215,7 @@ OBJS = 	xv.o xvevent.o xvroot.o xvmisc.o xvimage.o xvcolor.o xvsmooth.o \
 	xvdial.o xvgraf.o xvsunras.o xvjpeg.o xvps.o xvpopup.o xvdflt.o \
 	xvtiff.o xvtiffwr.o xvpds.o xvrle.o xviris.o xvgrab.o vprintf.o \
 	xvbrowse.o xvtext.o xvpcx.o xviff.o xvtarga.o xvxpm.o xvcut.o \
-	xvxwd.o xvfits.o
+	xvxwd.o xvfits.o xvpng.o
 
 MISC = README INSTALL CHANGELOG IDEAS
 
@@ -267,7 +286,7 @@ xvbrowse.o:	bits/br_sunras bits/br_bmp bits/br_utah bits/br_iris
 xvbrowse.o:	bits/br_pcx bits/br_jfif bits/br_tiff bits/br_pds
 xvbrowse.o:	bits/br_ps bits/br_iff bits/br_targa bits/br_xpm
 xvbrowse.o:	bits/br_trash bits/fcurs bits/fccurs bits/fdcurs bits/fcursm
-xvbrowse.o:     bits/br_xwd
+xvbrowse.o:     bits/br_xwd bits/br_png
 
 xvbutt.o:	bits/cboard50 bits/rb_frame bits/rb_frame1 bits/rb_top
 xvbutt.o:	bits/rb_bot bits/rb_dtop bits/rb_dbot bits/rb_body

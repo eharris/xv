@@ -55,6 +55,7 @@ typedef unsigned int mode_t;  /* file mode bits */
 #include "bits/br_xpm"
 #include "bits/br_xwd"
 #include "bits/br_fits"
+#include "bits/br_png"
 
 #include "bits/br_trash"
 #include "bits/fcurs"
@@ -94,7 +95,8 @@ typedef unsigned int mode_t;  /* file mode bits */
 #define BF_XPM      25
 #define BF_XWD      26
 #define BF_FITS     27
-#define BF_MAX      28    /* # of built-in icons */
+#define BF_PNG      28
+#define BF_MAX      29    /* # of built-in icons */
 
 #define ISLOADABLE(ftyp) (ftyp!=BF_DIR  && ftyp!=BF_CHR && ftyp!=BF_BLK && \
 			  ftyp!=BF_SOCK && ftyp!=BF_FIFO)
@@ -524,6 +526,7 @@ void CreateBrowse(geom, fgstr, bgstr, histr, lostr)
   bfIcons[BF_XPM] =MakePix1(br->win,br_xpm_bits, br_xpm_width, br_xpm_height);
   bfIcons[BF_XWD] =MakePix1(br->win,br_xwd_bits, br_xwd_width, br_xwd_height);
   bfIcons[BF_FITS]=MakePix1(br->win,br_fits_bits,br_fits_width,br_fits_height);
+  bfIcons[BF_PNG]=MakePix1(br->win,br_png_bits,br_png_width,br_png_height);
 
 
   /* check that they all got built */
@@ -3022,6 +3025,7 @@ static void scanFile(br, bf, name)
     case RFT_XPM:      bf->ftype = BF_XPM;      break;
     case RFT_XWD:      bf->ftype = BF_XWD;      break;
     case RFT_FITS:     bf->ftype = BF_FITS;     break;
+    case RFT_PNG:      bf->ftype = BF_PNG;      break;
     }
   }
 }
@@ -3569,6 +3573,7 @@ static void genIcon(br, bf)
   case RFT_XPM:      strcat(str,"XPM file");              break;
   case RFT_XWD:      strcat(str,"XWD file");              break;
   case RFT_FITS:     strcat(str,"FITS file");             break;
+  case RFT_PNG:      strcat(str,"PNG file");              break;
   default:           strcat(str,"file of unknown type");  break;
   }
 

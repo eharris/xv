@@ -522,6 +522,10 @@ void Quit(i)
     if (tiffW) XDestroyWindow(theDisp, tiffW);
 #endif
 
+#ifdef HAVE_PNG
+    if (pngW)  XDestroyWindow(theDisp, pngW);
+#endif
+
     /* if NOT using stdcmap for images, free stdcmap */
     if (colorMapMode != CM_STDCMAP) {
       int j;
@@ -717,6 +721,10 @@ static void set_cursors(mainc, otherc)
 
 #ifdef HAVE_TIFF
   if (tiffW) XDefineCursor(theDisp, tiffW, otherc);
+#endif
+
+#ifdef HAVE_PNG
+  if (pngW)  XDefineCursor(theDisp, pngW, otherc);
 #endif
 }
 
