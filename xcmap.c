@@ -140,8 +140,13 @@ int main(argc, argv)
     nxcells = nycells = 8;
   else if (dispcells>4)
     nxcells = nycells = 4;
-  else
+  else if (dispcells>2)
     nxcells = nycells = 2;
+  else
+  {
+    nxcells = 2;
+    nycells = 1;
+  }
 
   /**************** Create/Open X Resources ***************/
   if ((mfinfo = XLoadQueryFont(theDisp,FONT))==NULL) {
@@ -267,18 +272,25 @@ static void CreateMainWindow(name,geom,argc,argv)
 
   x=y=w=h=1;
   i=XParseGeometry(geom,&x,&y,&w,&h);
-  if (i&WidthValue)  WIDE = (int) w;
-  if (i&HeightValue) HIGH = (int) h;
+  if (i&WidthValue)
+  {
+    WIDE = (int) w;
+    hints.flags |= USSize;
+  }
+  if (i&HeightValue)
+  {
+    HIGH = (int) h;
+    hints.flags |= USSize;
+  }
 
-  if (i&XValue || i&YValue) hints.flags = USPosition;
-  else hints.flags = PPosition;
-
-  hints.flags |= USSize;
-
-  if (i&XValue && i&XNegative)
-    x = XDisplayWidth(theDisp,theScreen)-WIDE-abs(x);
-  if (i&YValue && i&YNegative)
-    y = XDisplayHeight(theDisp,theScreen)-HIGH-abs(y);
+  if (i&XValue || i&YValue)
+  {
+    if (i&XNegative)
+      x = XDisplayWidth(theDisp,theScreen)-WIDE-abs(x);
+    if (i&YNegative)
+      y = XDisplayHeight(theDisp,theScreen)-HIGH-abs(y);
+    hints.flags |= USPosition;
+  }
 
   hints.x=x;             hints.y=y;
   hints.width  = WIDE;   hints.height = HIGH;
