@@ -1577,10 +1577,19 @@ int LoadPS(fname, pinfo, quick)
 #  ifndef VMS
      sprintf(tmp1, "-I%s ", GS_LIB);
 #  else
-     sprintf(tmp1, "\"-I%s\"", GS_LIB);
+     sprintf(tmp1, "\"-I%s\" ", GS_LIB);
 #  endif
    strcat(tmp, tmp1);
 #endif
+
+
+   /* prevent some potential naughtiness... */
+#ifndef VMS
+   strcat(tmp, "-dSAFER ");
+#else
+   strcat(tmp, "\"-dSAFER\" ");
+#endif
+
 
   if (gsGeomStr) {
     sprintf(tmp1, "-g%s ", gsGeomStr);
