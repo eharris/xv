@@ -2778,7 +2778,7 @@ int DoPad(mode, str, wide, high, opaque, omode)
 
   rv = 1;
 
-  if ((mode != PAD_LOAD) && (wide == pWIDE && high == pHIGH && opaque==100)) {
+  if ((mode != PAD_LOAD) && (wide == cWIDE && high == cHIGH && opaque==100)) {
     ErrPopUp("Padding to same size as pic while fully opaque has no effect.",
 	     "\nI see");
     return 0;
@@ -3054,27 +3054,27 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 
   /* copy 'pic' centered onto pic24.  */
 
-  sx = (wide - pWIDE) / 2;
-  sy = (high - pHIGH) / 2;
+  sx = (wide - cWIDE) / 2;
+  sy = (high - cHIGH) / 2;
 
-  for (py = 0; py<pHIGH; py++) {
-    ProgressMeter(0, pHIGH-1, py, "Pad");
+  for (py = 0; py<cHIGH; py++) {
+    ProgressMeter(0, cHIGH-1, py, "Pad");
     if ((py & 0x1f)==0) WaitCursor();
 
     p24y = sy + py;
     if (p24y >= 0 && p24y < high) {
-      for (px=0; px<pWIDE; px++) {
+      for (px=0; px<cWIDE; px++) {
 	p24x = sx + px;
 	if (p24x >= 0 && p24x < wide) {
 	  p24 = pic24 + (p24y*wide  + p24x)*3;
 
 
 	  if (picType == PIC24) {                       /* src is PIC24 */
-	    pp  = pic + (py * pWIDE + px)  *3;
+	    pp  = cpic + (py * cWIDE + px)  *3;
 	    r = pp[0];  g = pp[1];  b = pp[2];
 	  }
 	  else {                                        /* src is PIC8 */
-	    pp  = pic + (py*pWIDE + px);
+	    pp  = cpic + (py*cWIDE + px);
 	    r = rMap[*pp];  g = gMap[*pp];  b = bMap[*pp];
 	  }
 
