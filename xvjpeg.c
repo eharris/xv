@@ -51,11 +51,11 @@ static    void         drawJD             PARM((int, int, int, int));
 static    void         clickJD            PARM((int, int));
 static    void         doCmd              PARM((int));
 static    void         writeJPEG          PARM((void));
-METHODDEF void         xv_error_exit      PARM((j_common_ptr));
-METHODDEF void         xv_error_output    PARM((j_common_ptr));
-METHODDEF void         xv_prog_meter      PARM((j_common_ptr));
+METHODDEF(void)        xv_error_exit      PARM((j_common_ptr));
+METHODDEF(void)        xv_error_output    PARM((j_common_ptr));
+METHODDEF(void)        xv_prog_meter      PARM((j_common_ptr));
 static    unsigned int j_getc             PARM((j_decompress_ptr));
-METHODDEF boolean      xv_process_comment PARM((j_decompress_ptr));
+METHODDEF(boolean)     xv_process_comment PARM((j_decompress_ptr));
 static    int          writeJFIF          PARM((FILE *, byte *, int,int,int));
 
 
@@ -400,7 +400,7 @@ static void writeJPEG()
 
 
 /**************************************************/
-METHODDEF void xv_error_exit(cinfo)
+METHODDEF(void) xv_error_exit(cinfo)
      j_common_ptr cinfo;
 {
   my_error_ptr myerr;
@@ -412,7 +412,7 @@ METHODDEF void xv_error_exit(cinfo)
 
 
 /**************************************************/
-METHODDEF void xv_error_output(cinfo)
+METHODDEF(void) xv_error_output(cinfo)
      j_common_ptr cinfo;
 {
   my_error_ptr myerr;
@@ -426,7 +426,7 @@ METHODDEF void xv_error_output(cinfo)
 
 
 /**************************************************/
-METHODDEF void xv_prog_meter(cinfo)
+METHODDEF(void) xv_prog_meter(cinfo)
      j_common_ptr cinfo;
 {
   struct jpeg_progress_mgr *prog;
@@ -671,7 +671,7 @@ static unsigned int j_getc(cinfo)
 
 
 /**************************************************/
-METHODDEF boolean xv_process_comment(cinfo)
+METHODDEF(boolean) xv_process_comment(cinfo)
      j_decompress_ptr cinfo;
 {
   int          length, hasnull;
