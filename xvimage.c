@@ -1736,10 +1736,12 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
     if (xim->byte_order == MSBFirst) {
       for (i=wide*high, ip=imagedata; i>0; i--,pp++) {
 	if (((i+1)&0x1ffff) == 0) WaitCursor();
-	if (dithpic) {
-	  *ip++ = ((*pp) ? white : black) & 0xffff;
-	}
-	else *ip++ = xcolors[*pp] & 0xffff;
+
+	if (dithpic) xcol = ((*pp) ? white : black) & 0xffff;
+		else xcol = xcolors[*pp] & 0xffff;
+
+	*((unsigned char *)ip)++ = (xcol>>8) & 0xff;
+	*((unsigned char *)ip)++ = (xcol) & 0xff;
       }
     }
     else {   /* LSBFirst */
@@ -1749,8 +1751,8 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 	if (dithpic) xcol = ((*pp) ? white : black) & 0xffff;
 		else xcol = xcolors[*pp];
 
-	/*  WAS *ip++ = ((xcol>>8) & 0xff) | ((xcol&0xff) << 8);  */
-	*ip++ = (unsigned short) (xcol);
+	*((unsigned char *)ip)++ = (xcol) & 0xff;
+	*((unsigned char *)ip)++ = (xcol>>8) & 0xff;
       }
     }
   }
