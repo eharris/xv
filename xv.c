@@ -2640,6 +2640,10 @@ int ReadFileType(fname)
 	   strncmp((char *) magicno, "\004%!", (size_t) 3)==0)   rv = RFT_PS;
 #endif
 
+#ifdef GS_PATH
+  else if (strncmp((char *) magicno, "%PDF",   (size_t) 4)==0)	 rv = RFT_PS;
+#endif
+
   return rv;
 }
 
