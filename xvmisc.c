@@ -28,6 +28,8 @@
  *     int    xvbcmp (s1,  s2,  length)
  *     void   xvbzero(s, length)
  *     char  *xv_strstr(s1, s2)
+ *     FILE  *xv_fopen(str, str)
+ *     void   xv_mktemp(str)
  *     void   Timer(milliseconds)
  */
 
@@ -1066,6 +1068,16 @@ FILE *xv_fopen(fname, mode)
 }
 
 
+/***************************************************/
+void xv_mktemp(buf, fname)
+     char *buf, *fname;
+{
+#ifndef VMS
+  sprintf(buf, "%s/%s", tmpdir, fname);
+#else
+  sprintf(buf, "Sys$Disk:[]%s", fname);
+#endif
+}
 
 
 /*******/

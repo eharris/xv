@@ -2683,7 +2683,7 @@ int ReadPicFile(fname, ftype, pinfo, quick)
 #endif
 
 #ifdef HAVE_TIFF
-  case RFT_TIFF:    rv = LoadTIFF  (fname, pinfo);           break;
+  case RFT_TIFF:    rv = LoadTIFF  (fname, pinfo, quick);    break;
 #endif
 
 #ifdef HAVE_PDS

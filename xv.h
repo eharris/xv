@@ -1248,6 +1248,7 @@ void xvbzero                PARM((char *, size_t));
 void xv_getwd               PARM((char *, size_t));
 char *xv_strstr             PARM((char *, char *));
 FILE *xv_fopen              PARM((char *, char *));
+void xv_mktemp              PARM((char *, char *));
 void Timer                  PARM((int));
 
 /*************************** XVCOLOR.C ***************************/
@@ -1607,7 +1608,7 @@ int  JPEGCheckEvent        PARM((XEvent *));
 void JPEGSaveParams        PARM((char *, int));
 
 /**************************** XVTIFF.C ***************************/
-int   LoadTIFF             PARM((char *, PICINFO *));
+int   LoadTIFF             PARM((char *, PICINFO *, int));
 void  CreateTIFFW          PARM((void));
 void  TIFFDialog           PARM((int));
 int   TIFFCheckEvent       PARM((XEvent *));
