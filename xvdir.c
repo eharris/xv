@@ -1168,7 +1168,8 @@ int DoSave()
 
   case F_XPM:
     rv = WriteXPM   (fp, thepic, ptype, w, h, rp, gp, bp, nc, col,
-		     fullname, picComments);
+		     fullname, picComments);                           break;
+
   case F_FITS:
     rv = WriteFITS  (fp, thepic, ptype, w, h, rp, gp, bp, nc, col,
 		     picComments);
