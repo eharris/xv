@@ -113,7 +113,8 @@ int LoadGIF(fname, pinfo)
   int            aspect, gotimage;
 
   /* initialize variables */
-  BitOffset = XC = YC = Pass = OutCount = gotimage = 0;
+  BitOffset = XC = YC = OutCount = gotimage = 0;
+  Pass = -1;
   RawGIF = Raster = pic8 = NULL;
   gif89 = 0;
 
@@ -693,7 +694,12 @@ static void doInterlace(Index)
   static byte *ptr = NULL;
   static int   oldYC = -1;
 
-  if (oldYC != YC) {  ptr = pic8 + YC * Width;  oldYC = YC; }
+  if (Pass == -1) {  /* first time through - init stuff */
+    oldYC = -1;
+    Pass = 0;
+  }
+
+  if (oldYC != YC) {  ptr = pic8 + YC * Width;	oldYC = YC; }
 
   if (YC<Height)
     *ptr++ = Index;
