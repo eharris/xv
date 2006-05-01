@@ -44,7 +44,6 @@ static int  Width, Height;
 static int  curx, cury;
 static long CountDown;
 static int  Interlace;
-static byte bw[2] = {0, 0xff};
 
 static void putword     PARM((int, FILE *));
 static void compress    PARM((int, FILE *, byte *, int));

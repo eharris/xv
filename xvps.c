@@ -888,7 +888,7 @@ double newx, newy;
 static void writePS()
 {
   FILE *fp;
-  int   i, j, q, err, rpix, gpix, bpix, nc, ptype;
+  int   i, j, err, rpix, gpix, bpix, nc, ptype;
   int   iw, ih, ox, oy, slen, lwidth, bits, colorps, w, h, pfree;
   double iwf, ihf;
   byte *inpix, *rmap, *gmap, *bmap;
@@ -1538,7 +1538,6 @@ int LoadPS(fname, pinfo, quick)
 
   char tmp[512], tmp1[512], tmpname[64];
   int  gsresult, nump, i, filetype;
-  char *rld;
 
   pinfo->pic     = (byte *) NULL;
   pinfo->comment = (char *) NULL;

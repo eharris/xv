@@ -292,9 +292,9 @@ static void EdgeDetect()
 /************************/
 static void TinFoil()
 {
-  byte *pic24, *p24, *tmpPic, *tp, *tlp;
+  byte *pic24, *tmpPic, *tp, *tlp;
   char *str;
-  int  i, j, v, maxv,sx,sy,sw,sh;
+  int  i, j, v, sx,sy,sw,sh;
 
   WaitCursor();
 
@@ -568,7 +568,7 @@ static void doBlurConvolv(pic24, w, h, results, selx,sely,selw,selh, n)
   register byte *p24;
   register int   rsum,gsum,bsum;
   byte          *rp;
-  int            i,j,k,x,y,x1,y1,count,n2;
+  int            x,y,x1,y1,count,n2;
 
 
   printUTime("start of blurConvolv");
@@ -631,7 +631,7 @@ static void doSharpConvolv(pic24, w, h, results, selx,sely,selw,selh, n)
   byte  *p24;
   int    rv, gv, bv;
   byte  *rp;
-  int    i,j,k,x,y,x1,y1;
+  int    i,x,y;
   double fact, ifact, hue,sat,val, vsum;
   double *linem1, *line0, *linep1, *tmpptr;
 
@@ -746,7 +746,7 @@ static void doEdgeConvolv(pic24, w, h, results, selx,sely,selw,selh)
   register byte *p24;
   register int   bperlin, a, b, c, d, rsum, gsum, bsum;
   byte          *rp;
-  int            i, x, y;
+  int            x, y;
 
 
   printUTime("start of edgeConvolv");
@@ -833,7 +833,7 @@ static void doAngleConvolv(pic24, w, h, results, selx,sely,selw,selh)
   register byte *p24;
   register int   bperlin,rsum,gsum,bsum;
   byte          *rp;
-  int            i, x,y;
+  int            x,y;
 
 
   printUTime("start of doAngleConvolv");
@@ -919,7 +919,7 @@ static void doOilPaint(pic24, w, h, results, selx,sely,selw,selh, n)
 
 
   register byte *pp;
-  register int   bperlin, rsum,gsum,bsum;
+  register int   bperlin;
   byte          *rp, *p24, *plin;
   int            i,j,k,x,y,n2,col,cnt,maxcnt;
   int           *nnrect;
@@ -1397,7 +1397,7 @@ static void doSpread(pic24, w, h, results, selx,sely,selw,selh, pixX, pixY)
      even look at pic24 */
 
   byte  *pp, *dp, r,g,b;
-  int    x,y, dx,dy, x1,y1, d, xrng, xoff, yrng, yoff, i,j;
+  int    x,y, x1,y1, d;
   int    minx, maxx, miny, maxy, rdist;
   time_t nowT;
 
@@ -1468,7 +1468,7 @@ static void doMedianFilter(pic24, w, h, results, selx,sely,selw,selh, n)
   register byte *p24;
   register int   rsum,gsum,bsum;
   byte          *rp;
-  int            i,j,k,x,y,x1,y1,count,n2,nsq,c2;
+  int            x,y,x1,y1,count,n2,nsq,c2;
   int           *rtab, *gtab, *btab;
 
   printUTime("start of doMedianFilter");

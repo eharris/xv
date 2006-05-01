@@ -233,7 +233,7 @@ void DoZoom(x,y,button)
 static void do_zoom(mx,my)
      int mx,my;
 {
-  int i,w,h,x,y,x2,y2;
+  int i;
   int rx,ry,rx2,ry2, orx, ory, orw, orh;
   int px,py,pw,ph,opx,opy,opw,oph,m;
   Window rW, cW;  unsigned int mask;  int rtx, rty;
@@ -485,7 +485,7 @@ static void do_pan_calc(offx, offy, xp,yp)
 /***********************************/
 void Crop()
 {
-  int i, x, y, w, h;
+  int x, y, w, h;
 
   if (!HaveSelection()) return;
 
@@ -499,8 +499,7 @@ void Crop()
 static void crop1(x,y,w,h,zm)
      int x,y,w,h,zm;
 {
-  int   i,j,oldew,oldeh,oldcx,oldcy;
-  byte *cp, *pp;
+  int   oldew,oldeh,oldcx,oldcy;
 
   oldcx = cXOFF;  oldcy = cYOFF;
   oldew = eWIDE;  oldeh = eHIGH;
@@ -802,7 +801,7 @@ void DoCrop(x,y,w,h)
      and sticks likely values into eWIDE,eHIGH, assuming you wanted to
      crop.  epic is not regnerated (but is freed) */
 
-  int     i, j, k, bperpix;
+  int     i, j, bperpix;
   byte   *cp, *pp;
   double  expw, exph;
 
@@ -1394,7 +1393,7 @@ byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
     pp  = outpic + i * w;
     thisptr = thisline;  nextptr = nextline;
 
-    if (i&1 == 0) {  /* go right */
+    if ((i&1) == 0) {  /* go right */
       for (j=0; j<w; j++, pp++, thisptr++, nextptr++) {
 	if (*thisptr<128) { err = *thisptr;     *pp = (byte) bval; }
 		     else { err = *thisptr-255; *pp = (byte) wval; }
@@ -1740,8 +1739,8 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 	if (dithpic) xcol = ((*pp) ? white : black) & 0xffff;
 		else xcol = xcolors[*pp] & 0xffff;
 
-	*((unsigned char *)ip)++ = (xcol>>8) & 0xff;
-	*((unsigned char *)ip)++ = (xcol) & 0xff;
+	*ip++ = (xcol>>8) & 0xff;
+	*ip++ = (xcol) & 0xff;
       }
     }
     else {   /* LSBFirst */
@@ -1751,8 +1750,8 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 	if (dithpic) xcol = ((*pp) ? white : black) & 0xffff;
 		else xcol = xcolors[*pp];
 
-	*((unsigned char *)ip)++ = (xcol) & 0xff;
-	*((unsigned char *)ip)++ = (xcol>>8) & 0xff;
+	*ip++ = (xcol) & 0xff;
+	*ip++ = (xcol>>8) & 0xff;
       }
     }
   }
@@ -1824,8 +1823,6 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
   return(xim);
 }
-
-static int foo = 0;
 
 /***********************************/
 XImage *Pic24ToXImage(pic24, wide, high)
@@ -2385,8 +2382,6 @@ void Set824Menus(mode)
 void Change824Mode(mode)
      int mode;
 {
-  static int oldcmapmode = -1;
-
   if (mode == picType) return;   /* same mode, do nothing */
 
   Set824Menus(mode);
@@ -2522,7 +2517,6 @@ int DoPad(mode, str, wide, high, opaque, omode)
      installs the new pic and all that...  Returns '0' on failure */
 
   int   rv;
-  char  loadName[256];
 
   if (padPic)      free(padPic);
   if (holdcomment) free(holdcomment);
@@ -2860,7 +2854,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 	      v = fv;
 	    }
 	    else if (omode == PAD_OHUE) {   /* the hard one! */
-	      int fdeg,bdeg,len1,len2;
+	      int fdeg,bdeg;
 
 	      fdeg = (fh<0) ? -1 : (int) floor(fh + 0.5);
 	      bdeg = (bh<0) ? -1 : (int) floor(bh + 0.5);
@@ -2965,7 +2959,7 @@ static int ReadImageFile1(name, pinfo)
      PICINFO *pinfo;
 {
   int  i, ftype;
-  char basefname[128], uncompname[128], errstr[256], *uncName, *readname;
+  char uncompname[128], errstr[256], *uncName, *readname;
 
   ftype = ReadFileType(name);
 

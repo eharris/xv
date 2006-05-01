@@ -48,7 +48,7 @@ int LoadTarga(fname, pinfo)
   /* returns '1' on success */
 
   FILE  *fp;
-  int    i, row, c, c1, w, h, r, g, b, flags, intlace, topleft, trunc;
+  int    i, row, c, c1, w, h, flags, intlace, topleft, trunc;
   byte *pic24, *pp;
 
   bname = BaseName(fname);

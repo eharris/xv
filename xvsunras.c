@@ -55,7 +55,7 @@ int LoadSunRas(fname, pinfo)
 {
   FILE	*fp;
   int	 linesize,lsize,csize,isize,i,w,h,d;
-  byte	 *image, *line, *pic8;
+  byte	 *image, *line;
   struct rasterfile sunheader;
   char   *bname;
 
@@ -429,6 +429,7 @@ int WriteSunRas(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,userle)
 
   /* write the colormap */
   if (d == 8)
+  {
     if (colorstyle == 1)  /* grayscale */
       for (color=0; color<3; color++)
 	for (i=0; i<numcols; i++)
@@ -438,7 +439,7 @@ int WriteSunRas(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,userle)
       fwrite (gmap, sizeof(byte), (size_t) numcols, fp);
       fwrite (bmap, sizeof(byte), (size_t) numcols, fp);
     }
-
+  } // if (d == 8)
 
   /* write the image */
   line[linesize-1] = 0;

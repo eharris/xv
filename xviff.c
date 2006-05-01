@@ -39,7 +39,6 @@
 
 static long filesize;
 
-static int           readID       PARM((FILE *, char *));
 static int           iffError     PARM((char *, char *));
 static void          decomprle    PARM((byte *, byte *, long, long));
 static unsigned int  iff_getword  PARM((byte *));
@@ -70,7 +69,7 @@ int LoadIFF(fname, pinfo)
   register long col, colbit;
   FILE          *fp;
   int           rv;
-  int           BMHDok, CMAPok, CAMGok, BODYok;
+  int           BMHDok, CMAPok, CAMGok;
   int           bmhd_width, bmhd_height, bmhd_bitplanes, bmhd_transcol;
   int           i, j, k, lineskip, colors, fmt;
   byte          bmhd_masking, bmhd_compression;

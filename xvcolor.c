@@ -950,7 +950,7 @@ int MakeStdCmaps()
    *   allocate any colors.
    */
 
-  int i,j,r,g,b, desMode, screwed;
+  int i,r,g,b, desMode, screwed;
   XColor def;
   byte rmap[256],gmap[256],bmap[256],order[256];
   unsigned long descols[256];

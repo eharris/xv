@@ -830,7 +830,7 @@ byte *Do332ColorDither(pic24, pic8, w, h, rmap, gmap, bmap,
 
 
     for (j=0; j<w; j++) {
-      int k, d, mind, closest, rb,gb,bb;
+      int rb,gb,bb;
 
       r2 = *thisptr++;  g2 = *thisptr++;  b2 = *thisptr++;
       if (i&1) thisptr -= 6;  /* move left */

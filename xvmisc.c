@@ -402,7 +402,7 @@ void Draw3dRect(win, x,y,w,h, inout, bwidth, hi, lo, bg)
      unsigned int  w,h;
      unsigned long hi, lo, bg;
 {
-  int i,r,x1,y1;
+  int i,x1,y1;
 
   x1 = x + (int) w;
   y1 = y + (int) h;

@@ -223,10 +223,9 @@ static int splitfits(image, comment, nx, ny, nz, basename)
    * If there was a problem writing files, then a error message will be set.
    */
 
-  int   i, np=nx * ny, ioerror, nwrt;
+  int   i, np=nx * ny, nwrt;
   FILE *fp;
   char *error;
-  byte *work;
   char  filename[70];
 
 #ifndef VMS
@@ -293,7 +292,7 @@ static char *wrheader(fp, nx, ny, comment)
   /* Writes a minimalist FITS file header */
 
   char *block = fits_block, *bp;
-  int   i, j, wrotehist, lenhist;
+  int   i, j, lenhist;
   char  history[80];
 
   for (i=0, bp=block; i<BLOCKSIZE; i++, bp++) *bp = ' ';

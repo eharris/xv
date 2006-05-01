@@ -98,7 +98,6 @@ void CreateTextWins(geom, cmtgeom)
   XSizeHints            hints;
   XSetWindowAttributes  xswa;
   TVINFO               *tv;
-  int                   gx,gy,gw,gh,gset,gx1,gy1;
 
 
   mfwide = monofinfo->max_bounds.width;
@@ -200,7 +199,6 @@ void TextView(fname)
 {
   /* given a filename, attempts to read in the file and open a textview win */
 
-  int   i;
   long  textlen;
   char *text, buf[512], title[128], rfname[MAXPATHLEN+1];
   char *basefname[128];  /* just current fname, no path */
@@ -276,7 +274,6 @@ void OpenTextView(text, len, title, freeonclose)
 {
   /* opens up a textview window */
 
-  int     i, oldone;
   TVINFO *tv;
 
   tv = &tinfo[0];
@@ -317,7 +314,6 @@ void OpenCommentText()
 {
   /* opens up the reserved 'comment' textview window */
 
-  int     i;
   TVINFO *tv;
 
   tv = &tinfo[CMTWIN];
@@ -519,7 +515,7 @@ static int tvChkEvent(tv, xev)
   /* checks event to see if it's a text-window related thing.  If it
      is, it eats the event and returns '1', otherwise '0'. */
 
-  int i, rv;
+  int rv;
 
   rv = 1;
 
@@ -585,7 +581,7 @@ static int tvChkEvent(tv, xev)
 
   else if (xev->type == ButtonPress) {
     XButtonEvent *e = (XButtonEvent *) xev;
-    int i,x,y;
+    int x,y;
     x = e->x;  y = e->y;
 
     if (e->button == Button1) {
@@ -634,7 +630,7 @@ static void resizeText(tv,w,h)
      TVINFO *tv;
      int     w,h;
 {
-  int        i, maxw, maxh, hmax, hpage, vmax, vpage;
+  int        i, maxw, maxh;
   XSizeHints hints;
 
   if (tv->wide == w && tv->high == h) return;  /* no change in size */
@@ -1061,8 +1057,6 @@ static void textKey(tv, key)
      TVINFO *tv;
      int     key;
 {
-  int i,j;
-
   if (!tv->textlen) return;
 
   /* an arrow key (or something like that) was pressed in icon window.
@@ -1206,7 +1200,7 @@ void ShowLicense()
 #ifdef LC
 #undef LC
 #endif
-#define LC(x) (strcat(license, x), strcat(license, "\n"))
+#define LC(x) strcat(license, x); strcat(license, "\n");
 
   LC("(Note: This has been changed, and hopefully clarified, from the 3.00");
   LC("version of this info.  Please read it.)");
@@ -1383,7 +1377,7 @@ void ShowKeyHelp()
   keyhelp[0] = '\0';
 
 #undef LC
-#define LC(x) (strcat(keyhelp, x), strcat(keyhelp, "\n"))
+#define LC(x) strcat(keyhelp, x); strcat(keyhelp, "\n");
 
   LC("XV Mouse and Keyboard Usage");
   LC("===========================");

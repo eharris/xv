@@ -666,7 +666,7 @@ int HandleEvent(event, donep)
        Window root_r;
        Window parent_r;
        Window *children_r;
-       int nchildren_r;
+       unsigned int nchildren_r;
        XWindowAttributes xwa;
 
        parent_r=mainW;
@@ -1203,7 +1203,6 @@ static void handleButtonEvent(event, donep, retvalp)
       if      (win == mainW) DoSelection(but_event);
 
       else if (win == ctrlW) {
-	int   w,h;
 
 	if      (MBClick(&dispMB,   x,y)) SelectDispMB  (MBTrack(&dispMB)  );
 	else if (MBClick(&conv24MB, x,y)) Select24to8MB (MBTrack(&conv24MB));
@@ -1970,7 +1969,7 @@ void WRotate()
 void WCrop(w,h,dx,dy)
      int w,h,dx,dy;
 {
-  int cx, cy, cw, ch, ex, ey;
+  int ex, ey;
   XWindowAttributes xwa;
 
   if (useroot) {
@@ -2160,7 +2159,7 @@ XWindowAttributes *xwa;
 static void CropKey(dx,dy,grow,crop)
      int dx,dy,grow,crop;
 {
-  int x1,x2,y1,y2,active, ocx, ocy;
+  int ocx, ocy;
 
   if (crop) { /* chop off a pixel from the appropriate edge */
     int dealt=1;
@@ -2712,10 +2711,8 @@ static void paintXLine(x,y,x1,y1,newcol)
 static void BlurPaint()
 {
   Window  rW,cW;
-  int     rx,ry,ox,oy,x,y, px,py, ex,ey, ex1,ey1, ew, eh, done1, dragging;
-  int     uppedpic;
+  int     rx,ry,ox,oy,x,y, px,py, done1, dragging;
   u_int   mask;
-  byte   *pp;
 
   /* blurs pixels in either editCol (PIC8) or clear{R,G,B} (PIC24) until
      'shift' key is released.  */

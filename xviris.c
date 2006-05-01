@@ -242,7 +242,7 @@ static byte *getimagedata(fp, img)
 
   byte   *base, *lptr;
   byte   *verdat;
-  int     y, z, pos, len, tablen;
+  int     y, z, tablen;
   int     xsize, ysize, zsize;
   int     bpp, rle, cur, badorder;
   int     rlebuflen;

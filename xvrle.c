@@ -44,7 +44,7 @@ int LoadRLE(fname, pinfo)
   byte   maps[3][256];
   int    xpos, ypos, w, h, flags, ncolors, pixelbits, ncmap, cmaplen;
   int    cmtlen;
-  byte  *img, *pic8;
+  byte  *img;
   long filesize;
   char  *bname, *errstr;
 

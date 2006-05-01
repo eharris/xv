@@ -1,4 +1,4 @@
-.TH XV l "2 December 1994" "Rev. 3.10"
+.TH XV 1 "2 December 1994" "Rev. 3.10"
 .SH NAME
 \fBxv\fP \- interactive image display for the X Window System
 .SH SYNTAX

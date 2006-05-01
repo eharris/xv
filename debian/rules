@@ -59,6 +59,10 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs CHANGELOG
 	dh_installdocs
+	cp $(CURDIR)/debian/bug.control $(CURDIR)/debian/xv/usr/share/bug/xv/control
+	cp $(CURDIR)/debian/bug.presubj $(CURDIR)/debian/xv/usr/share/bug/xv/presubj
+	cp $(CURDIR)/debian/bug.control $(CURDIR)/debian/xv-doc/usr/share/bug/xv-doc/control
+	cp $(CURDIR)/debian/bug.presubj $(CURDIR)/debian/xv-doc/usr/share/bug/xv-doc/presubj
 #	dh_install
 	dh_installmenu
 	dh_installmime

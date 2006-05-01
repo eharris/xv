@@ -78,8 +78,6 @@ static int    readbigshort    PARM((FILE *, CARD16 *));
 static int    readbiglong     PARM((FILE *, CARD32 *));
 static int    readlittleshort PARM((FILE *, CARD16 *));
 static int    readlittlelong  PARM((FILE *, CARD32 *));
-static int    writebigshort   PARM((FILE *, int));
-static int    writebiglong    PARM((FILE *, CARD32));
 
 static byte  *pic8, *pic24;
 static CARD32 red_mask, green_mask, blue_mask;
@@ -90,7 +88,6 @@ static CARD16 *shortP;
 static CARD32 *longP;
 static CARD32 pixel_mask;
 static int    byte_swap, byte_order, bit_order, filesize;
-static byte   bw[2] = {0, 0xff};
 
 static char  *bname;
 
@@ -112,7 +109,8 @@ int LoadXWD(fname, pinfo)
   bname          = BaseName(fname);
   pinfo->pic     = (byte *) NULL;
   pinfo->comment = (char *) NULL;
-  maxval         = 0;
+  maxval = visualclass = 0;
+  cols = rows = padright = 0;
 
   ifp = xv_fopen(fname, "r");
   if (!ifp) return (xwdError("can't open file"));
@@ -619,27 +617,5 @@ static int readlittlelong(in, lP)
   *lP |= (getc(in) & 0xff) << 24;
 
   if (ferror(in)) return -1;
-  return 0;
-}
-
-
-static int writebiglong(out, l)
-     FILE* out;
-     CARD32 l;
-{
-  putc((l>>24) & 0xff, out);
-  putc((l>>16) & 0xff, out);
-  putc((l>> 8) & 0xff, out);
-  putc( l      & 0xff, out);
-  return 0;
-}
-
-
-static int writebigshort(out, s)
-     FILE* out;
-     int   s;
-{
-  putc((s>>8)&0xff, out);
-  putc(s&0xff, out);
   return 0;
 }

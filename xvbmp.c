@@ -775,7 +775,7 @@ static void writeBMP8(fp, pic8, w, h)
      byte *pic8;
      int  w,h;
 {
-  int   i,j,c,padw;
+  int   i,j,padw;
   byte *pp;
 
   padw = ((w + 3)/4) * 4; /* 'w' padded to a multiple of 4pix (32 bits) */
@@ -796,7 +796,7 @@ static void writeBMP24(fp, pic24, w, h)
      byte *pic24;
      int  w,h;
 {
-  int   i,j,c,padb;
+  int   i,j,padb;
   byte *pp;
 
   padb = (4 - ((w*3) % 4)) & 0x03;  /* # of pad bytes to write at EOscanline */

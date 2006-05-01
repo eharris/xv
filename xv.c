@@ -860,7 +860,7 @@ int main(argc, argv)
 /*****************************************************/
 static void makeDirectCmap()
 {
-  int    i, j, cmaplen, numgot;
+  int    i, cmaplen, numgot;
   byte   origgot[256];
   XColor c;
   u_long rmask, gmask, bmask;
@@ -1726,8 +1726,6 @@ static int argcmp(a1, a2, minlen, plusallowed, plusminus)
      be at least 'minlen'.  Otherwise, return non-zero.  plusminus set to '1'
      if '-option', '0' if '+option' */
 
-  int i;
-
   if ((strlen(a1) < (size_t) minlen) || (strlen(a2) < (size_t) minlen))
     return 1;
   if (strlen(a1) > strlen(a2)) return 1;
@@ -1763,8 +1761,7 @@ static int openPic(filenum)
   int   oldCXOFF, oldCYOFF, oldCWIDE, oldCHIGH, wascropped;
   char *tmp;
   char *fullname,       /* full name of the original file */
-	filename[512],  /* full name of file to load (could be /tmp/xxx)*/
-	globnm[512];    /* globbed version of fullname of orig file */
+	filename[512];  /* full name of file to load (could be /tmp/xxx)*/
 
   xvbzero((char *) &pinfo, sizeof(PICINFO));
 
@@ -3567,7 +3564,7 @@ void AddFNameToCtrlList(fpath,fname)
 {
   /* stick given path/name into 'namelist'.  Doesn't redraw list */
 
-  char *fullname, *dname;
+  char *fullname;
   char cwd[MAXPATHLEN], globnm[MAXPATHLEN+100];
   int i;
 

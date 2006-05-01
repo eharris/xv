@@ -513,8 +513,6 @@ static void buildPadLists()
   /* generates padCol* and padBg* lists used in 'Defaults' MBUTT.  Grabs
      all the X resources values it can, and adds appropriate defaults */
 
-  int  i;
-
   rd_str_cl("foo", "", 1);                    /* rebuild database */
 
   build1PadList("color", padColVals, padColNames, &padColLen,
@@ -534,7 +532,7 @@ static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
      int  *lenp, dlen;
 {
   int i;
-  char resname[128], name[256], value[256];
+  char resname[128];
 
   for (i=0; i<*lenp; i++) {   /* kill old lists */
     free(nams[i]);

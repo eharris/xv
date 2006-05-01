@@ -165,7 +165,6 @@ int LoadXPM(fname, pinfo)
     do {
       char  key[3];
       char  color[40];	/* Need to figure a good size for this... */
-      short hd;		/* Hex digits per R, G, or B */
 
       for (j=0; j<2 && (c != ' ') && (c != '\t') && (c != EOF); j++) {
 	key[j] = c;
@@ -202,7 +201,9 @@ int LoadXPM(fname, pinfo)
 
 	  /* Is there a better way to do this? */
 	  if (pinfo->colType != F_FULLCOLOR)
+	  {
 	    if (pinfo->colType == F_GREYSCALE)
+	    {
 	      if (pinfo->r[i] == pinfo->g[i] &&
 		  pinfo->g[i] == pinfo->b[i])
 		/* Still greyscale... */
@@ -210,9 +211,12 @@ int LoadXPM(fname, pinfo)
 	      else
 		/* It's color */
 		pinfo->colType = F_FULLCOLOR;
+	    }
 	    else
+	    {
 	      if (pinfo->r[i] == pinfo->g[i] &&
 		  pinfo->g[i] == pinfo->b[i])
+	      {
 		if ((pinfo->r[i] == 0 || pinfo->r[i] == 0xff) &&
 		    (pinfo->g[i] == 0 || pinfo->g[i] == 0xff) &&
 		    (pinfo->b[i] == 0 || pinfo->b[i] == 0xff))
@@ -221,10 +225,14 @@ int LoadXPM(fname, pinfo)
 		else
 		  /* It's greyscale */
 		  pinfo->colType = F_GREYSCALE;
+	      } // if (pinfo->r[i] == pinfo->g[i]...
 	      else
+	      {
 		/* It's color */
 		pinfo->colType = F_FULLCOLOR;
-
+	      } // pinfo->g[i] == pinfo->b[i]) ...
+	    } // if (pinfo->colType == F_GREYSC...
+	  } // if (pinfo->colType != F_FULLCO...
 	}
 	else {   /* PIC24 */
 	  c_sptr->cv_rgb[0] = col.red >> 8;
@@ -525,11 +533,13 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
 #endif
 
   if (DEBUG)
+  {
     if (ptype == PIC8)
       printf("WriteXPM(): Write a %d color, colortype %d, PIC8 image.\n",
 	     nc, col);
     else
       printf("WriteXPM(): Write a colortype %d, PIC24 image.\n", col);
+  }
 
   foo = BaseName(name);
   strcpy(image_name, foo);

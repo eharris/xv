@@ -34,7 +34,6 @@ typedef unsigned int mode_t;  /* file mode bits */
 #include "bits/br_sock"
 #include "bits/br_fifo"
 #include "bits/br_error"
-#include "bits/br_unknown"
 #include "bits/br_cmpres"
 
 #include "bits/br_gif"
@@ -742,8 +741,7 @@ static int brChkEvent(br, xev)
   /* checks event to see if it's a browse-window related thing.  If it
      is, it eats the event and returns '1', otherwise '0'. */
 
-  int    i, rv;
-  char buf[1024];
+  int    rv;
 
   rv = 1;
 
@@ -880,7 +878,7 @@ static void resizeBrowse(br,w,h)
      int w,h;
 {
   XSizeHints hints;
-  int        i, minv, maxv, curv, page, maxh;
+  int        i, maxv, page, maxh;
 
   if (br->wide == w && br->high == h) return;  /* no change in size */
 
@@ -1074,7 +1072,7 @@ static void doCmd(br, cmd)
   case BR_GENICON: genSelectedIcons(br);  break;
 
   case BR_SELALL:  {
-		     int i;  char buf[128];
+		     int i;
 
 		     for (i=0; i<br->bfLen; i++)
 		       br->bfList[i].lit = 1;
@@ -1375,10 +1373,8 @@ static void drawIconWin(delta, sptr)
      int delta;
      SCRL *sptr;
 {
-  int   i,indx, x,y, ix,iy, num;
-  BFIL     *bf;
+  int   i,indx, num;
   BROWINFO *br;
-  char  tmpstr[64], *nstr;
 
   /* figure out BROWINFO pointer from SCRL pointer */
   for (i=0; i<MAXBRWIN; i++) {
@@ -1435,7 +1431,7 @@ static void drawIcon(br, num)
 {
   int i,x,y,ix,iy,sw,sh,sx,sy;
   BFIL *bf;
-  char  tmpstr[64], fixedname[64], *nstr, *str;
+  char  tmpstr[64], *nstr, *str;
 
 
   if (num<0 || num >= br->bfLen) return;
@@ -1540,7 +1536,6 @@ static void eraseIcon(br, num)
 
   int i,x,y,ix,iy,w,h;
   BFIL *bf;
-  char  tmpstr[64], *nstr;
 
   if (num<0 || num >= br->bfLen) return;
   bf = &(br->bfList[num]);
@@ -1663,7 +1658,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
   /* returns '-1' normally, returns an index into bfList[] if the user
      double-clicks an icon */
 
-  int       i,j, base, num, x,y,ix,iy, rv, sel, cpymode, dodel;
+  int       i,j, rv, sel, cpymode, dodel;
   BROWINFO *destBr;
   BFIL     *bf;
   char      buf[256], *destFolderName;
@@ -1733,7 +1728,6 @@ static int clickIconWin(br, mx, my, mtime, multi)
 
     /* see if we've double-clicked something */
     if (sel==br->lastIconClicked && mtime-br->lastClickTime < DBLCLICKTIME) {
-      int k;
       br->lastIconClicked = -1;    /* YES */
 
       doubleClick(br, sel);
@@ -1911,7 +1905,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
 
 	    else {
 	      static int prevx, prevy, prevcnt;
-	      int        origy, top, left, wide, high, cnt;
+	      int        origy, cnt;
 
 	      if (first) { prevx = mx;  prevy = my;  first=0;  prevcnt = -1; }
 
@@ -1934,7 +1928,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
 		   redraw those that have changed state */
 
 		for (i=0,cnt=0, bf=br->bfList; i<br->bfLen; i++,bf++) {
-		  int ix, iy, isin, light;
+		  int ix, iy, isin;
 
 		  ix = ((i%br->numWide) * ISPACE_WIDE)
 				  + ISPACE_WIDE/2 - bf->w/2;
@@ -2025,8 +2019,6 @@ static int clickIconWin(br, mx, my, mtime, multi)
 
   /* if doing a copy or a move, do the thing to the files */
   if (sel >= 0) {
-    char *destFolder;
-
     if (DEBUG) {
       fprintf(stderr,"---------------\n");
       fprintf(stderr,"Source  Dir: '%s'\n", br->path);
@@ -2731,7 +2723,7 @@ static void scanDir(br)
    * and it's reasonable to expect folks to want to add their own bitmaps
    */
 
-  int   i,j,k,oldbflen,vmsparent;
+  int   i,j,oldbflen,vmsparent;
   BFIL *bf;
 
   DIR           *dirp;
@@ -3279,7 +3271,7 @@ static char **getDirEntries(dir, lenP, dohidden)
      'lenP' strings on success.  '.' and '..' ARE included in list
      if !dohidden, all '.*' files are skipped (except . and ..) */
 
-  int    i, j, dirlen;
+  int    i, dirlen;
   DIR   *dirp;
   char **names;
 #ifdef NODIRENT
@@ -3365,7 +3357,7 @@ static void computeScrlVals(br, max, page)
 static void genSelectedIcons(br)
      BROWINFO *br;
 {
-  int i, sval, first, numvis, cnt;
+  int i, cnt;
 
   setBrowStr(br, "");
 
@@ -4233,7 +4225,7 @@ static void doDeleteCmd(br)
    */
 
   BFIL  *bf;
-  int    i, j, numdirs, numfiles, slen, firstdel;
+  int    i, numdirs, numfiles, slen, firstdel;
   char   buf[512];
   static char *yesno[]  = { "\004Delete", "\033Cancel" };
 
@@ -4664,7 +4656,7 @@ static void dragFiles(srcBr, dstBr, srcpath, dstpath, dstdir,
      long array of strings (the simple filenames of the files to move)
      if 'cpymode' copy files, otherwise move them */
 
-  int  i, j, k, dothumbs, fail;
+  int  i, j, dothumbs, fail;
   char dstp[MAXPATHLEN + 1];
   char src[MAXPATHLEN+1], dst[MAXPATHLEN+1];
   char buf[128];
@@ -5024,7 +5016,7 @@ static void cp()
      called recursively by cp_dir, there are *no* guarantees that either file
      exists or not */
 
-  int         i, havedst;
+  int         havedst;
   struct stat srcSt, dstSt;
 
   if (stat(cpSrcPath, &srcSt)) {   /* src doesn't exist, usefully... */
@@ -5096,7 +5088,7 @@ static void cp_dir()
 {
   int    i, dirlen, oldsrclen, olddstlen, longpath;
   char **names, *name;
-  struct stat  srcSt, dstSt;
+  struct stat  srcSt;
 
 
   /* src and dst directories both exists now.  copy entries */
@@ -5198,7 +5190,7 @@ static void cp_file(st, exists)
 /*****************************/
 {
   register int srcFd, dstFd, rcount, wcount, i;
-  char         str[512], buf[8192];
+  char         buf[8192];
   static char  *owbuts[4] = { "\nOk", "dDon't Ask", "nNo", "\033Cancel" };
 
   if (DEBUG) fprintf(stderr,"cp_file:  src='%s',  dst='%s'\n",

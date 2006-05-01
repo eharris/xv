@@ -28,10 +28,9 @@ CCOPTS = -O
 
 
 ### Installation locations
-BINDIR = $(DESTDIR)/usr/X11R6/bin
-MANDIR = $(DESTDIR)/usr/X11R6/man/man1
+BINDIR = $(DESTDIR)/usr/bin
+MANDIR = $(DESTDIR)/usr/share/man/man1
 MANSUF = 1
-LIBDIR = $(DESTDIR)/usr/X11R6/lib
 
 
 buildit: all

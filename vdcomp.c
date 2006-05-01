@@ -436,13 +436,13 @@ int host;
     fgets (inname, BUFSIZE, stdin);
   }
 
-  if (host == 1 | host == 2) {
+  if ((host == 1) | (host == 2)) {
     if ((infile = open(inname,O_RDONLY | O_BINARY)) <= 0) {
       fprintf(stderr,"\ncan't open input file: %s\n",inname);
       exit(1);
     }
   }
-  else if (host == 3 | host == 5) {
+  else if ((host == 3) | (host == 5)) {
     if ((infile = open(inname,O_RDONLY)) <= 0) {
       fprintf(stderr,"\ncan't open input file: %s\n",inname);
       exit(1);
@@ -575,9 +575,9 @@ int *host;
 void pds_labels(host)
      int host;
 {
-  char          outstring[80],ibuf[2048];
+  char          ibuf[2048];
   unsigned char cr=13,lf=10,blank=32;
-  short         length,nlen,total_bytes,line,i;
+  short         length,total_bytes,i;
 
 
   total_bytes = 0;
@@ -791,7 +791,7 @@ void fits_labels(host)
 int host;
 {
   char          ibuf[2048],outstring[80];
-  short         length,nlen,total_bytes,line,i;
+  short         length,total_bytes,i;
   unsigned char cr=13,lf=10,blank=32;
 
   do {
@@ -883,7 +883,7 @@ int host;
 
 {
   char          ibuf[2048],outstring[80];
-  short         length,nlen,total_bytes,line,i;
+  short         length,total_bytes,i;
   unsigned char cr=13,lf=10,blank=32;
 
   do {
@@ -953,8 +953,8 @@ int host;
 void no_labels(host)
 int host;
 {
-  char          ibuf[2048],outstring[80];
-  short         length,nlen,total_bytes,line,i;
+  char          ibuf[2048];
+  short         length,i;
 
   do {
     length = read_var(ibuf,host);
@@ -1190,7 +1190,6 @@ NODE *huff_tree(hist)
   NODE **np;        /* Node list pointer */
 
   int num_freq;   /* Number non-zero frequencies in histogram */
-  int sum;                 /* Sum of all frequencies */
 
   short int num_nodes; /* Counter for DN initialization */
   short int cnt;       /* Miscellaneous counter */

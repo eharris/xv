@@ -256,7 +256,7 @@ static int loadppm(fp, pinfo, raw, maxv)
      PICINFO *pinfo;
      int      raw, maxv;
 {
-  byte *pix, *pic24, scale[256], *pic8;
+  byte *pix, *pic24, scale[256];
   int   i,j,bitshift, w, h, holdmaxv;
 
   w = pinfo->w;  h = pinfo->h;

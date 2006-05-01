@@ -45,8 +45,7 @@ int Grab()
 
   int          i, x, y, x1, y1, x2, y2, ix, iy, iw, ih, rv;
   int          rx, ry, pretendGotB1, autograb;
-  int          oldaclose;
-  Window       rW, cW, clickWin, tmpwin;
+  Window       rW, cW, clickWin;
   unsigned int mask;
   XColor       fc, bc;
 
@@ -528,8 +527,6 @@ static int convertImage(image, colors, ncolors, xwap)
   int            isLsbMachine, flipBytes;
   Visual         *visual;
   char            errstr[256];
-  static char    *foo[] = { "\nThat Sucks!" };
-
 
   /* quiet compiler warnings */
   sval = 0;
@@ -538,6 +535,7 @@ static int convertImage(image, colors, ncolors, xwap)
   pixvalue  = 0;
   rmask  = gmask  = bmask = 0;
   rshift = gshift = bshift = 0;
+  b8shift = g8shift = r8shift = 0;
 
 
   /* determine byte order of the machine we're running on */
@@ -806,7 +804,6 @@ static int getxcolors(win_info, colors)
      XColor **colors;
 {
   int i, ncolors;
-  Colormap cmap;
 
   *colors = (XColor *) NULL;
 

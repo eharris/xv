@@ -16,7 +16,6 @@
 #include "bits/xv_rev"
 #include "bits/xv_ver"
 #include "bits/xf_left"
-#include "bits/xf_right"
 #include "bits/font5x9.h"
 
 
@@ -300,7 +299,7 @@ static void gen_bg(dfltpic, pinfo)
      byte    *dfltpic;
      PICINFO *pinfo;
 {
-  int i,j,k, dr, dg, db;
+  int i,j, dr, dg, db;
   byte *pp;
 
   pp = dfltpic;

@@ -231,7 +231,7 @@ static void doPaste(cimg)
 
   byte *dp, *dpic, *clippic, *clipcmap;
   int   clipw, cliph, clipis24, len, istran, trval;
-  int   i, j, sx,sy,sw,sh, cx,cy,cw,ch, dx,dy,dw,dh,dx2,dy2;
+  int   i, j, sx,sy,sw,sh, cx,cy,cw,ch, dx,dy,dw,dh;
 
 
   /*
@@ -342,7 +342,7 @@ static void doPaste(cimg)
 
   if (picType == PIC8) {
     int   clx, cly, r,g,b,k,mind,close,newcols;
-    byte *cp, *clp, *pp, *ccp, newr[256], newg[256], newb[256], remap[256];
+    byte *cp, *clp, *pp, newr[256], newg[256], newb[256], remap[256];
     byte  order[256], trans[256];
     int   bperpix, dpncols;
 
@@ -1022,7 +1022,7 @@ static int countNewCols(newpic, w,h, newcmap, is24, cx,cy,cw,ch)
    */
 
   int   i, j, k, nc, r,g,b;
-  byte *pp, *cp;
+  byte *pp;
   byte  newr[257], newg[257], newb[257];
 
   if (picType != PIC8) return 0;           /* shouldn't happen */
@@ -1254,7 +1254,7 @@ static int dragHandle(ev)
    * holding CTRL  constrains selection to keep original aspect ratio
    */
 
-  int          i, mex, mey, mpx, mpy, offx,offy;
+  int          mex, mey, mpx, mpy, offx,offy;
   int          sex, sey, sex2, sey2, sew, seh, sew2, seh2, hs, h2;
   int          istp, isbt, islf, isrt, isvm, ishm;
   int          cnstsq, cnstasp;

@@ -108,7 +108,7 @@ int LoadGIF(fname, pinfo)
 {
   /* returns '1' if successful */
 
-  register byte  ch, ch1, *origptr;
+  register byte  ch, *origptr;
   register int   i, block;
   int            aspect, gotimage;
 

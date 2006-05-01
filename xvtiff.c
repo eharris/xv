@@ -141,7 +141,7 @@ int LoadTIFF(fname, pinfo, quick)
     }
 
     if (nump>1) {
-      TIFF *in, *out;
+      TIFF *in;
 
       in = TIFFOpen(filename, "r");
       if (!in) return 0;

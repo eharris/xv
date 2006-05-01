@@ -86,7 +86,9 @@ static void changedDirMB     PARM((int));
 static int  dnamcmp          PARM((const void *, const void *));
 static int  FNameCdable      PARM((void));
 static void loadCWD          PARM((void));
+#ifdef FOO
 static int  cd_able          PARM((char *));
+#endif
 static void scrollToFileName PARM((void));
 static void setFName         PARM((char *));
 static void showFName        PARM((void));
@@ -130,8 +132,6 @@ static int  dopipe;
 void CreateDirW(geom)
      char *geom;
 {
-  int w, y;
-
   path[0] = '\0';
 
   xv_getwd(loadpath, sizeof(loadpath));
@@ -323,7 +323,6 @@ void RedrawDirW(x,y,w,h)
 {
   int        i, ypos, txtw;
   char       foo[30], *str;
-  XRectangle xr;
 
   if (dList.nstr==1) strcpy(foo,"1 file");
 		else sprintf(foo,"%d files",dList.nstr);
@@ -787,11 +786,13 @@ void GetDirPath(buf)
 
 
 /***************************************************/
+#ifdef FOO
 static int cd_able(str)
 char *str;
 {
   return ((str[0] == C_DIR || str[0] == C_LNK));
 }
+#endif
 
 
 /***************************************************/
@@ -1669,7 +1670,6 @@ int CloseOutFile(fp, filename, failed)
 
 
   if (fclose(fp) == EOF) {
-    static char *foo[] = { "\nWeird!" };
     char  str[512];
     sprintf(str,"Can't close file '%s'\n\n  %s.",outFName, ERRSTR(errno));
     ErrPopUp(str, "\nWeird!");
@@ -2068,7 +2068,6 @@ void DIRDeletedFile(name)
   /* called when file 'name' has been deleted.  If any of the browsers
      were showing the directory that the file was in, does a rescan() */
 
-  int  i;
   char buf[MAXPATHLEN + 2], *tmp;
 
   strcpy(buf, name);

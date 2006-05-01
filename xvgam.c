@@ -3178,7 +3178,7 @@ byte *GammifyPic24(pic24, wide, high)
 
   byte *pp, *op;
   int   i,j;
-  int   rv, gv, bv, vi, hi;
+  int   rv, gv, bv;
   byte *outpic;
   int   min, max, del, h, s, v;
   int   f, p, q, t, vs100, vsf10000;

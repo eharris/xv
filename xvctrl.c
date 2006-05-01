@@ -49,7 +49,6 @@
 #include "bits/uicon"
 #include "bits/oicon1"
 #include "bits/oicon2"
-#include "bits/icon"
 
 #define CTRLWIDE 440               /* (fixed) size of control window */
 #define CTRLHIGH 348 /* 379 */
@@ -160,7 +159,7 @@ static void ls3d         PARM((LIST *));
 void CreateCtrl(geom)
      char *geom;
 {
-  int i, listh, topskip;
+  int listh, topskip;
   double skip;
   XSetWindowAttributes xswa;
   Pixmap oicon1Pix, oicon2Pix;
@@ -417,7 +416,6 @@ void RedrawCtrl(x,y,w,h)
 int x,y,w,h;
 {
   int i;
-  XRectangle xr;
 
   RANGE(w, 0, CTRLWIDE);
   RANGE(h, 0, CTRLHIGH);
@@ -453,7 +451,7 @@ int x,y,w,h;
 /***************************************************/
 void DrawCtrlNumFiles()
 {
-  int x,y,w,h;
+  int x,y,w;
   char foo[40];
 
   x  = but[BNEXT].x;

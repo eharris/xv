@@ -1,3 +1,15 @@
+xv (3.10a-27) unstable; urgency=low
+
+  * Remving many unused variables
+  * Fix some other compiler warnings
+  * Do some build requirements
+  * Build it with recent libtiff
+  * Add bug control
+  * Cleanup locations
+  * Fix most lintian warnings
+
+ -- Klaus Ethgen <Klaus@Ethgen.de>  Mon,  1 May 2006 18:50:30 +0200
+
 xv (3.10a-26) unstable; urgency=low
 
   * New imported from original source

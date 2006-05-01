@@ -51,8 +51,8 @@ int LoadPCX(fname, pinfo)
 {
   FILE  *fp;
   long   filesize;
-  char  *bname, *errstr;
-  byte   hdr[128], *image;
+  char  *bname;
+  byte   hdr[128];
   int    i, colors, gray, fullcolor;
 
   pinfo->type = PIC8;

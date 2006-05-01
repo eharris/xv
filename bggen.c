@@ -16,6 +16,8 @@
 #include <X11/Xutil.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include <math.h>
 
 #ifndef M_PI
@@ -396,7 +398,7 @@ double computeDist(x, y, cx, cy, rot)
 {
   /* rot has to be in range 0-359 */
 
-  double x1, y1, x2, y2, x3, y3, d, d1, b, theta;
+  double x1, y1, x2, y2, x3, y3, d, d1, b;
 
   if (rot == 0)   return (double) (y - cy);
   if (rot == 180) return (double) (cy - y);

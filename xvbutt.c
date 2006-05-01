@@ -116,7 +116,7 @@ int           act;
 void BTRedraw(bp)
 BUTT *bp;
 {
-  int          i,x,y,r,x1,y1;
+  int          x,y,r,x1,y1;
   unsigned int w,h;
   XPoint       tpts[10], bpts[10], ipts[5];
 
@@ -761,7 +761,6 @@ CBUTT *cb;
   Window       rW, cW;
   int          x, y, rx, ry, lit;
   unsigned int mask;
-  Pixmap litpix, darkpix;
 
   /* called once we've figured out that the mouse clicked in 'cb' */
 

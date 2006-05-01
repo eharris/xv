@@ -80,8 +80,6 @@ static BUTT  jbut[J_NBUTTS];
 /***************************************************/
 void CreateJPEGW()
 {
-  XClassHint classh;
-
   jpegW = CreateWindow("xv jpeg","XVjpeg",NULL,JWIDE,JHIGH,infofg,infobg,0);
   if (!jpegW) FatalError("can't create jpeg window!");
 
