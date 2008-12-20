@@ -2,7 +2,7 @@ Source: xv
 Section: non-free/graphics
 Priority: optional
 Maintainer: Klaus Ethgen <Klaus@Ethgen.de>
-Build-Depends: debhelper (>= 4.0.0), libxt-dev, libjpeg62-dev | libjpeg-mmx-dev, libtiff4-dev
+Build-Depends: debhelper (>= 4.0.0), libxt-dev, libjpeg62-dev | libjpeg-mmx-dev, libtiff4-dev, libpng12-dev
 Standards-Version: 3.6.0
 
 Package: xv
