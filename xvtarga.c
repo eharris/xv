@@ -17,8 +17,8 @@
  *   0:
  *   1: colormap type
  *   2: image type  (1=colmap RGB, 2=uncomp RGB, 3=uncomp gray)
- *   3: 
- *   4: 
+ *   3:
+ *   4:
  *   5: colormap_length, low byte
  *   6: colormap_length, high byte
  *   7: bits per cmap entry     (8, 24, 32)
@@ -28,7 +28,7 @@
  *  14: height, low byte
  *  15: height, high byte
  *  16: bits per pixel (8, 24)
- *  17: flags  
+ *  17: flags
  */
 
 
@@ -134,7 +134,7 @@ int LoadTarga(fname, pinfo)
       if      (i < h / 2) row = 2 * i;
       else                row = 2 * (i - h/2) + 1;
     }
-    
+
     else row = i;              /* no interlace */
 
 
@@ -185,7 +185,7 @@ int WriteTarga(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle)
 
   /* write the header */
   for (i=0; i<12; i++) putc( (i==2) ? 2 : 0, fp);
-  
+
   putc(w&0xff,     fp);
   putc((w>>8)&0xff,fp);
   putc(h&0xff,     fp);

@@ -107,7 +107,7 @@ default_decompress_parms (j_decompress_ptr cinfo)
     cinfo->jpeg_color_space = JCS_GRAYSCALE;
     cinfo->out_color_space = JCS_GRAYSCALE;
     break;
-    
+
   case 3:
     if (cinfo->saw_JFIF_marker) {
       cinfo->jpeg_color_space = JCS_YCbCr; /* JFIF implies YCbCr */
@@ -142,7 +142,7 @@ default_decompress_parms (j_decompress_ptr cinfo)
     /* Always guess RGB is proper output colorspace. */
     cinfo->out_color_space = JCS_RGB;
     break;
-    
+
   case 4:
     if (cinfo->saw_Adobe_marker) {
       switch (cinfo->Adobe_transform) {
@@ -163,7 +163,7 @@ default_decompress_parms (j_decompress_ptr cinfo)
     }
     cinfo->out_color_space = JCS_CMYK;
     break;
-    
+
   default:
     cinfo->jpeg_color_space = JCS_UNKNOWN;
     cinfo->out_color_space = JCS_UNKNOWN;

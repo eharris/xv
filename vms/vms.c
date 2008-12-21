@@ -41,7 +41,7 @@ char *getwd(p)
  root_dir = strstr ( p, "/000000" );
  if ( root_dir != NULL ) {
     /* trim root directory out of specification */
-    if ( (strlen(root_dir) == 7) && 
+    if ( (strlen(root_dir) == 7) &&
 	 (strpbrk(p+1,"/") == root_dir) ) *root_dir = '\0';
  }
  /* special kludge for "/" directory */
@@ -77,7 +77,7 @@ int lstat(f,st)		/* fake a stat operation to return file type */
     if ( dirext != NULL ) {
 	/* make it an exact match */
 	extlen = strcspn(&dirext[1],".;");
-        if ( (extlen == 0) || (extlen == 3) ) {
+	if ( (extlen == 0) || (extlen == 3) ) {
 	    st->st_mode = S_IFDIR;
 	    if ( strncmp ( name, "000000.", 7 ) == 0 ) return 0;
 	    else return (stat ( f, st ));
@@ -111,7 +111,7 @@ vms_wild_put_one(s,pargc,pargv,pvsize)
      char *s; int *pargc; char ***pargv; int *pvsize;
 {int nvsize,i;
 #ifdef __ALPHA
-# define SHELL$TRANSLATE_VMS   decc$translate_vms 
+# define SHELL$TRANSLATE_VMS   decc$translate_vms
 #else
  char *SHELL$TRANSLATE_VMS();
 #endif
@@ -127,7 +127,7 @@ vms_wild_put_one(s,pargc,pargv,pvsize)
     /* printf("vms: '%s' -> unix: '%s'\n", s, uname ); */
     if ( strlen(s) >= strlen(uname) ) { strcpy(s,uname); free(uname); }
     else s = uname;  /* will lose s's old allocation */
- } 
+ }
  (*pargv)[(*pargc)++] = s;}
 
 
@@ -210,85 +210,85 @@ void xv_qsort ( array, size, unit, compare )
       finish = *top++; start = *top++;
       pivot = array[start];
       if ( finish > start + 1 ) {
-         /*
-          *  more than 2 elements, split range into 2 sections according to
-          *  the relation to the pivot value.
-          */
+	 /*
+	  *  more than 2 elements, split range into 2 sections according to
+	  *  the relation to the pivot value.
+	  */
 	 array[start] = array[(start+finish)/2];	/* avoid sequence */
 	 array[(start+finish)/2] = pivot; pivot = array[start];
-         lbound = start; hbound = finish;
-         while ( lbound < hbound ) {
-            if ( compare(&pivot, &array[lbound+1]) > 0 ) {
-               lbound++;
-            } else {
-               temp = array[hbound];
-               array[hbound] = array[lbound+1];
-               hbound--;
-               array[lbound+1] = temp;
-            }
-         }
-         /* determine which parition is bigger and push onto stack */
-         if ( lbound + lbound < (start+finish) ) {
-            /* push high partition first. */
-            *--top = lbound + 1;
-            *--top = finish;
-            finish = start;		/* skip add step below */
-             /* either push low partition or sort by inspection */
-            if ( lbound - start > 1 ) {
-               *--top = start;
-               *--top = lbound;
-            } else {
-               /* 2 element parition (start+1=lbound), sort by looking */
-               if ( pivot > array[lbound] ) {
-                  array[start] = array[lbound];
-                  array[lbound] = pivot;
-               }
-            }
-         } else if ( lbound != finish ) {
-            /* either push low partition or sort by inspection */
-            if ( lbound - start > 1 ) {
-               *--top = start;
-               *--top = lbound;
-            } else if ( lbound  > start ) {
-               /* 2 element parition (start+1=lbound), sort by looking */
-               if ( compare(&pivot, &array[lbound]) > 0 ) {
-                  array[start] = array[lbound];
-                  array[lbound] = pivot;
-               }
-            }
-            /* push high partition or sort by inspection */
-            if ( lbound < finish - 2 ) {
-               *--top = lbound + 1;
-               *--top = finish;
-            } else if ( lbound < finish - 1 ) {  /* 2 in partition */
-               if ( compare(&array[lbound+1], &array[finish]) > 0 ) {
-                  temp = array[lbound+1];
-                  array[lbound+1] = array[finish];
-                  array[finish] = temp;
-               }
-            }
-         } else {
-            /*
-             * Special case: high partition is empty, indicating that pivot
-             * value is at maximum.  Move to end and re-push remainder.
-             */
-            array[start] = array[finish];
-            array[finish] = pivot;
-            *--top = start;
-            *--top = finish - 1;
-         }
+	 lbound = start; hbound = finish;
+	 while ( lbound < hbound ) {
+	    if ( compare(&pivot, &array[lbound+1]) > 0 ) {
+	       lbound++;
+	    } else {
+	       temp = array[hbound];
+	       array[hbound] = array[lbound+1];
+	       hbound--;
+	       array[lbound+1] = temp;
+	    }
+	 }
+	 /* determine which parition is bigger and push onto stack */
+	 if ( lbound + lbound < (start+finish) ) {
+	    /* push high partition first. */
+	    *--top = lbound + 1;
+	    *--top = finish;
+	    finish = start;		/* skip add step below */
+	     /* either push low partition or sort by inspection */
+	    if ( lbound - start > 1 ) {
+	       *--top = start;
+	       *--top = lbound;
+	    } else {
+	       /* 2 element parition (start+1=lbound), sort by looking */
+	       if ( pivot > array[lbound] ) {
+		  array[start] = array[lbound];
+		  array[lbound] = pivot;
+	       }
+	    }
+	 } else if ( lbound != finish ) {
+	    /* either push low partition or sort by inspection */
+	    if ( lbound - start > 1 ) {
+	       *--top = start;
+	       *--top = lbound;
+	    } else if ( lbound  > start ) {
+	       /* 2 element parition (start+1=lbound), sort by looking */
+	       if ( compare(&pivot, &array[lbound]) > 0 ) {
+		  array[start] = array[lbound];
+		  array[lbound] = pivot;
+	       }
+	    }
+	    /* push high partition or sort by inspection */
+	    if ( lbound < finish - 2 ) {
+	       *--top = lbound + 1;
+	       *--top = finish;
+	    } else if ( lbound < finish - 1 ) {  /* 2 in partition */
+	       if ( compare(&array[lbound+1], &array[finish]) > 0 ) {
+		  temp = array[lbound+1];
+		  array[lbound+1] = array[finish];
+		  array[finish] = temp;
+	       }
+	    }
+	 } else {
+	    /*
+	     * Special case: high partition is empty, indicating that pivot
+	     * value is at maximum.  Move to end and re-push remainder.
+	     */
+	    array[start] = array[finish];
+	    array[finish] = pivot;
+	    *--top = start;
+	    *--top = finish - 1;
+	 }
 
       } else {
-         /* only 2 elements in partition, sort inline */
-         if ( compare(&pivot,&array[finish]) > 0 ) {
-            array[start] = array[finish];
-            array[finish] = pivot;
-         }
+	 /* only 2 elements in partition, sort inline */
+	 if ( compare(&pivot,&array[finish]) > 0 ) {
+	    array[start] = array[finish];
+	    array[finish] = pivot;
+	 }
       }
    }
-} 
+}
 
-/*****************************************************************************/
+ /*****************************************************************************/
 
 /*
 **  VMS readdir() routines.
@@ -296,7 +296,7 @@ void xv_qsort ( array, size, unit, compare )
 **  This code has no copyright.
 */
 
-/* 12-NOV-1990 added d_namlen field and special case "." name -GJC@MITECH.COM 
+/* 12-NOV-1990 added d_namlen field and special case "." name -GJC@MITECH.COM
  */
 
 #include <stdio.h>
@@ -334,9 +334,9 @@ opendir(name)
 	errno = ENOMEM;
 	return NULL;
     }
-    
+
     if (strcmp(".",name) == 0) name = "";
-    
+
     dd->pattern = malloc((unsigned int)(strlen(name) + sizeof "*.*" + 1));
     if (dd->pattern == NULL) {
 	free((char *)dd);
@@ -543,7 +543,7 @@ main()
 }
 #endif	/* TEST */
 
-/*****************************************************************************/
+ /*****************************************************************************/
 
 /*
 	pseudo_root - Return the Window ID of the Pseudo Root
@@ -585,7 +585,7 @@ int screen;
     root = RootWindow(dpy, screen);
 
     /* Get the geometry of the root */
-    if (XGetGeometry(dpy, root, &win, &root_x, &root_y, 
+    if (XGetGeometry(dpy, root, &win, &root_x, &root_y,
 			&root_width, &root_height,
 			&root_bw, &root_depth))
     {
@@ -676,10 +676,10 @@ Window w;
 
 } /*** End chase_root() ***/
 
-/*****************************************************************************/
+ /*****************************************************************************/
 
 /*
- * @(#)argproc.c 1.0 89/02/01		Mark Pizzolato (mark@infopiz.uucp)	
+ * @(#)argproc.c 1.0 89/02/01		Mark Pizzolato (mark@infopiz.uucp)
  */
 
 #ifndef lint
@@ -688,7 +688,7 @@ char argproc_version[] = "@(#)argproc.c VMS uucp Version infopiz-1.0";
 
 #include "includes.h"		/* System include files, system dependent */
 
-
+
 /*
  * getredirection() is intended to aid in porting C programs
  * to VMS (Vax-11 C) which does not support '>' and '<'
@@ -862,11 +862,11 @@ char		***av;
 	out = pipe_and_fork(subcmd);
 	outmode = "wb";
 	}
-	
+
     /* Check for input from a pipe (mailbox) */
 
     if(fstat(0, &statbuf) == 0){
-	if(strncmp(statbuf.st_dev, "MB", 2) == 0 || 
+	if(strncmp(statbuf.st_dev, "MB", 2) == 0 ||
 	    strncmp(statbuf.st_dev, "_MB", 3) == 0){
 
 	    /* Input from a pipe, reopen it in binary mode to disable	*/
@@ -887,9 +887,9 @@ char		***av;
 
 
 #ifdef __ALPHA
-        /*, "mbc=32", "mbf=2"))) blows up on the ALPHA cbm 11/08/92 */
+	/*, "mbc=32", "mbf=2"))) blows up on the ALPHA cbm 11/08/92 */
     if ((in != NULL) && (NULL == freopen(in, "r", stdin)))
-        {
+	{
 #else
     if ((in != NULL) && (NULL == freopen(in, "r", stdin, "mbc=32", "mbf=2")))
 	{
@@ -899,10 +899,10 @@ char		***av;
 	}
 #ifdef __ALPHA
     if ((out != NULL) && (NULL == freopen(out, outmode, stdout)))
-        {
+	{
 #else
     if ((out != NULL) && (NULL == freopen(out, outmode, stdout, "mbc=32", "mbf=2")))
-	{	
+	{
 #endif
 	perror(ap);		/* Error, can't write or append	*/
 	exit(EXIT_ERR);		/* Is a fatal error		*/
@@ -911,21 +911,21 @@ char		***av;
      if ( new_file ) {
 	/*
 	 * We are making an explicit output file, fstat the file and
-         * declare exit handler to be able change the file to fixed length
-	 * records if necessary. 
+	 * declare exit handler to be able change the file to fixed length
+	 * records if necessary.
 	 */
 	char fname[256];
 	static int outfile_rundown(), check_outfile_filetype();
 	static stat_t ofile_stat;
 	static struct exit_control_block {
-    	    struct exit_control_block *flink;
-    	    int	(*exit_routine)();
+	    struct exit_control_block *flink;
+	    int	(*exit_routine)();
 	    int arg_count;
 	    int *status_address;	/* arg 1 */
 	    stat_t *stat;		/* arg 2 */
 	    int exit_status;
 	    int skew[128];
-	} exit_block = 
+	} exit_block =
 	    { 0, outfile_rundown, 2, &exit_block.exit_status, &ofile_stat, 0 };
 
 	if ( fstat ( fileno(stdout), &ofile_stat ) == 0 )
@@ -962,7 +962,7 @@ static int check_outfile_filetype ( name )
 
     for ( p = binary_filetypes; *p != '\0'; p++ ) {
 	for ( t = p;
-	      (*p != '\0' ) && (strchr ( ", 	", *p ) == NULL); 
+	      (*p != '\0' ) && (strchr ( ", 	", *p ) == NULL);
 	     p++ ) *p = toupper(*p);
 	*p = '\0';
 
@@ -1001,7 +1001,7 @@ static int outfile_rundown ( reason, statbuf )
      */
     device.dsc$w_length = strlen ( statbuf->st_dev );
     status = sys$assign ( &device, &channel, 0, 0 );
-    if ((status & 1) == 0) { fprintf(stderr, 
+    if ((status & 1) == 0) { fprintf(stderr,
 	"assign error to %s (%d)\n", device.dsc$a_pointer, status);
 		return status; }
     code = DVI$_DEVCHAR;
@@ -1116,7 +1116,7 @@ $DESCRIPTOR(resultspec, "");
      */
     had_version = strchr(item, ';');
     while (1 == (1&lib$find_file(&filespec, &resultspec, &context,
-    				 &defaultspec, 0, &status_value, &0)))
+				 &defaultspec, 0, &status_value, &0)))
 	{
 	char *string;
 	char *c;
@@ -1261,7 +1261,7 @@ char *cmd;
 	vaxc$errno = iosb[0];
     if (0 == (1&vaxc$errno))
 	{
- 	errno = EVMSERR;
+	errno = EVMSERR;
 	perror("Can't get SYSGEN parameter value for MAXBUF");
 	exit(EXIT_ERR);
 	}
@@ -1274,11 +1274,11 @@ char *cmd;
 	exit(EXIT_ERR);
 	}
     if (1 == (1&(vaxc$errno = sys$getdviw(0, child_chan, 0, &itmlst, iosb,
-    					  0, 0, 0))))
+					  0, 0, 0))))
 	vaxc$errno = iosb[0];
     if (0 == (1&vaxc$errno))
 	{
- 	errno = EVMSERR;
+	errno = EVMSERR;
 	perror("Can't get pipe mailbox device name");
 	exit(EXIT_ERR);
 	}
@@ -1287,8 +1287,8 @@ char *cmd;
     fprintf(stderr, "Pipe Mailbox Name = '%s'\n", mbxname);
 #endif
     if (0 == (1&(vaxc$errno = lib$spawn(&cmddsc, &mbxdsc, 0, &1,
-    					0, &pid, child_st, &ef, sig_child,
-    					&child_chan))))
+					0, &pid, child_st, &ef, sig_child,
+					&child_chan))))
 	{
 	errno = EVMSERR;
 	perror("Can't spawn subprocess");
@@ -1337,7 +1337,7 @@ int pid;
     fprintf(stderr, "%08X\n", pid);
     return(EXIT_OK);
 }
-
+
 /* got this off net.sources */
 
 #ifdef	VMS
@@ -1400,7 +1400,7 @@ char	**nargv,
 			if (!progname) progname = nargv[0]; else progname++;
 			tell(": option requires an argument -- ");
 		}
-	 	else optarg = nargv[optind];	/* white space */
+		else optarg = nargv[optind];	/* white space */
 		place = EMSG;
 		++optind;
 	}
@@ -1408,7 +1408,7 @@ char	**nargv,
 }
 
 #ifndef __DECC
-/*
+/*
  *  This was stolen from xterm v2.1 for VMS by Rick Dyson
 */
 
@@ -1455,7 +1455,7 @@ int  namelen;
 
     unsigned short retlen;		/* Must be a WORD */
 
-    /* 
+    /*
 	Buffer for the translation
 
 	Max return length from SYS$TRNLNM is 255,

@@ -262,7 +262,7 @@ jpeg_finish_compress (j_compress_ptr cinfo)
 {
   JDIMENSION iMCU_row, mcu_ctr;
 
-  if (cinfo->global_state != CSTATE_SCANNING && 
+  if (cinfo->global_state != CSTATE_SCANNING &&
       cinfo->global_state != CSTATE_RAW_OK)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
   if (cinfo->next_scanline < cinfo->image_height)

@@ -4,23 +4,23 @@
  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994 Sam Leffler
  * Copyright (c) 1991, 1992, 1993, 1994 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- * 
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -542,8 +542,8 @@ LZWDecode(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 		codep = sp->dec_codetab + code;
 
 		/*
-	 	 * Add the new entry to the code table.
-	 	 */
+		 * Add the new entry to the code table.
+		 */
 		assert(&sp->dec_codetab[0] <= free_entp && free_entp < &sp->dec_codetab[CSIZE]);
 		free_entp->next = oldcodep;
 		free_entp->firstchar = free_entp->next->firstchar;
@@ -559,9 +559,9 @@ LZWDecode(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 		oldcodep = codep;
 		if (code >= 256) {
 			/*
-		 	 * Code maps to a string, copy string
+			 * Code maps to a string, copy string
 			 * value to output (written in reverse).
-		 	 */
+			 */
 			if (codep->length > occ) {
 				/*
 				 * String is too long for decode buffer,
@@ -716,8 +716,8 @@ LZWDecodeCompat(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 		codep = sp->dec_codetab + code;
 
 		/*
-	 	 * Add the new entry to the code table.
-	 	 */
+		 * Add the new entry to the code table.
+		 */
 		assert(&sp->dec_codetab[0] <= free_entp && free_entp < &sp->dec_codetab[CSIZE]);
 		free_entp->next = oldcodep;
 		free_entp->firstchar = free_entp->next->firstchar;
@@ -733,9 +733,9 @@ LZWDecodeCompat(TIFF* tif, tidata_t op0, tsize_t occ0, tsample_t s)
 		oldcodep = codep;
 		if (code >= 256) {
 			/*
-		 	 * Code maps to a string, copy string
+			 * Code maps to a string, copy string
 			 * value to output (written in reverse).
-		 	 */
+			 */
 			if (codep->length > occ) {
 				/*
 				 * String is too long for decode buffer,
@@ -959,16 +959,16 @@ LZWPreEncode(TIFF* tif)
 /*
  * Encode a chunk of pixels.
  *
- * Uses an open addressing double hashing (no chaining) on the 
+ * Uses an open addressing double hashing (no chaining) on the
  * prefix code/next character combination.  We do a variant of
  * Knuth's algorithm D (vol. 3, sec. 6.4) along with G. Knott's
  * relatively-prime secondary probe.  Here, the modular division
- * first probe is gives way to a faster exclusive-or manipulation. 
+ * first probe is gives way to a faster exclusive-or manipulation.
  * Also do block compression with an adaptive reset, whereby the
  * code table is cleared when the compression ratio decreases,
  * but after the table fills.  The variable-length output codes
  * are re-sized at this point, and a CODE_CLEAR is generated
- * for the decoder. 
+ * for the decoder.
  */
 static int
 LZWEncode(TIFF* tif, tidata_t bp, tsize_t cc, tsample_t s)
@@ -1187,7 +1187,7 @@ LZWPostEncode(TIFF* tif)
 		sp->enc_oldcode = (hcode_t) -1;
 	}
 	PutNextCode(op, CODE_EOI);
-	if (nextbits > 0) 
+	if (nextbits > 0)
 		*op++ = (u_char)(nextdata << (8-nextbits));
 	tif->tif_rawcc = (tsize_t)(op - tif->tif_rawdata);
 	return (1);
@@ -1202,7 +1202,7 @@ cl_hash(LZWEncodeState* sp)
 	register hash_t *hp = &sp->enc_hashtab[HSIZE-1];
 	register long i = HSIZE-8;
 
- 	do {
+	do {
 		i -= 8;
 		hp[-7].hash = -1;
 		hp[-6].hash = -1;
@@ -1214,7 +1214,7 @@ cl_hash(LZWEncodeState* sp)
 		hp[ 0].hash = -1;
 		hp -= 8;
 	} while (i >= 0);
-    	for (i += 8; i > 0; i--, hp--)
+	for (i += 8; i > 0; i--, hp--)
 		hp->hash = -1;
 }
 

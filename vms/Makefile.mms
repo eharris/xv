@@ -107,13 +107,13 @@ LINKFLAGS = $(LINKFLAGS) $(DEBUG)
 XVLIB = LIBXV.OLB
 
 OBJS = 	xv.obj,xvevent.obj,xvroot.obj,xvmisc.obj,xvimage.obj,xvcolor.obj, \
-        xvsmooth.obj,xv24to8.obj,xvgif.obj,xvpm.obj,xvinfo.obj,xvctrl.obj, \
-        xvscrl.obj,xvalg.obj,xvgifwr.obj,xvdir.obj,xvbutt.obj,xvpbm.obj, \
-        xvxbm.obj,xvgam.obj,xvbmp.obj,xvdial.obj,xvgraf.obj,xvsunras.obj, \
-        xvjpeg.obj,xvps.obj,xvpopup.obj,xvdflt.obj,xvtiff.obj,xvtiffwr.obj, \
-        xvpds.obj,xvrle.obj,xviris.obj,xvgrab.obj,xvbrowse.obj,xviff.obj, \
-        xvtext.obj,xvpcx.obj,xvtarga.obj,xvxpm.obj,xvcut.obj,xvxwd.obj,   \
-        xvfits.obj,vms.obj
+	xvsmooth.obj,xv24to8.obj,xvgif.obj,xvpm.obj,xvinfo.obj,xvctrl.obj, \
+	xvscrl.obj,xvalg.obj,xvgifwr.obj,xvdir.obj,xvbutt.obj,xvpbm.obj, \
+	xvxbm.obj,xvgam.obj,xvbmp.obj,xvdial.obj,xvgraf.obj,xvsunras.obj, \
+	xvjpeg.obj,xvps.obj,xvpopup.obj,xvdflt.obj,xvtiff.obj,xvtiffwr.obj, \
+	xvpds.obj,xvrle.obj,xviris.obj,xvgrab.obj,xvbrowse.obj,xviff.obj, \
+	xvtext.obj,xvpcx.obj,xvtarga.obj,xvxpm.obj,xvcut.obj,xvxwd.obj,   \
+	xvfits.obj,vms.obj
 
 
 BITS = [.Bits]annot.h
@@ -166,7 +166,7 @@ xcmap.exe :     xcmap.obj
 xvpictoppm.exe :	xvpictoppm.obj
 	$(LINK) $(LINKFLAGS) xvpictoppm.obj,$(XVLIB)/Library,$(OPTS)/Option
 
-xv.exe : 	xv.obj $(XVLIB) $(JPEGLIB) $(TIFFLIB) $(OPTS) 
+xv.exe : 	xv.obj $(XVLIB) $(JPEGLIB) $(TIFFLIB) $(OPTS)
 	$(LINK) $(LINKFLAGS) xv.obj,$(XVLIB)/Library,$(JPEGLIB)/Library,$(TIFFLIB)/Library,$(OPTS)/Option
 
 $(JPEGLIB) :
@@ -192,7 +192,7 @@ $(TIFFLIB) :
 	Set Default 'XVDIR'
 
 $(XVLIB) :	$(OBJS)
-        If "''F$Search ("$(XVLIB)")'" .eqs. "" Then Library /Create $(XVLIB)
+	If "''F$Search ("$(XVLIB)")'" .eqs. "" Then Library /Create $(XVLIB)
 	Library /Replace $(XVLIB) $(OBJS)
 
 decompress.exe :	decompress.obj
@@ -201,7 +201,7 @@ decompress.exe :	decompress.obj
 vdcomp.exe :	vdcomp.obj
 	$(LINK) $(LINKFLAGS) vdcomp.obj,$(OPTS)/Option
 
-[.Bits]annot.h :	
+[.Bits]annot.h :
 	Set Default [.Bits]
 	Set Protection = Owner:RWED *.
 	Rename *. *.H
@@ -217,44 +217,44 @@ vms.obj :		includes.h dirent.h
 #  Build the linker options file for OpenVMS VAX and VAX C.
 #
 Sys$Disk:[]VAXC_Options.opt :
-        @ Open /Write TMP VAXC_Options.opt
-        @ Write TMP "! XV (v3.10) Linker Options list for VMS VAX C"
-        @ Write TMP "!"
-        @ Write TMP "Sys$Disk:[]LibXV.OLB /Library"
-        @ Write TMP "Sys$Disk:[.JPEG]LibJPEG.OLB /Library"
-        @ Write TMP "Sys$Disk:[.TIFF]LibTIFF.OLB /Library"
+	@ Open /Write TMP VAXC_Options.opt
+	@ Write TMP "! XV (v3.10) Linker Options list for VMS VAX C"
+	@ Write TMP "!"
+	@ Write TMP "Sys$Disk:[]LibXV.OLB /Library"
+	@ Write TMP "Sys$Disk:[.JPEG]LibJPEG.OLB /Library"
+	@ Write TMP "Sys$Disk:[.TIFF]LibTIFF.OLB /Library"
 .ifdef DEC_XUI
-        @ Write TMP "!"
-        @ Write TMP "! These were appropriate for VAX C and XUI in the past."
-        @ Write TMP "Sys$Library:DECW$DWTLibShr.exe /Share
-        @ Write TMP "Sys$Library:DECW$XLibShr.exe /Share
-        @ Write TMP "!You may need the next line for VAX C (v3.2-044)"
-        @ Write TMP "!But you don't for DEC C (v4.0-000)"
-        @ Write TMP "Sys$Library:VAXCRTL.EXE /Share"
+	@ Write TMP "!"
+	@ Write TMP "! These were appropriate for VAX C and XUI in the past."
+	@ Write TMP "Sys$Library:DECW$DWTLibShr.exe /Share
+	@ Write TMP "Sys$Library:DECW$XLibShr.exe /Share
+	@ Write TMP "!You may need the next line for VAX C (v3.2-044)"
+	@ Write TMP "!But you don't for DEC C (v4.0-000)"
+	@ Write TMP "Sys$Library:VAXCRTL.EXE /Share"
 .else
-        @ Write TMP "!"
-        @ Write TMP "! Some of the following libraries may not be available on"
-        @ Write TMP "! older systems, namely XUI or Motif v1.0/1.1"
-        @ Write TMP "! I know they are available for OpenVMS v6.1/Motif v1.2."
-        @ Write TMP "! If you get a report that they can't be found,"
-        @ Write TMP "! comment them out and try again..."
-        @ Write TMP "Sys$Library:DECW$DXMLibShr12.exe /Share
-        @ Write TMP "Sys$Library:DECW$XMLibShr12.exe /Share
-        @ Write TMP "Sys$Library:DECW$XTLibShrR5.exe /Share"
-        @ Write TMP "Sys$Library:DECW$XLibShr.exe /Share
+	@ Write TMP "!"
+	@ Write TMP "! Some of the following libraries may not be available on"
+	@ Write TMP "! older systems, namely XUI or Motif v1.0/1.1"
+	@ Write TMP "! I know they are available for OpenVMS v6.1/Motif v1.2."
+	@ Write TMP "! If you get a report that they can't be found,"
+	@ Write TMP "! comment them out and try again..."
+	@ Write TMP "Sys$Library:DECW$DXMLibShr12.exe /Share
+	@ Write TMP "Sys$Library:DECW$XMLibShr12.exe /Share
+	@ Write TMP "Sys$Library:DECW$XTLibShrR5.exe /Share"
+	@ Write TMP "Sys$Library:DECW$XLibShr.exe /Share
 .endif
-        @ Close TMP
+	@ Close TMP
 
 Sys$Disk:[]DECC_Options.opt :
-        @ Open /Write TMP DECC_Options.opt
-        @ Write TMP "! XV (v3.10) Linker Options list for VMS DEC C"
-        @ Write TMP "!"
-        @ Write TMP "Sys$Disk:[]LibXV.olb /Library"
-        @ Write TMP "Sys$Disk:[.JPEG]LibJPEG.olb /Library"
-        @ Write TMP "Sys$Disk:[.TIFF]LibTIFF.olb /Library"
-        @ Write TMP "Sys$Library:DECW$XTShr.exe /Share"
-        @ Write TMP "Sys$Library:DECW$XLibShr.exe /Share"
-        @ Close TMP
+	@ Open /Write TMP DECC_Options.opt
+	@ Write TMP "! XV (v3.10) Linker Options list for VMS DEC C"
+	@ Write TMP "!"
+	@ Write TMP "Sys$Disk:[]LibXV.olb /Library"
+	@ Write TMP "Sys$Disk:[.JPEG]LibJPEG.olb /Library"
+	@ Write TMP "Sys$Disk:[.TIFF]LibTIFF.olb /Library"
+	@ Write TMP "Sys$Library:DECW$XTShr.exe /Share"
+	@ Write TMP "Sys$Library:DECW$XLibShr.exe /Share"
+	@ Close TMP
 
 install :	xv.exe vdcomp.exe bggen.exe decompress.exe
 	Copy *.exe $(BINDIR)

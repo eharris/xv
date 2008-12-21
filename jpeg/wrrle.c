@@ -97,7 +97,7 @@ start_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
    */
 
   if (cinfo->output_width > 32767 || cinfo->output_height > 32767)
-    ERREXIT2(cinfo, JERR_RLE_DIMENSIONS, cinfo->output_width, 
+    ERREXIT2(cinfo, JERR_RLE_DIMENSIONS, cinfo->output_width,
 	     cinfo->output_height);
 
   if (cinfo->out_color_space != JCS_GRAYSCALE &&
@@ -122,8 +122,8 @@ start_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
     /* Shifting would need adjustment for JSAMPLEs wider than 8 bits. */
     for (ci = 0; ci < cinfo->out_color_components; ci++) {
       for (i = 0; i < cinfo->actual_number_of_colors; i++) {
-        dest->colormap[ci * CMAPLENGTH + i] =
-          GETJSAMPLE(cinfo->colormap[ci][i]) << 8;
+	dest->colormap[ci * CMAPLENGTH + i] =
+	  GETJSAMPLE(cinfo->colormap[ci][i]) << 8;
       }
     }
   }
@@ -221,12 +221,12 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (cinfo->output_components == 1) {
     for (row = cinfo->output_height-1; row >= 0; row--) {
       rle_row = (rle_pixel **) (*cinfo->mem->access_virt_sarray)
-        ((j_common_ptr) cinfo, dest->image, (JDIMENSION) row, FALSE);
+	((j_common_ptr) cinfo, dest->image, (JDIMENSION) row, FALSE);
       rle_putrow(rle_row, (int) cinfo->output_width, &header);
 #ifdef PROGRESS_REPORT
       if (progress != NULL) {
-        progress->pub.pass_counter++;
-        (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
+	progress->pub.pass_counter++;
+	(*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
       }
 #endif
     }
@@ -234,20 +234,20 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
     for (row = cinfo->output_height-1; row >= 0; row--) {
       rle_row = (rle_pixel **) dest->rle_row;
       output_row = * (*cinfo->mem->access_virt_sarray)
-        ((j_common_ptr) cinfo, dest->image, (JDIMENSION) row, FALSE);
+	((j_common_ptr) cinfo, dest->image, (JDIMENSION) row, FALSE);
       red = rle_row[0];
       green = rle_row[1];
       blue = rle_row[2];
       for (col = cinfo->output_width; col > 0; col--) {
-        *red++ = GETJSAMPLE(*output_row++);
-        *green++ = GETJSAMPLE(*output_row++);
-        *blue++ = GETJSAMPLE(*output_row++);
+	*red++ = GETJSAMPLE(*output_row++);
+	*green++ = GETJSAMPLE(*output_row++);
+	*blue++ = GETJSAMPLE(*output_row++);
       }
       rle_putrow(rle_row, (int) cinfo->output_width, &header);
 #ifdef PROGRESS_REPORT
       if (progress != NULL) {
-        progress->pub.pass_counter++;
-        (*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
+	progress->pub.pass_counter++;
+	(*progress->pub.progress_monitor) ((j_common_ptr) cinfo);
       }
 #endif
     }
@@ -278,7 +278,7 @@ jinit_write_rle (j_decompress_ptr cinfo)
   /* Create module interface object, fill in method pointers */
   dest = (rle_dest_ptr)
       (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo, JPOOL_IMAGE,
-                                  SIZEOF(rle_dest_struct));
+				  SIZEOF(rle_dest_struct));
   dest->pub.start_output = start_output_rle;
   dest->pub.finish_output = finish_output_rle;
 

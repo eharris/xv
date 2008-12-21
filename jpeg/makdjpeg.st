@@ -12,7 +12,7 @@
 ;      * * * Output file * * *
 djpeg.ttp
 ;
-; * * * COMPILER OPTIONS * * *  
+; * * * COMPILER OPTIONS * * *
 .C[-P]        ; absolute calls
 .C[-M]        ; and no string merging, folks
 .C[-w-cln]    ; no "constant is long" warnings
@@ -20,7 +20,7 @@ djpeg.ttp
 .C[-w-rch]    ; no "unreachable code"
 .C[-wsig]     ; warn if significant digits may be lost
 =
-; * * * * List of modules * * * * 
+; * * * * List of modules * * * *
 PCSTART.O
 djpeg.c	(cdjpeg.h,jinclude.h,jconfig.h,jpeglib.h,jmorecfg.h,jerror.h,cderror.h,jversion.h)
 rdcolmap.c	(cdjpeg.h,jinclude.h,jconfig.h,jpeglib.h,jmorecfg.h,jerror.h,cderror.h)

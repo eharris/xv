@@ -35,7 +35,7 @@
    This is currently hardcoded to be twice the size of a schnauzer icon, as
    the schnauzer's the only thing that does a quick load... */
 
-#define QUICKWIDE 160    
+#define QUICKWIDE 160
 #define QUICKHIGH 120
 
 struct my_error_mgr {
@@ -84,24 +84,24 @@ void CreateJPEGW()
 
   jpegW = CreateWindow("xv jpeg","XVjpeg",NULL,JWIDE,JHIGH,infofg,infobg,0);
   if (!jpegW) FatalError("can't create jpeg window!");
-  
+
   XSelectInput(theDisp, jpegW, ExposureMask | ButtonPressMask | KeyPressMask);
-  
-  DCreate(&qDial, jpegW, 10, 10, 80, 100, 1, 100, 75, 5, 
+
+  DCreate(&qDial, jpegW, 10, 10, 80, 100, 1, 100, 75, 5,
 	  infofg, infobg, hicol, locol, "Quality", "%");
-  
-  DCreate(&smDial, jpegW, 120, 10, 80, 100, 0, 100, 0, 5, 
+
+  DCreate(&smDial, jpegW, 120, 10, 80, 100, 0, 100, 0, 5,
 	  infofg, infobg, hicol, locol, "Smoothing", "%");
-  
-  BTCreate(&jbut[J_BOK], jpegW, JWIDE-180-1, JHIGH-10-BUTTH-1, 80, BUTTH, 
+
+  BTCreate(&jbut[J_BOK], jpegW, JWIDE-180-1, JHIGH-10-BUTTH-1, 80, BUTTH,
 	   "Ok", infofg, infobg, hicol, locol);
-  
-  BTCreate(&jbut[J_BCANC], jpegW, JWIDE-90-1, JHIGH-10-BUTTH-1, 80, BUTTH, 
+
+  BTCreate(&jbut[J_BCANC], jpegW, JWIDE-90-1, JHIGH-10-BUTTH-1, 80, BUTTH,
 	   "Cancel", infofg, infobg, hicol, locol);
-  
+
   XMapSubwindows(theDisp, jpegW);
 }
-  
+
 
 /***************************************************/
 void JPEGDialog(vis)
@@ -122,32 +122,32 @@ int JPEGCheckEvent(xev)
 {
   /* check event to see if it's for one of our subwindows.  If it is,
      deal accordingly, and return '1'.  Otherwise, return '0' */
-  
+
   int rv;
   rv = 1;
-  
+
   if (!jpegUp) return 0;
-  
+
   if (xev->type == Expose) {
     int x,y,w,h;
     XExposeEvent *e = (XExposeEvent *) xev;
     x = e->x;  y = e->y;  w = e->width;  h = e->height;
-    
+
     /* throw away excess expose events for 'dumb' windows */
-    if (e->count > 0 && (e->window == qDial.win || 
+    if (e->count > 0 && (e->window == qDial.win ||
 			 e->window == smDial.win)) {}
-    
+
     else if (e->window == jpegW)       drawJD(x, y, w, h);
     else if (e->window == qDial.win)   DRedraw(&qDial);
     else if (e->window == smDial.win)  DRedraw(&smDial);
     else rv = 0;
   }
-  
+
   else if (xev->type == ButtonPress) {
     XButtonEvent *e = (XButtonEvent *) xev;
     int x,y;
     x = e->x;  y = e->y;
-    
+
     if (e->button == Button1) {
       if      (e->window == jpegW)      clickJD(x,y);
       else if (e->window == qDial.win)  DTrack(&qDial,  x,y);
@@ -156,18 +156,18 @@ int JPEGCheckEvent(xev)
     }  /* button1 */
     else rv = 0;
   }  /* button press */
-  
-  
+
+
   else if (xev->type == KeyPress) {
     XKeyEvent *e = (XKeyEvent *) xev;
     char buf[128];  KeySym ks;
     int stlen;
-    
+
     stlen = XLookupString(e,buf,128,&ks,(XComposeStatus *) NULL);
     buf[stlen] = '\0';
-    
+
     RemapKeyCheck(ks, buf, &stlen);
-    
+
     if (e->window == jpegW) {
       if (stlen) {
 	if (buf[0] == '\r' || buf[0] == '\n') { /* enter */
@@ -181,12 +181,12 @@ int JPEGCheckEvent(xev)
     else rv = 0;
   }
   else rv = 0;
-  
+
   if (rv==0 && (xev->type == ButtonPress || xev->type == KeyPress)) {
     XBell(theDisp, 50);
     rv = 1;   /* eat it */
   }
-  
+
   return rv;
 }
 
@@ -211,17 +211,17 @@ static void drawJD(x,y,w,h)
   char *title3 = "quality = bigger file.";
   char *title4 = "Use smoothing if saving";
   char *title5 = "an 8-bit image (eg, a GIF).";
-  
+
   char *qtitle1 = "Default = 75.";
   char *qtitle2 = "Useful range";
   char *qtitle3 = "is 5-95.";
   char *smtitle1 = "Default = 0 (none).";
   char *smtitle2 = "10-30 is enough";
   char *smtitle3 = "for typical GIFs.";
-  
+
   int  i;
   XRectangle xr;
-  
+
   xr.x = x;  xr.y = y;  xr.width = w;  xr.height = h;
   XSetClipRectangles(theDisp, theGC, 0,0, &xr, 1, Unsorted);
 
@@ -240,11 +240,11 @@ static void drawJD(x,y,w,h)
   DrawString(jpegW,  15, 10+100+10+ASCENT,            qtitle1);
   DrawString(jpegW,  15, 10+100+10+ASCENT+LINEHIGH,   qtitle2);
   DrawString(jpegW,  15, 10+100+10+ASCENT+LINEHIGH*2, qtitle3);
-  
+
   DrawString(jpegW, 115, 10+100+10+ASCENT+LINEHIGH*0, smtitle1);
   DrawString(jpegW, 115, 10+100+10+ASCENT+LINEHIGH*1, smtitle2);
   DrawString(jpegW, 115, 10+100+10+ASCENT+LINEHIGH*2, smtitle3);
-  
+
   XSetClipMask(theDisp, theGC, None);
 }
 
@@ -255,14 +255,14 @@ static void clickJD(x,y)
 {
   int i;
   BUTT *bp;
-  
+
   /* check BUTTs */
-  
+
   for (i=0; i<J_NBUTTS; i++) {
     bp = &jbut[i];
     if (PTINRECT(x, y, bp->x, bp->y, bp->w, bp->h)) break;
   }
-  
+
   if (i<J_NBUTTS) {  /* found one */
     if (BTTrack(bp)) doCmd(i);
   }
@@ -281,7 +281,7 @@ static void doCmd(cmd)
 
     writeJPEG();
     JPEGDialog(0);
-    
+
     fullname = GetDirFullName();
     if (!ISPIPE(fullname[0])) {
       XVCreatedFile(fullname);
@@ -336,15 +336,15 @@ static void writeJPEG()
       if (i==w*h) colorType = F_GREYSCALE;  /* all the way through */
     }
   }
-  
-  
+
+
   /* first thing to do is build an 8/24-bit Greyscale/TrueColor image
      (meaning: non-colormapped) */
-  
+
   if (colorType == F_GREYSCALE) {   /* build an 8-bit Greyscale image */
     image8 = (byte *) malloc((size_t) w * h);
     if (!image8) FatalError("writeJPEG: unable to malloc image8\n");
-    
+
     if (ptype == PIC8) {
       for (i=0,ip=image8,ep=inpix; i<w * h; i++, ip++, ep++)
 	*ip = MONO(rmap[*ep], gmap[*ep], bmap[*ep]);
@@ -374,16 +374,16 @@ static void writeJPEG()
     }
   }
 
-  
+
   /* in any event, we've got some valid image.  Do the JPEG Thing */
   rv = writeJFIF(fp, (colorType==F_GREYSCALE) ? image8 : image24,
 		 w, h, colorType);
-  
+
   if      (colorType == F_GREYSCALE) free(image8);
   else if (ptype == PIC8)            free(image24);
 
   if (pfree) free(inpix);
-  
+
   if (CloseOutFile(fp, filename, rv) == 0) DirBox(0);
   SetCursors(-1);
 }
@@ -400,7 +400,7 @@ static void writeJPEG()
 
 
 /**************************************************/
-METHODDEF void xv_error_exit(cinfo) 
+METHODDEF void xv_error_exit(cinfo)
      j_common_ptr cinfo;
 {
   my_error_ptr myerr;
@@ -412,7 +412,7 @@ METHODDEF void xv_error_exit(cinfo)
 
 
 /**************************************************/
-METHODDEF void xv_error_output(cinfo) 
+METHODDEF void xv_error_output(cinfo)
      j_common_ptr cinfo;
 {
   my_error_ptr myerr;
@@ -546,16 +546,16 @@ int LoadJFIF(fname, pinfo, quick)
   if (cinfo.jpeg_color_space == JCS_GRAYSCALE) {
     cinfo.out_color_space = JCS_GRAYSCALE;
     cinfo.quantize_colors = FALSE;
-    
+
     SetISTR(ISTR_INFO,"Loading %dx%d Greyscale JPEG (%ld bytes)...",
 	    w,h,filesize);
-    
+
     for (i=0; i<256; i++) pinfo->r[i] = pinfo->g[i] = pinfo->b[i] = i;
   }
   else {
     cinfo.out_color_space = JCS_RGB;
     cinfo.quantize_colors = FALSE;     /* default: give 24-bit image to XV */
-    
+
     if (!quick && picType==PIC8 && conv24MB.flags[CONV24_LOCK] == 1) {
       /*
        * we're locked into 8-bit mode:
@@ -563,23 +563,23 @@ int LoadJFIF(fname, pinfo, quick)
        *   if CONV24_SLOW, use JPEG's two-pass quantizer
        *   if CONV24_BEST, or other, ask for 24-bit image and hand it to XV
        */
-      
+
       cinfo.desired_number_of_colors = 256;
-      
+
       if (conv24 == CONV24_FAST || conv24 == CONV24_SLOW) {
 	cinfo.quantize_colors = TRUE;
 	state824=1;              /* image was converted from 24 to 8 bits */
-	
+
 	cinfo.two_pass_quantize = (conv24 == CONV24_SLOW);
       }
     }
-    
+
     SetISTR(ISTR_INFO,"Loading %dx%d Color JPEG (%ld bytes)...",
 	    w,h,filesize);
   }
-  
+
   jpeg_calc_output_dimensions(&cinfo);   /* note colorspace changes... */
-    
+
 
   if (cinfo.output_components != 1 && cinfo.output_components != 3) {
     SetISTR(ISTR_WARNING, "%s:  can't read %d-plane JPEG file!",
@@ -603,7 +603,7 @@ int LoadJFIF(fname, pinfo, quick)
     if (comment) free(comment);
     return 0;
   }
-  
+
   jpeg_start_decompress(&cinfo);
 
   while (cinfo.output_scanline < cinfo.output_height) {
@@ -611,7 +611,7 @@ int LoadJFIF(fname, pinfo, quick)
     (void) jpeg_read_scanlines(&cinfo, rowptr, (JDIMENSION) 1);
   }
 
-  
+
 
   /* return 'PICINFO' structure to XV */
 
@@ -623,7 +623,7 @@ int LoadJFIF(fname, pinfo, quick)
   if (cinfo.out_color_space == JCS_GRAYSCALE) {
     sprintf(pinfo->fullInfo, "Greyscale JPEG. (%ld bytes)", filesize);
     pinfo->colType = F_GREYSCALE;
-    
+
     for (i=0; i<256; i++) pinfo->r[i] = pinfo->g[i] = pinfo->b[i] = i;
   }
   else {
@@ -638,10 +638,10 @@ int LoadJFIF(fname, pinfo, quick)
       }
     }
   }
-  
-  sprintf(pinfo->shrtInfo, "%dx%d %s JPEG. ", w,h, 
+
+  sprintf(pinfo->shrtInfo, "%dx%d %s JPEG. ", w,h,
 	  (cinfo.out_color_space == JCS_GRAYSCALE) ? "Greyscale " : "Color ");
-  
+
   pinfo->comment = comment;
 
   jpeg_finish_decompress(&cinfo);
@@ -651,8 +651,8 @@ int LoadJFIF(fname, pinfo, quick)
   comment = (char *) NULL;
   return 1;
 }
-  
-  
+
+
 
 
 /**************************************************/
@@ -660,7 +660,7 @@ static unsigned int j_getc(cinfo)
      j_decompress_ptr cinfo;
 {
   struct jpeg_source_mgr *datasrc = cinfo->src;
-  
+
   if (datasrc->bytes_in_buffer == 0) {
     if (! (*datasrc->fill_input_buffer) (cinfo))
       ERREXIT(cinfo, JERR_CANT_SUSPEND);
@@ -688,7 +688,7 @@ METHODDEF boolean xv_process_comment(cinfo)
   }
   else comment = (char *) realloc(comment, strlen(comment) + length + 1);
   if (!comment) FatalError("out of memory in xv_process_comment");
-  
+
   oldsp = sp = comment + strlen(comment);
   hasnull = 0;
 
@@ -770,19 +770,19 @@ static int writeJFIF(fp, pic, w,h, coltype)
 
   sprintf(xvcmt, "%sXV %s  Quality = %d, Smoothing = %d\n",
 	  CREATOR_STR, REVDATE, qDial.val, smDial.val);
-  
+
   if (picComments) {   /* append XV comment */
     char *sp, *sp1;  int done;
 
     i   = strlen(picComments);
     comment = (char *) malloc(i + strlen(xvcmt) + 2 + 1);
     if (!comment) FatalError("out of memory in writeJFIF()");
-    
+
     strcpy(comment, picComments);
-    
+
     /* see if there's a line that starts with 'CREATOR: ' in the
        comments.  If there is, rip it out. */
-    
+
     sp = comment;  done = 0;
     while (!done && *sp) {
       if (strncmp(sp, CREATOR_STR, strlen(CREATOR_STR)) == 0) {
@@ -801,7 +801,7 @@ static int writeJFIF(fp, pic, w,h, coltype)
       }
     }
 
-    /* count # of \n's at end of comment.  
+    /* count # of \n's at end of comment.
        If none, add 2.   If one, add 1.  If two or more, add none. */
 
     sp = comment + strlen(comment);
@@ -814,15 +814,15 @@ static int writeJFIF(fp, pic, w,h, coltype)
     strcat(comment, xvcmt);
   }
   else comment = xvcmt;
-  
-  
+
+
   jpeg_write_marker(&cinfo,JPEG_COM,(byte *) comment,(u_int) strlen(comment));
-  
+
   while (cinfo.next_scanline < cinfo.image_height) {
     rowptr[0] = (JSAMPROW) &pic[cinfo.next_scanline * w * bperpix];
     (void) jpeg_write_scanlines(&cinfo, rowptr, (JDIMENSION) 1);
   }
-  
+
   jpeg_finish_compress(&cinfo);
   jpeg_destroy_compress(&cinfo);
   return 0;

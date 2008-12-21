@@ -428,7 +428,7 @@ where both input and output file names must be given explicitly.
 wrjpgcom understands three switches:
 	-replace		 Delete any existing COM blocks from the file.
 	-comment "Comment text"	 Supply new COM text on command line.
-        -cfile name		 Read text for new COM block from named file.
+	-cfile name		 Read text for new COM block from named file.
 (Switch names can be abbreviated.)  If you have only one line of comment text
 to add, you can provide it on the command line with -comment.  The comment
 text must be surrounded with quotes so that it is treated as a single

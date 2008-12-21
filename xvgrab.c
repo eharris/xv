@@ -6,7 +6,7 @@
  *  Contains:
  *     int Grab()             - handles the GRAB command
  *     int LoadGrab();        - 'loads' the pic from the last succesful Grab
- *            
+ *
  */
 
 #include "copyright.h"
@@ -27,7 +27,7 @@ static void   startflash      PARM((void));
 static void   endflash        PARM((void));
 static int    grabImage       PARM((Window, int, int, int, int));
 static void   ungrabX         PARM((void));
-static int    convertImage    PARM((XImage *, XColor *, int, 
+static int    convertImage    PARM((XImage *, XColor *, int,
 				    XWindowAttributes *));
 
 static int    lowbitnum       PARM((unsigned long));
@@ -75,7 +75,7 @@ int Grab()
     grabInProgress = 1; /* guard against recursive grabs during delay */
     time(&startT);
     while (1) {
-      time(&t);  
+      time(&t);
       if (t >= startT + grabDelay) break;
       if (XPending(theDisp)>0) {
 	XEvent evt;
@@ -91,25 +91,25 @@ int Grab()
     grabInProgress = 0;
   }
 
-  
+
   rootGC   = DefaultGC(theDisp, theScreen);
-  
+
   if (grabPic) {  /* throw away previous 'grabbed' pic, if there is one */
     free(grabPic);  grabPic = (byte *) NULL;
   }
 
 
   fc.flags = bc.flags = DoRed | DoGreen | DoBlue;
-  fc.red = fc.green = fc.blue = 0xffff;  
+  fc.red = fc.green = fc.blue = 0xffff;
   bc.red = bc.green = bc.blue = 0x0000;
   XRecolorCursor(theDisp, tcross, &fc, &bc);
 
 
   XBell(theDisp, 0);		/* beep once at start of grab */
 
-  if (!autograb) XGrabButton(theDisp, (u_int) AnyButton, 0, rootW, False, 0, 
+  if (!autograb) XGrabButton(theDisp, (u_int) AnyButton, 0, rootW, False, 0,
 			     GrabModeAsync, GrabModeSync, None, tcross);
-  
+
   if (autograb) {
     XGrabServer(theDisp);	 /* until we've done the grabImage */
     if (!XQueryPointer(theDisp,rootW,&rW,&cW,&rx,&ry,&x1,&y1,&mask)) {
@@ -136,7 +136,7 @@ int Grab()
       XNextEvent(theDisp, &evt);
       i = HandleEvent(&evt, &done);
       if (done) {                    /* only 'new image' cmd accepted=quit */
-	if (i==QUIT) { 
+	if (i==QUIT) {
 	  XUngrabButton(theDisp, (u_int) AnyButton, 0, rootW);
 	  Quit(0);
 	}
@@ -145,12 +145,12 @@ int Grab()
 
     }
   }
-  
-  
+
+
   /***
    ***  got button click (or pretending we did, if autograb)
    ***/
-  
+
 
   if (mask & Button3Mask || rW!=rootW) {        /* Button3: CANCEL GRAB */
     while (1) {      /* wait for button to be released */
@@ -158,7 +158,7 @@ int Grab()
 	if (!(mask & Button3Mask)) break;
       }
     }
-    
+
     XUngrabButton(theDisp, (u_int) AnyButton, 0, rootW);
     XBell(theDisp, 0);
     XBell(theDisp, 0);
@@ -175,7 +175,7 @@ int Grab()
 	if (!(mask & Button1Mask)) break;
       }
     }
-    
+
     if (!cW || cW == rootW) clickWin = rootW;
     else {
       int xr, yr;    Window chwin;
@@ -186,11 +186,11 @@ int Grab()
 	clickWin = xvClientWindow(theDisp, chwin);
 
 	/* decide if we want to just grab clickWin, or cW.
-	   basically, if they're different in any important way 
-	   (depth, visual, colormap), grab 'clickWin' only, 
+	   basically, if they're different in any important way
+	   (depth, visual, colormap), grab 'clickWin' only,
 	   as it's the important part */
 
-	if (!clickWin || 
+	if (!clickWin ||
 	    (XGetWindowAttributes(theDisp, clickWin, &clickxwa)  &&
 	     XGetWindowAttributes(theDisp, cW,       &parentxwa) &&
 	     clickxwa.visual->class == parentxwa.visual->class   &&
@@ -200,44 +200,44 @@ int Grab()
 	  clickWin = cW;   	  /* close enough! */
       }
       else clickWin = cW;
-      
-      if (DEBUG) 
+
+      if (DEBUG)
 	fprintf(stderr, "rW = %x, cW = %x, chwin = %x, clickWin = %x\n",
 		(u_int) rW, (u_int) cW, (u_int) chwin, (u_int) clickWin);
     }
-    
-    
+
+
     if (clickWin == rootW) {   /* grab entire screen */
       if (DEBUG) fprintf(stderr,"Grab: clicked on root window.\n");
       ix = iy = 0;  iw = dispWIDE;  ih = dispHIGH;
     }
     else {
       int x,y;  Window win;   unsigned int rw,rh,rb,rd;
-      
+
       if (XGetGeometry(theDisp,clickWin,&rW, &x, &y, &rw, &rh, &rb, &rd)) {
 	iw = (int) rw;  ih = (int) rh;
-	
+
 	XTranslateCoordinates(theDisp, clickWin, rootW, 0, 0, &ix,&iy, &win);
-	
-	if (DEBUG) fprintf(stderr,"clickWin=0x%x: %d,%d %dx%d depth=%ud\n", 
-			   (u_int) clickWin, ix, iy, iw, ih, rd);    
+
+	if (DEBUG) fprintf(stderr,"clickWin=0x%x: %d,%d %dx%d depth=%ud\n",
+			   (u_int) clickWin, ix, iy, iw, ih, rd);
       }
       else {
 	ix = iy = 0;  iw = dispWIDE;  ih = dispHIGH;  clickWin = rootW;
 	if (DEBUG) fprintf(stderr,"XGetGeometry failed? (using root win)\n");
       }
     }
-    
-    
+
+
     /* range checking:  keep rectangle fully on-screen */
     if (ix<0) { iw += ix;  ix = 0; }
     if (iy<0) { ih += iy;  iy = 0; }
     if (ix+iw>dispWIDE) iw = dispWIDE-ix;
     if (iy+ih>dispHIGH) ih = dispHIGH-iy;
-    
-    
+
+
     if (DEBUG) fprintf(stderr,"using %d,%d (%dx%d)\n", ix, iy, iw, ih);
-    
+
     /* flash the rectangle a bit... */
     startflash();
     for (i=0; i<5; i++) {
@@ -258,7 +258,7 @@ int Grab()
     origrx = ix = x2 = rx;
     origry = iy = y2 = ry;
     iw = ih = 0;
-    
+
     XGrabServer(theDisp);
     startflash();
 
@@ -276,32 +276,32 @@ int Grab()
 	iw = abs(rx - x1);  ih = abs(ry - y1);
 	x2 = rx;  y2 = ry;
       }
-      
+
       if (iw>1 && ih>1) flashrect(ix,iy,iw,ih,1);  /* turn on rect */
     }
 
     flashrect(ix, iy, iw, ih, 0);                  /* turn off rect */
     endflash();
-    
+
     XUngrabServer(theDisp);
-    
-    
+
+
     if (origcW == cW) {  /* maybe it's entirely in one window??? */
       if (cW) {    /* will be 0 if clicked in rootW */
 	Window stwin, enwin, stwin1, enwin1;
-	if (DEBUG) fprintf(stderr,"origcW=%x cW=%x   ", 
+	if (DEBUG) fprintf(stderr,"origcW=%x cW=%x   ",
 			   (u_int) origcW, (u_int) cW);
 	XTranslateCoordinates(theDisp,rootW,cW, origrx,origry,&x,&y,&stwin);
 	XTranslateCoordinates(theDisp,rootW,cW, rx,    ry,    &x,&y,&enwin);
-	
-	if (DEBUG) fprintf(stderr,"stwin=%x enwin=%x   ", 
+
+	if (DEBUG) fprintf(stderr,"stwin=%x enwin=%x   ",
 			   (u_int) stwin, (u_int) enwin);
 	if (stwin == enwin && stwin != None) {
 	  stwin1 = xvClientWindow(theDisp, stwin);
 	  enwin1 = xvClientWindow(theDisp, enwin);
-	  if (DEBUG) fprintf(stderr,"stwin1=%x enwin1=%x   ", 
+	  if (DEBUG) fprintf(stderr,"stwin1=%x enwin1=%x   ",
 			     (u_int) stwin1, (u_int) enwin1);
-	  
+
 	  if (stwin1 == enwin1 && stwin1) clickWin = stwin1;
 	  else clickWin = stwin;
 	}
@@ -310,7 +310,7 @@ int Grab()
       else clickWin = rootW;
     }
   }
-  
+
 
   /***
    ***  now that clickWin,ix,iy,iw,ih are known, try to grab the bits...
@@ -337,7 +337,7 @@ int Grab()
 
       if (DEBUG) fprintf(stderr,"==remapped mainW.  waiting for Config.\n");
 
-      /* sit here until we see a MapNotify on mainW followed by a 
+      /* sit here until we see a MapNotify on mainW followed by a
 	 ConfigureNotify on mainW */
 
       state = 0;
@@ -349,13 +349,13 @@ int Grab()
 	if (state==0 && event.type == MapNotify &&
 	    event.xmap.window == mainW) state = 1;
 
-	if (state==1 && event.type == ConfigureNotify && 
+	if (state==1 && event.type == ConfigureNotify &&
 	    event.xconfigure.window == mainW) break;
       }
 
       if (DEBUG) fprintf(stderr,"==after remapping mainW, GOT Config.\n");
     }
-      
+
     else if (ctrlW) CtrlBox(1);
   }
 
@@ -373,7 +373,7 @@ static void flashrect(x,y,w,h,show)
   XSetPlaneMask(theDisp, rootGC, xorMasks[maskno]);
 
   if (!show) {     /* turn off rectangle */
-    if (isvis) 
+    if (isvis)
       XDrawRectangle(theDisp, rootW, rootGC, x, y, (u_int) w-1, (u_int) h-1);
 
     isvis = 0;
@@ -391,7 +391,7 @@ static void flashrect(x,y,w,h,show)
 
 /***********************************/
 static void startflash()
-{  
+{
   /* set up for drawing a flashing rectangle */
   XSetFunction(theDisp, rootGC, GXinvert);
   XSetSubwindowMode(theDisp, rootGC, IncludeInferiors);
@@ -399,7 +399,7 @@ static void startflash()
 
 /***********************************/
 static void endflash()
-{  
+{
   XSetFunction(theDisp, rootGC, GXcopy);
   XSetSubwindowMode(theDisp, rootGC, ClipByChildren);
   XSetPlaneMask(theDisp, rootGC, AllPlanes);
@@ -446,7 +446,7 @@ static int grabImage(clickWin, x, y, w, h)
   XTranslateCoordinates(theDisp, rootW, clickWin, x, y, &ix, &iy, &win);
 
   xerrcode = 0;
-  image = XGetImage(theDisp, clickWin, ix, iy, (u_int) w, (u_int) h, 
+  image = XGetImage(theDisp, clickWin, ix, iy, (u_int) w, (u_int) h,
 		    AllPlanes, ZPixmap);
   if (xerrcode || !image || !image->data) {
     sprintf(str, "Unable to get image (%d,%d %dx%d) from display", ix,iy,w,h);
@@ -475,8 +475,8 @@ static int grabImage(clickWin, x, y, w, h)
 
   /* DO *NOT* use xvDestroyImage(), as the 'data' field was alloc'd by X, not
      necessarily through 'malloc() / free()' */
-  XDestroyImage(image);   
-  
+  XDestroyImage(image);
+
   if (colors) free((char *) colors);
 
   return i;
@@ -545,13 +545,13 @@ static int convertImage(image, colors, ncolors, xwap)
   isLsbMachine = (sw.b[0]) ? 1 : 0;
 
   if (xwap && xwap->visual) visual = xwap->visual;
-                       else visual = theVisual;
+		       else visual = theVisual;
 
   if (DEBUG) {
     fprintf(stderr,"convertImage:\n");
     fprintf(stderr,"  %dx%d (offset %d), %s\n",
-	    image->width, image->height, image->xoffset, 
-	    (image->format == XYBitmap || image->format == XYPixmap) 
+	    image->width, image->height, image->xoffset,
+	    (image->format == XYBitmap || image->format == XYPixmap)
 	    ? "XYPixmap" : "ZPixmap");
 
     fprintf(stderr,"byte_order = %s, bitmap_bit_order = %s, unit=%d, pad=%d\n",
@@ -566,7 +566,7 @@ static int convertImage(image, colors, ncolors, xwap)
 	    image->red_mask, image->green_mask, image->blue_mask);
 
     if (isLsbMachine) fprintf(stderr,"This looks like an lsbfirst machine\n");
-                 else fprintf(stderr,"This looks like an msbfirst machine\n");
+		 else fprintf(stderr,"This looks like an msbfirst machine\n");
   }
 
 
@@ -605,7 +605,7 @@ static int convertImage(image, colors, ncolors, xwap)
       grabmapB[i] = colors[i].blue  >> 8;
     }
   }
-  
+
   if (!grabPic) FatalError("unable to malloc grabPic in convertImage()");
   pptr = grabPic;
 
@@ -652,12 +652,12 @@ static int convertImage(image, colors, ncolors, xwap)
 
   /* if we're on an lsbfirst machine, or the image came from an lsbfirst
      machine, we should flip the bytes around.  NOTE:  if we're on an
-     lsbfirst machine *and* the image came from an lsbfirst machine, 
+     lsbfirst machine *and* the image came from an lsbfirst machine,
      *don't* flip bytes, as it should work out */
 
   /* pity we don't have a logical exclusive-or */
   flipBytes = ( isLsbMachine && byte_order != LSBFirst) ||
-              (!isLsbMachine && byte_order == LSBFirst);
+	      (!isLsbMachine && byte_order == LSBFirst);
 
   for (i=0; i<image->height; i++) {
     lineptr = (byte *) image->data + (i * image->bytes_per_line);
@@ -667,23 +667,23 @@ static int convertImage(image, colors, ncolors, xwap)
     bits_used = bits_per_item;
 
     for (j=0; j<image->width; j++) {
-      
+
       /* get the next pixel value from the image data */
 
       if (bits_used == bits_per_item) {  /* time to move on to next b/s/l */
 	switch (bits_per_item) {
 	case 8:  bptr++;  break;
 	case 16: sptr++;  sval = *sptr;
-	         if (flipBytes) {   /* swap CARD16 */
+		 if (flipBytes) {   /* swap CARD16 */
 		   sw.s = sval;
 		   tmpbyte = sw.b[0];
 		   sw.b[0] = sw.b[1];
 		   sw.b[1] = tmpbyte;
 		   sval = sw.s;
 		 }
-	         break;
+		 break;
 	case 32: lptr++;  lval = *lptr;
-	         if (flipBytes) {   /* swap CARD32 */
+		 if (flipBytes) {   /* swap CARD32 */
 		   sw.l = lval;
 		   tmpbyte = sw.b[0];
 		   sw.b[0] = sw.b[3];
@@ -693,12 +693,12 @@ static int convertImage(image, colors, ncolors, xwap)
 		   sw.b[2] = tmpbyte;
 		   lval = sw.l;
 		 }
-	         break;
+		 break;
 	}
-		   
+
 	bits_used = 0;
 	if (bit_order == MSBFirst) bit_shift = bits_per_item - bits_per_pixel;
-	                      else bit_shift = 0;
+			      else bit_shift = 0;
       }
 
       switch (bits_per_item) {
@@ -708,14 +708,14 @@ static int convertImage(image, colors, ncolors, xwap)
       }
 
       if (bit_order == MSBFirst) bit_shift -= bits_per_pixel;
-                            else bit_shift += bits_per_pixel;
+			    else bit_shift += bits_per_pixel;
       bits_used += bits_per_pixel;
 
-      
+
       /* okay, we've got the next pixel value in 'pixvalue' */
-      
+
       if (visual->class == TrueColor || visual->class == DirectColor) {
-	/* in either case, we have to take the pixvalue and 
+	/* in either case, we have to take the pixvalue and
 	   break it out into individual r,g,b components */
 	rval = (pixvalue & rmask) >> rshift;
 	gval = (pixvalue & gmask) >> gshift;
@@ -839,7 +839,7 @@ static int getxcolors(win_info, colors)
 
   return(ncolors);
 }
-    
+
 
 
 
@@ -872,11 +872,11 @@ int LoadGrab(pinfo)
   pinfo->frmType = -1;
   pinfo->colType = -1;
 
-  sprintf(pinfo->fullInfo,"<%s internal>", 
+  sprintf(pinfo->fullInfo,"<%s internal>",
 	  (pinfo->type == PIC8) ? "8-bit" : "24-bit");
-  
+
   sprintf(pinfo->shrtInfo,"%dx%d image.",gWIDE, gHIGH);
-  
+
   pinfo->comment = (char *) NULL;
 
   grabPic = (byte *) NULL;

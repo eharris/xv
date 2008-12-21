@@ -1,12 +1,12 @@
 --------
 Schnauzer:  add fields to BRINFO structure.  Want to be able to sort on
 name, size, and mtime  (atime is useless, given that we access files all
-the time in the schnauzer...)  
+the time in the schnauzer...)
 
 Have a '-noshrink' option & resource.  When enabled, and you view an image
 	that's larger than the max window size, it should *crop* the image
 	to the window, rather than shrink it.  This should probably also
-	become the new default behavior, so maybe call it '-shrink' or 
+	become the new default behavior, so maybe call it '-shrink' or
 	something...  (Concerns:  'Normal' command, 'Uncrop' command...)
 
 Option to change how TrackPicValues displays stuff.  Let user enter
@@ -24,7 +24,7 @@ CODE TO WRITE (maybe)
 >   prompting for a one line annotation or a file containing the text.
 >
 > BETTER IDEA:
->   write comments (if any) to a temp file, exec an emacs (or whatever 
+>   write comments (if any) to a temp file, exec an emacs (or whatever
 >   'EDITOR' is set to) on that file, and when it exits, reload contents of
 >   the file as comments.  Should be easy enough, but I'm not making any more
 >   changes until after 3.10 ships...
@@ -55,12 +55,12 @@ On-line help of some sort!  (Maybe an HTML page.)
 Make a '-update' option to do an 'Update' (generate icons) in the specified
 	directory, without any user intervention.
 
-If '-perfect' or '-owncmap', we could create a private colormap when in 
+If '-perfect' or '-owncmap', we could create a private colormap when in
 	stdcmap mode (and then we can pick a 3/3/2 on 8-bit displays, and
 	have a better chance of getting 2/2/2 on 6-bit displays.)
 
 Add '-1xlimit' option (to keep 'old style' behavior, for folks who liked it),
-	and make '-2xlimits' the default.  Also change UnCrop behavior 
+	and make '-2xlimits' the default.  Also change UnCrop behavior
 	(should uncrop at current expansion:  if that would be bigger than
 	the screen, just go back to 'normal' size)
 
@@ -100,7 +100,7 @@ Keyboard accelerators for the RGB dials in the color editor.
 RIGHT BEFORE HELL FREEZES OVER
 ------------------------------
 
-> Let you type 'xv <dirname>' it should do the 'right thing'  (including 
+> Let you type 'xv <dirname>' it should do the 'right thing'  (including
 > 	recursing down subdirs...)
 > Should probably have a '-only_use_recognized_suffixes' option to speed things
 > up?  (ie, so it won't bother stat'ing (or including in the list, at least)
@@ -108,11 +108,11 @@ RIGHT BEFORE HELL FREEZES OVER
 
 
 > Deal with the virtual WM scene (tvtwm, at least)
->  
+>
 > '-root' modes in tvtwm core dump?
-> 
+>
 > '-virtual' option:  geomspecs should normally be relative to the physical
-> root window.  If '-virtual' is specified, they should be relative to the 
+> root window.  If '-virtual' is specified, they should be relative to the
 > virtual root window (if any)  (ALTERNATELY:  modify parsing of the geometry
 > string slightly (look for a leading 'a' or 'r'???)
 >
@@ -139,11 +139,11 @@ One question re usage:  can I place the "xv" window on one
 I looked/read the docs, but couldn't figure out if this was possible.
 
 
-Histograms (possibly toggle switches for all four graph windows?)  Possibly 
+Histograms (possibly toggle switches for all four graph windows?)  Possibly
 it's own window...  (See message from Jon Brinkmann describing ideas.)
 
 
-> What I want is that if I Shift-rightbutton'ed on a pixel in the image, the 
+> What I want is that if I Shift-rightbutton'ed on a pixel in the image, the
 > pixel got the yanked color. Should be very easy to implement if desired.
 
 

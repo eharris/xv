@@ -1,7 +1,7 @@
-FITS:  There are two different sets of modifications that allow XV to 
+FITS:  There are two different sets of modifications that allow XV to
 read/write 'FITS' files.  I have no comment on the merits of either set.
-Take your pick.  (Note: At least one of the sets (FITS.rite) makes assumptions 
-about 'int's being 4 bytes long.  This will fail miserably on a 64-bit 
+Take your pick.  (Note: At least one of the sets (FITS.rite) makes assumptions
+about 'int's being 4 bytes long.  This will fail miserably on a 64-bit
 machine.)  I'm unlikely to incorporate either set into a future version of XV,
 as FITS looks like a dinosaur format that should've gone away a decade ago.
 (It makes PDS/VICAR look streamlined and modern!)  Anyway, if you need FITS
@@ -25,14 +25,14 @@ by Marc Evans.
 This directory contains various things that folks have sent me that
 may be of interest to various other folks out there.  *NONE* of the stuff
 in this directory has been made to work with the current release of XV.
-If it had, it would be part of the program, instead.  
+If it had, it would be part of the program, instead.
 
 Rather than put off releasing XV, because I'm too busy adding formats that
 don't particularly interest me (personally), I've decided to just put all
 of these things in this directory.  Anyone who actually wants to use one
 of these formats shouldn't have much trouble taking what is given here and
 tweaking it so that it follows the specs in Appendix G of the (PostScript)
-XV Docs (not the 'man' page).  
+XV Docs (not the 'man' page).
 
 Also, please don't ask *me* anything about the code in this directory,
 other than to find out if I've put out a newer release that officially

@@ -8,13 +8,13 @@ $! and Tim Bell (tbell@netcom.com) for their help.
 $!
 $! Read installation instructions before running this!!
 $!
-$ If F$GetSyi ("HW_MODEL") .gt. 1023 
+$ If F$GetSyi ("HW_MODEL") .gt. 1023
 $   Then
 $       OPT = ""
 $   Else
 $       OPT = ",Sys$Disk:[]makvms.opt/Option"
 $ EndIf
-$ 
+$
 $ DoCompile := CC /NoDebug /Optimize
 $!
 $ DoCompile jcapi.c
@@ -57,13 +57,13 @@ $ DoCompile jmemmgr.c
 $ DoCompile jmemnobs.c
 $!
 $ Library /Create libjpeg.olb  jcapi.obj,jcparam.obj,jdatadst.obj, -
-          jcmaster.obj,jcmarker.obj,jcmainct.obj,jcprepct.obj,jccoefct.obj, -
-          jccolor.obj,jcsample.obj,jchuff.obj,jcdctmgr.obj,jfdctfst.obj, -
-          jfdctflt.obj,jfdctint.obj,jdapi.obj,jdatasrc.obj,jdmaster.obj, -
-          jdmarker.obj,jdmainct.obj,jdcoefct.obj,jdpostct.obj,jddctmgr.obj, -
-          jidctfst.obj,jidctflt.obj,jidctint.obj,jidctred.obj,jdhuff.obj, -
-          jdsample.obj,jdcolor.obj,jquant1.obj,jquant2.obj,jdmerge.obj, -
-          jcomapi.obj,jutils.obj,jerror.obj,jmemmgr.obj,jmemnobs.obj
+	  jcmaster.obj,jcmarker.obj,jcmainct.obj,jcprepct.obj,jccoefct.obj, -
+	  jccolor.obj,jcsample.obj,jchuff.obj,jcdctmgr.obj,jfdctfst.obj, -
+	  jfdctflt.obj,jfdctint.obj,jdapi.obj,jdatasrc.obj,jdmaster.obj, -
+	  jdmarker.obj,jdmainct.obj,jdcoefct.obj,jdpostct.obj,jddctmgr.obj, -
+	  jidctfst.obj,jidctflt.obj,jidctint.obj,jidctred.obj,jdhuff.obj, -
+	  jdsample.obj,jdcolor.obj,jquant1.obj,jquant2.obj,jdmerge.obj, -
+	  jcomapi.obj,jutils.obj,jerror.obj,jmemmgr.obj,jmemnobs.obj
 $!
 $ DoCompile cjpeg.c
 $ DoCompile rdppm.c
@@ -73,7 +73,7 @@ $ DoCompile rdrle.c
 $ DoCompile rdbmp.c
 $!
 $ Link /Executable = cjpeg.exe  cjpeg.obj,rdppm.obj,rdgif.obj,rdtarga.obj, -
-          rdrle.obj,rdbmp.obj,libjpeg.olb/Library'OPT'
+	  rdrle.obj,rdbmp.obj,libjpeg.olb/Library'OPT'
 $!
 $ DoCompile djpeg.c
 $ DoCompile wrppm.c
@@ -84,7 +84,7 @@ $ DoCompile wrbmp.c
 $ DoCompile rdcolmap.c
 $!
 $ Link /Executable = djpeg.exe  djpeg.obj,wrppm.obj,wrgif.obj,wrtarga.obj, -
-          wrrle.obj,wrbmp.obj,rdcolmap.obj,libjpeg.olb/Library'OPT'
+	  wrrle.obj,wrbmp.obj,rdcolmap.obj,libjpeg.olb/Library'OPT'
 $!
 $ DoCompile rdjpgcom.c
 $ Link /Executable = rdjpgcom.exe  rdjpgcom.obj'OPT'

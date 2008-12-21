@@ -234,13 +234,13 @@ out_of_memory (j_common_ptr cinfo, int which)
  * machines, but may be too small if longs are 64 bits or more.
  */
 
-static const size_t first_pool_slop[JPOOL_NUMPOOLS] = 
+static const size_t first_pool_slop[JPOOL_NUMPOOLS] =
 {
 	1600,			/* first PERMANENT pool */
 	16000			/* first IMAGE pool */
 };
 
-static const size_t extra_pool_slop[JPOOL_NUMPOOLS] = 
+static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
 {
 	0,			/* additional PERMANENT pools */
 	5000			/* additional IMAGE pools */
@@ -797,7 +797,7 @@ access_virt_sarray (j_common_ptr cinfo, jvirt_sarray_ptr ptr,
 	ltemp = 0;		/* don't fall off front end of file */
       ptr->cur_start_row = (JDIMENSION) ltemp;
     }
-    /* If reading, read in the selected part of the array. 
+    /* If reading, read in the selected part of the array.
      * If we are writing, we need not pre-read the selected portion,
      * since the access sequence constraints ensure it would be garbage.
      */
@@ -853,7 +853,7 @@ access_virt_barray (j_common_ptr cinfo, jvirt_barray_ptr ptr,
 	ltemp = 0;		/* don't fall off front end of file */
       ptr->cur_start_row = (JDIMENSION) ltemp;
     }
-    /* If reading, read in the selected part of the array. 
+    /* If reading, read in the selected part of the array.
      * If we are writing, we need not pre-read the selected portion,
      * since the access sequence constraints ensure it would be garbage.
      */

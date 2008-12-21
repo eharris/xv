@@ -1,5 +1,5 @@
 <These have already been applied.  They're listed here mainly for my
- reference, as they'll probably have to be reapplied whenever there's a 
+ reference, as they'll probably have to be reapplied whenever there's a
  new version of the tiff library.  --jhb, 12/14/94>
 
 In tiff/Makefile.hpux, you need to add -D_HPUX_SOURCE to CFLAGS.
@@ -51,9 +51,9 @@ Index: tiff/Makefile.mms
 + #
 + # It is based on the Unix Makefile by Leffler
 + #
-+ 
++
 + NULL =
-+ 
++
 + IPATH =	[]
 + #
 + # Library-wide configuration defines:
@@ -77,17 +77,17 @@ Index: tiff/Makefile.mms
 + # automatically handled (i.e. tif_compress.o has a dependency on
 + # the Makefile).
 + #
-+ 
++
 + .ifdef ALPHA
 + FLAGS =		/Warnings = NoInformationals /Standard = VAXC
 + DEFS = 		/Define = ("BSDTYPES=1", "USE_VARARGS=1", "USE_PROTOTYPES=0", \
 + 		"USE_CONST",__STDC__)
 + .else
-+ FLAGS =		
++ FLAGS =
 + DEFS = 		/Define = ("BSDTYPES=1", "USE_VARARGS=1", "USE_PROTOTYPES=0", \
 + 		"USE_CONST", __STDC__)
 + .endif
-+ 
++
 + .ifdef DEBUG
 + OPTIMIZE = 	/NoOptimize
 + DBG = 		/Debug
@@ -95,12 +95,12 @@ Index: tiff/Makefile.mms
 + OPTIMIZE = 	/Optimize
 + DBG = 		/NoDebug
 + .endif
-+ 
++
 + INCS =		/Include_Directory = ($(IPATH))
 + CFLAGS = 	$(CFLAGS) $(FLAGS) $(DEFS) $(INCS) $(OPTIMIZE) $(DBG)
-+ 
++
 + INCLUDES =	tiff.h tiffio.h
-+ 
++
 + SRCS =	tif_fax3.c \
 + 	tif_fax4.c \
 + 	tif_aux.c \
@@ -130,7 +130,7 @@ Index: tiff/Makefile.mms
 +         tif_vms.c \
 + 	tif_warning.c \
 + 	tif_write.c
-+ 
++
 + OBJS =	tif_fax3.obj \
 + 	tif_fax4.obj \
 + 	tif_aux.obj \
@@ -160,32 +160,32 @@ Index: tiff/Makefile.mms
 +         tif_vms.obj \
 + 	tif_warning.obj \
 + 	tif_write.obj
-+ 
++
 + OBJLIST = tif_fax3.obj,tif_fax4.obj,tif_aux.obj,tif_ccittrle.obj,tif_close.obj,tif_compress.obj,tif_dir.obj,tif_dirinfo.obj,tif_dirread.obj,tif_dirwrite.obj,tif_dumpmode.obj,tif_error.obj,tif_getimage.obj,tif_jpeg.obj,tif_flush.obj,tif_lzw.obj,tif_next.obj,tif_open.obj,tif_packbits.obj,tif_print.obj,tif_read.obj,tif_strip.obj,tif_swab.obj,tif_thunder.obj,tif_tile.obj,tif_version.obj,tif_vms.obj,tif_warning.obj,tif_write.obj
-+ 
++
 + TIFFLIB =	libtiff.olb
-+ 
++
 + .first
 + .ifdef ALPHA
 + 	@- Define /NoLog Sys DECC$Library_Include
 + .else
 + 	@- Define /NoLog Sys Sys$Library
 + .endif
-+ 
++
 + all :		lib
 + 	@ continue
-+ 
++
 + lib :		$(TIFFLIB)
 + 	@ continue
-+ 
++
 + libtiff.olb :		$(OBJS)
 +         If "''F$Search ("$(TIFFLIB)")'" .eqs. "" Then Library /Create $(TIFFLIB)
 + 	Library /Replace $(TIFFLIB) $(OBJLIST)
-+ 
++
 + $(OBJS) : 	tiffio.h tiff.h tiffcomp.h tiffiop.h tiffconf.h
-+ 
++
 + tif_fax3.obj :	tif_fax3.c g3states.h t4.h tif_fax3.h
-+ 
++
 + mkg3states.exe :	mkg3states.c t4.h
 + 	- $(CC) $(CFLAGS) mkg3states.c
 + .ifdef ALPHA
@@ -193,7 +193,7 @@ Index: tiff/Makefile.mms
 +         - $ Define /User_Mode LNK$Library Sys$Library:VAXCRTL
 + .endif
 + 	- $(LINK) $(LINKFLAGS) mkg3states
-+ 
++
 + g3states.h :		mkg3states.exe
 + 	Define /User_Mode Sys$Output g3states.h
 + 	Run mkg3states.exe
@@ -203,21 +203,21 @@ Index: tiff/Makefile.mms
 + #   run once, I didn't think it was really necessary anymore.   RLD 24-FEB-1993
 + #[-]argproc.obj :	[-]argproc.c [-]includes.h
 + #	$(CC) $(CFLAGS) [-]argproc.c
-+ 
++
 + clean :
 + 	@- Set Protection = Owner:RWED *.*;-1,*.obj
 + 	- Purge /NoLog /NoConfirm *.*
 + 	- Delete /NoLog /NoConfirm *.obj;*,*.exe;*,*.olb;
 + 	- Delete /NoLog /NoConfirm g3states.h;*
 Index: tiff/mkg3states.c
-Prereq:  1.23 
+Prereq:  1.23
 *** xv-3.10-orig/tiff/mkg3states.c	Mon Dec  5 14:22:10 1994
 --- xv-3.10-new/tiff/mkg3states.c	Mon Dec 12 17:17:33 1994
 ***************
 *** 264,270 ****
 --- 264,274 ----
-  	fprintf(stderr, "%d incomplete prefixes defined\n",
-  	    (int) horiz_mode_prefix_count);
+	fprintf(stderr, "%d incomplete prefixes defined\n",
+	    (int) horiz_mode_prefix_count);
       write_tables(stdout);
 + #ifndef VMS
       return (0);
@@ -225,49 +225,49 @@ Prereq:  1.23
 +     exit (0);
 + #endif
   }
-  
+
   void
 Index: tiff/tif_vms.c
-Prereq:  1.13 
+Prereq:  1.13
 *** xv-3.10-orig/tiff/tif_vms.c	Mon Dec  5 14:22:12 1994
 --- xv-3.10-new/tiff/tif_vms.c	Mon Dec 12 17:17:34 1994
 ***************
 *** 28,37 ****
    * TIFF Library VMS-specific Routines.
    */
-  
+
 ! #include stdlib
 ! #include unixio
 ! #include rms
 ! #include starlet
   #include "tiffiop.h"
-  
+
   static tsize_t
 --- 28,37 ----
    * TIFF Library VMS-specific Routines.
    */
-  
+
 ! #include <stdlib>
 ! #include <unixio>
 ! #include <rms>
 ! #include <starlet>
   #include "tiffiop.h"
-  
+
   static tsize_t
 ***************
 *** 235,241 ****
-  		fd = open(name, m, 0666,
-  		    "deq = 64", "mbc = 32", "fop = tef", "ctx = stm");
-  	} else
+		fd = open(name, m, 0666,
+		    "deq = 64", "mbc = 32", "fop = tef", "ctx = stm");
+	} else
 ! 		fd = open(name, m, 0666, "mbc = 32");
-  	if (fd < 0) {
-  		TIFFError(module, "%s: Cannot open", name);
-  		return ((TIFF*)0);
+	if (fd < 0) {
+		TIFFError(module, "%s: Cannot open", name);
+		return ((TIFF*)0);
 --- 235,241 ----
-  		fd = open(name, m, 0666,
-  		    "deq = 64", "mbc = 32", "fop = tef", "ctx = stm");
-  	} else
+		fd = open(name, m, 0666,
+		    "deq = 64", "mbc = 32", "fop = tef", "ctx = stm");
+	} else
 ! 		fd = open(name, m, 0666, "mbc = 32", "ctx = stm");
-  	if (fd < 0) {
-  		TIFFError(module, "%s: Cannot open", name);
-  		return ((TIFF*)0);
+	if (fd < 0) {
+		TIFFError(module, "%s: Cannot open", name);
+		return ((TIFF*)0);

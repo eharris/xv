@@ -14,7 +14,7 @@
  *
  *      This code should work on machines with any byte order.
  *
- *	Could someone make this run real fast using multiple processors 
+ *	Could someone make this run real fast using multiple processors
  *	or how about using memory mapped files to speed it up?
  *
  *				Paul Haeberli - 1991
@@ -44,7 +44,7 @@ typedef struct {
     u_short 	zsize;
     u_long 	min;
     u_long 	max;
-    u_long	wastebytes;	
+    u_long	wastebytes;
     char 	name[80];
     u_long	colormap;
 
@@ -148,7 +148,7 @@ int LoadIRIS(fname, pinfo)
   }
 
   rawdata = getimagedata(fp, &img);
-  if (!rawdata) {   
+  if (!rawdata) {
     fclose(fp);
     if (loaderr) irisError(bname, loaderr);
     return 0;
@@ -173,7 +173,7 @@ int LoadIRIS(fname, pinfo)
     }
 
 
-    for (i=0; i<256; i++) 
+    for (i=0; i<256; i++)
       pinfo->r[i] = pinfo->g[i] = pinfo->b[i] = i;
 
     pinfo->pic  = pic824;
@@ -190,7 +190,7 @@ int LoadIRIS(fname, pinfo)
   else {  /* truecolor */
     pic824 = (byte *) malloc((size_t) img.xsize * img.ysize * 3);
     if (!pic824) FatalError("couldn't malloc pic824 in LoadIRIS()");
-    
+
     /* copy plane 3 from rawdata into pic824, inverting pic vertically */
     for (i=0, bptr=pic824; i<(int) img.ysize; i++) {
       rptr = rawdata + ((img.ysize - 1) - i) * (img.xsize * 4);
@@ -220,7 +220,7 @@ int LoadIRIS(fname, pinfo)
   pinfo->comment = (char *) NULL;
 
   return 1;
-}     
+}
 
 
 /*******************************************/
@@ -237,7 +237,7 @@ static byte *getimagedata(fp, img)
      FILE  *fp;
      IMAGE *img;
 {
-  /* read in a B/W RGB or RGBA iris image file and return a 
+  /* read in a B/W RGB or RGBA iris image file and return a
      pointer to an array of 4-byte pixels, arranged ABGR, NULL on error */
 
   byte   *base, *lptr;
@@ -271,7 +271,7 @@ static byte *getimagedata(fp, img)
     lengthtab = (u_long *) malloc((size_t) tablen * sizeof(long));
     rledat    = (byte *)   malloc((size_t) rlebuflen);
 
-    if (!starttab || !lengthtab || !rledat) 
+    if (!starttab || !lengthtab || !rledat)
       FatalError("out of memory in LoadIRIS()");
 
     fseek(fp, 512L, 0);
@@ -354,7 +354,7 @@ static byte *getimagedata(fp, img)
     if (!base || !verdat) FatalError("out of memory in LoadIRIS()");
 
     addimgtag(base,xsize,ysize);
-    
+
     fseek(fp,512L,0);
 
     for (z=0; z<zsize; z++) {
@@ -457,7 +457,7 @@ static void addimgtag(dptr,xsize,ysize)
      byte *dptr;
      int   xsize, ysize;
 {
-  /* this is used to extract image data from core dumps. 
+  /* this is used to extract image data from core dumps.
      I doubt this is necessary...  --jhb */
 
   dptr    = dptr + (xsize * ysize * 4);
@@ -508,7 +508,7 @@ int WriteIRIS(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle)
   byte   *lumbuf, *lptr, *longpic;
 
   xvbzero((char *) &img, sizeof(IMAGE));
-  
+
   /* write header information */
   fwrite(&img, sizeof(IMAGE), (size_t) 1, fp);
   fseek(fp, 0L, 0);
@@ -545,7 +545,7 @@ int WriteIRIS(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle)
   rlebuf    = (byte *)   malloc((size_t) rlebuflen);
   lumbuf    = (byte *)   malloc((size_t) w * 4);
 
-  if (!starttab || !lengthtab || !rlebuf || !lumbuf) 
+  if (!starttab || !lengthtab || !rlebuf || !lumbuf)
     FatalError("out of memory in WriteIRIS()");
 
   pos = 512 + 2 * (tablen * 4);
@@ -574,7 +574,7 @@ int WriteIRIS(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle)
       }
     }
   }
-      
+
 
 
   /* compress and write the data */
@@ -584,7 +584,7 @@ int WriteIRIS(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle)
       if (zsize == 1) {
 	lumrow(lptr, lumbuf, w);
 	len = compressrow(lumbuf, rlebuf, CHANOFFSET(j), w);
-      } 
+      }
       else {
 	len = compressrow(lptr, rlebuf, CHANOFFSET(j), w);
       }
@@ -618,10 +618,10 @@ int WriteIRIS(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle)
 
   return 0;
 }
-  
+
 
 /*************************************/
-static void lumrow(rgbptr, lumptr, n) 
+static void lumrow(rgbptr, lumptr, n)
      byte *rgbptr, *lumptr;
      int n;
 {
@@ -640,7 +640,7 @@ static int compressrow(lbuf, rlebuf, z, cnt)
      int   z, cnt;
 {
   byte *iptr, *ibufend, *sptr, *optr;
-  short todo, cc;							
+  short todo, cc;
   long  count;
 
   lbuf    += z;
@@ -685,7 +685,7 @@ static int compressrow(lbuf, rlebuf, z, cnt)
     cc = *iptr;
     iptr += 4;
     while ((iptr<ibufend) && (*iptr == cc))  iptr += 4;
-    
+
     count = (iptr-sptr)/4;
     while (count) {
       todo = count>126 ? 126:count;
@@ -694,7 +694,7 @@ static int compressrow(lbuf, rlebuf, z, cnt)
       *optr++ = cc;
     }
   }
-  
+
   *optr++ = 0;
   return (optr - rlebuf);
 }

@@ -4,23 +4,23 @@
  * Copyright (c) 1990, 1991, 1992, 1993, 1994 Sam Leffler
  * Copyright (c) 1991, 1992, 1993, 1994 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- * 
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -606,7 +606,7 @@ Fax3Decode2DRow(TIFF* tif, u_char* buf, uint32 npels)
 			color = !color;
 			a0 = b1;
 			break;
-	        case MODE_UNCOMP:
+		case MODE_UNCOMP:
 			/*
 			 * Uncompressed mode: select from the
 			 * special set of code words.
@@ -652,7 +652,7 @@ Fax3Decode2DRow(TIFF* tif, u_char* buf, uint32 npels)
 			} while (mode < UNCOMP_EXIT);
 			CACHE_STATE;
 			break;
-	        case MODE_ERROR_1:
+		case MODE_ERROR_1:
 			if ((tif->tif_options & FAX3_NOEOL) == 0) {
 				TIFFWarning(module,
 				    "%s: Premature EOL at scanline %d (x %d)",
@@ -662,13 +662,13 @@ Fax3Decode2DRow(TIFF* tif, u_char* buf, uint32 npels)
 				return (1);		/* try to synchronize */
 			}
 			/* fall thru... */
-	        case MODE_ERROR:
+		case MODE_ERROR:
 			TIFFError(module,
 			    "%s: Bad 2D code word at scanline %d",
 			    tif->tif_name, tif->tif_row);
 			UNCACHE_STATE;
 			goto bad;
-	        default:
+		default:
 			TIFFError(module,
 			    "%s: Panic, bad decoding state at scanline %d",
 			    tif->tif_name, tif->tif_row);

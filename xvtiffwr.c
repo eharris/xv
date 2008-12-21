@@ -16,8 +16,8 @@
 
 
 static void setupColormap   PARM((TIFF *, byte *, byte *, byte *));
-static int  WriteTIFF       PARM((FILE *, byte *, int, int, int, 
-				  byte *, byte *, byte *, int, int, 
+static int  WriteTIFF       PARM((FILE *, byte *, int, int, int,
+				  byte *, byte *, byte *, int, int,
 				  char *, int, char *));
 
 
@@ -29,7 +29,7 @@ static void setupColormap(tif, rmap, gmap, bmap)
 {
   short red[256], green[256], blue[256];
   int i;
-  
+
   /* convert 8-bit colormap to 16-bit */
   for (i=0; i<256; i++) {
 #define	SCALE(x)	((((int)x)*((1L<<16)-1))/255)
@@ -95,7 +95,7 @@ static int WriteTIFF(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,
       TIFFSetField(tif, TIFFTAG_SAMPLESPERPIXEL, 3);
       TIFFSetField(tif, TIFFTAG_BITSPERSAMPLE,   8);
       TIFFSetField(tif, TIFFTAG_PHOTOMETRIC,     PHOTOMETRIC_RGB);
-      
+
       TIFFWriteEncodedStrip(tif, 0, pic, w*h*3);
     }
 
@@ -109,9 +109,9 @@ static int WriteTIFF(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,
       tpic = (byte *) malloc((size_t) w*h);
       if (!tpic) FatalError("unable to malloc in WriteTIFF()");
 
-      for (i=0, tp=tpic, sp=pic; i<w*h; i++, sp+=3) 
+      for (i=0, tp=tpic, sp=pic; i<w*h; i++, sp+=3)
 	*tp++ = MONO(sp[0],sp[1],sp[2]);
-      
+
       TIFFWriteEncodedStrip(tif, 0, tpic, w*h);
 
       free(tpic);
@@ -209,23 +209,23 @@ void CreateTIFFW()
 {
   int	     y;
 
-  tiffW = CreateWindow("xv tiff", "XVtiff", NULL, 
+  tiffW = CreateWindow("xv tiff", "XVtiff", NULL,
 		       TWIDE, THIGH, infofg, infobg, 0);
   if (!tiffW) FatalError("can't create tiff window!");
 
   XSelectInput(theDisp, tiffW, ExposureMask | ButtonPressMask | KeyPressMask);
 
-  BTCreate(&tbut[T_BOK], tiffW, TWIDE-140-1, THIGH-10-BUTTH-1, 60, BUTTH, 
+  BTCreate(&tbut[T_BOK], tiffW, TWIDE-140-1, THIGH-10-BUTTH-1, 60, BUTTH,
 	   "Ok", infofg, infobg, hicol, locol);
 
-  BTCreate(&tbut[T_BCANC], tiffW, TWIDE-70-1, THIGH-10-BUTTH-1, 60, BUTTH, 
+  BTCreate(&tbut[T_BCANC], tiffW, TWIDE-70-1, THIGH-10-BUTTH-1, 60, BUTTH,
 	   "Cancel", infofg, infobg, hicol, locol);
 
   y = 55;
   compRB = RBCreate(NULL, tiffW, 36, y,   "None", infofg, infobg,hicol,locol);
   RBCreate(compRB, tiffW, 36, y+18,       "LZW", infofg, infobg,hicol,locol);
   RBCreate(compRB, tiffW, 36, y+36,       "PackBits", infofg, infobg,
-           hicol, locol);
+	   hicol, locol);
   RBCreate(compRB, tiffW, TWIDE/2, y,     "CCITT Group3", infofg, infobg,
 	   hicol, locol);
   RBCreate(compRB, tiffW, TWIDE/2, y+18,  "CCITT Group4", infofg, infobg,
@@ -237,7 +237,7 @@ void CreateTIFFW()
 
   XMapSubwindows(theDisp, tiffW);
 }
-  
+
 
 /***************************************************/
 void TIFFDialog(vis)
@@ -288,9 +288,9 @@ XEvent *xev;
 
   else if (xev->type == KeyPress) {
     XKeyEvent *e = (XKeyEvent *) xev;
-    char buf[128];  KeySym ks;  XComposeStatus status;  
+    char buf[128];  KeySym ks;  XComposeStatus status;
     int stlen;
-	
+
     stlen = XLookupString(e,buf,128,&ks,&status);
     buf[stlen] = '\0';
 
@@ -381,7 +381,7 @@ int x,y;
   /* check BUTTs */
 
   /* check the RBUTTS first, since they don't DO anything */
-  if ( (i=RBClick(compRB, x,y)) >= 0) { 
+  if ( (i=RBClick(compRB, x,y)) >= 0) {
     (void) RBTrack(compRB, i);
     return;
   }
@@ -417,7 +417,7 @@ int cmd;
     }
   }
     break;
-    
+
   case T_BCANC:	TIFFDialog(0);   break;
 
   default:	break;

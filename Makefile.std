@@ -14,7 +14,7 @@ CC = cc
 #       -Wuninitialized -Wparentheses
 
 
-CCOPTS = -O 
+CCOPTS = -O
 
 
 ### NOTE: Sun running OpenWindows:
@@ -38,7 +38,7 @@ buildit: all
 
 
 ########################### CONFIGURATION OPTIONS ############################
-### NOTE: be sure to check 'config.h', for a few other configuration options 
+### NOTE: be sure to check 'config.h', for a few other configuration options
 ##############################################################################
 
 ###
@@ -70,7 +70,7 @@ $(TIFFLIB):
 ###
 ### if, for whatever reason, you're unable to get the PDS/VICAR support
 ### to compile (xvpds.c, and vdcomp.c), *COMMENT OUT* the following line,
-### and also remove 'vdcomp' from the 'all:' dependancy 
+### and also remove 'vdcomp' from the 'all:' dependancy
 ###
 PDS = -DDOPDS
 
@@ -78,7 +78,7 @@ PDS = -DDOPDS
 #----------System V----------
 
 # if you are running on a SysV-based machine, such as HP, Silicon Graphics,
-# Solaris, etc., uncomment the following line to get mostly there.  
+# Solaris, etc., uncomment the following line to get mostly there.
 #UNIX = -DSVR4
 
 
@@ -109,7 +109,7 @@ PDS = -DDOPDS
 #MCHN = -Dsco -DPOSIX
 #
 # For ODT 2.0 (UNIX 3.2v4) machines, uncomment the following:
-#MCHN= -Dsco -DPOSIX -DNO_RANDOM 
+#MCHN= -Dsco -DPOSIX -DNO_RANDOM
 #
 # Also, you should add '-lc -lx' to the end of the LIBS def below
 # -lx must be after -lc so you get the right directory routines.
@@ -147,8 +147,8 @@ PDS = -DDOPDS
 #TIMERS = -DUSLEEP
 
 
-# if XV locks up whenever you click on *any* of the buttons, the Timer() 
-# function in xvmisc.c is going out to lunch.  A simple workaround is to 
+# if XV locks up whenever you click on *any* of the buttons, the Timer()
+# function in xvmisc.c is going out to lunch.  A simple workaround is to
 # uncomment the following line:
 #TIMERS = -DNOTIMER
 
@@ -160,7 +160,7 @@ PDS = -DDOPDS
 #DXWM = -DDXWM
 
 
-# if, during compilation, your system complains about the types 
+# if, during compilation, your system complains about the types
 # 'u_long', 'u_short', 'u_int', etc. as being undefined, uncomment the
 # following line:
 #BSDTYPES = -DBSDTYPES
@@ -247,7 +247,7 @@ install: all
 
 tar:
 	tar cvf xv.tar Makefile* Imakefile *.c *.h bits \
-		docs unsupt vms $(JPEGDIR) $(TIFFDIR) $(MISC) 
+		docs unsupt vms $(JPEGDIR) $(TIFFDIR) $(MISC)
 
 xvtar:
 	tar cvf xv.tar Makefile* Imakefile *.c *.h bits
@@ -258,13 +258,13 @@ $(OBJS):   xv.h config.h
 ################# bitmap dependencies ####################
 
 xv.o:      	bits/icon bits/iconmask bits/runicon bits/runiconm
-xv.o:      	bits/cboard50 bits/gray25 
+xv.o:      	bits/cboard50 bits/gray25
 
 xvbrowse.o:	bits/br_file bits/br_dir bits/br_exe bits/br_chr bits/br_blk
 xvbrowse.o:	bits/br_sock bits/br_fifo bits/br_error bits/br_unknown
 xvbrowse.o:	bits/br_cmpres bits/br_gif bits/br_pm bits/br_pbm
 xvbrowse.o:	bits/br_sunras bits/br_bmp bits/br_utah bits/br_iris
-xvbrowse.o:	bits/br_pcx bits/br_jfif bits/br_tiff bits/br_pds 
+xvbrowse.o:	bits/br_pcx bits/br_jfif bits/br_tiff bits/br_pds
 xvbrowse.o:	bits/br_ps bits/br_iff bits/br_targa bits/br_xpm
 xvbrowse.o:	bits/br_trash bits/fcurs bits/fccurs bits/fdcurs bits/fcursm
 xvbrowse.o:     bits/br_xwd
@@ -276,7 +276,7 @@ xvbutt.o:	bits/rb_dot bits/cb_check bits/mb_chk
 xvctrl.o:	bits/gray25 bits/gray50 bits/i_fifo bits/i_chr bits/i_dir
 xvctrl.o: 	bits/i_blk bits/i_lnk bits/i_sock bits/i_exe bits/i_reg
 xvctrl.o:	bits/h_rotl bits/h_rotr bits/fliph bits/flipv bits/p10
-xvctrl.o:	bits/m10 bits/cut bits/copy bits/paste bits/clear 
+xvctrl.o:	bits/m10 bits/cut bits/copy bits/paste bits/clear
 xvctrl.o:	bits/uicon bits/oicon1 bits/oicon2 bits/icon
 xvctrl.o:	bits/padimg bits/annot
 
@@ -291,7 +291,7 @@ xvdial.o:	bits/dial_cw1 bits/dial_ccw1 bits/dial_cw2 bits/dial_ccw2
 
 xvdir.o:	bits/d_load bits/d_save
 
-xvevent.o:	bits/dropper bits/dropperm bits/pen bits/penm 
+xvevent.o:	bits/dropper bits/dropperm bits/pen bits/penm
 xvevent.o:	bits/blur bits/blurm
 
 xvgam.o:	bits/h_rotl bits/h_rotr bits/h_flip bits/h_sinc bits/h_sdec

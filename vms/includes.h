@@ -1,12 +1,12 @@
 /*
  * @(#)includes.h 1.8 89/04/01		Jamie Hanrahan (simpact!jeh)
  *
- * Version simpact-1.8, for DECUS uucp (VMS portion).  
+ * Version simpact-1.8, for DECUS uucp (VMS portion).
  * All changes and additions from previous versions (see below) are in
- * the public domain. 
+ * the public domain.
  *
  * Derived from:
- * 
+ *
  * includes.h 1.7 87/09/29	Copyright 1987 Free Software Foundation, Inc.
  *
  * Copying and use of this program are controlled by the terms of the
@@ -34,7 +34,7 @@
 #include <ssdef>
 #include <stat>
 /*      because I have consolidated ARGPROC.C into VMS.C (for XV) this
-        call is reduntant and causes a compiler warning         RLD  24-FEB-1993
+	call is reduntant and causes a compiler warning         RLD  24-FEB-1993
 #include <stdlib>
 */
 #include <stdio>
@@ -54,7 +54,7 @@
 #define MAXLOCK 32
 #define LOGLEN 255
 #define SEQSIZE 4
-#define CONTROL_FILE         "uucp_cfg:control." 
+#define CONTROL_FILE         "uucp_cfg:control."
 #define	LOGCLOSE	/* Logfile must be closed; VMS locks it when open */
 #define EXEDIR  "uucp_bin:"	/* uuxqt executables live here (not used) */
 #define NULL_DEVICE "NL:"

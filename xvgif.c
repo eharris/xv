@@ -34,7 +34,7 @@ typedef int boolean;
 #define INTERLACEMASK 0x40
 #define COLORMAPMASK  0x80
 
-  
+
 
 FILE *fp;
 
@@ -82,11 +82,11 @@ char *id87 = "GIF87a";
 char *id89 = "GIF89a";
 
 static int EGApalette[16][3] = {
-  {0,0,0},       {0,0,128},     {0,128,0},     {0,128,128}, 
+  {0,0,0},       {0,0,128},     {0,128,0},     {0,128,128},
   {128,0,0},     {128,0,128},   {128,128,0},   {200,200,200},
   {100,100,100}, {100,100,255}, {100,255,100}, {100,255,255},
   {255,100,100}, {255,100,255}, {255,255,100}, {255,255,255} };
-  
+
 
 static int   readImage   PARM((PICINFO *));
 static int   readCode    PARM((void));
@@ -129,16 +129,16 @@ int LoadGIF(fname, pinfo)
   fseek(fp, 0L, 2);
   filesize = ftell(fp);
   fseek(fp, 0L, 0);
-  
-  /* the +256's are so we can read truncated GIF files without fear of 
+
+  /* the +256's are so we can read truncated GIF files without fear of
      segmentation violation */
   if (!(dataptr = RawGIF = (byte *) calloc((size_t) filesize+256, (size_t) 1)))
     return( gifError(pinfo, "not enough memory to read gif file") );
-  
-  if (!(Raster = (byte *) calloc((size_t) filesize+256,(size_t) 1))) 
+
+  if (!(Raster = (byte *) calloc((size_t) filesize+256,(size_t) 1)))
     return( gifError(pinfo, "not enough memory to read gif file") );
-  
-  if (fread(dataptr, (size_t) filesize, (size_t) 1, fp) != 1) 
+
+  if (fread(dataptr, (size_t) filesize, (size_t) 1, fp) != 1)
     return( gifError(pinfo, "GIF data read failed") );
 
 
@@ -147,35 +147,35 @@ int LoadGIF(fname, pinfo)
   if      (strncmp((char *) dataptr, id87, (size_t) 6)==0) gif89 = 0;
   else if (strncmp((char *) dataptr, id89, (size_t) 6)==0) gif89 = 1;
   else    return( gifError(pinfo, "not a GIF file"));
-  
+
   dataptr += 6;
-  
+
   /* Get variables from the GIF screen descriptor */
-  
+
   ch = NEXTBYTE;
   RWidth = ch + 0x100 * NEXTBYTE;	/* screen dimensions... not used. */
   ch = NEXTBYTE;
   RHeight = ch + 0x100 * NEXTBYTE;
-  
+
   ch = NEXTBYTE;
   HasColormap = ((ch & COLORMAPMASK) ? True : False);
-  
+
   BitsPerPixel = (ch & 7) + 1;
   numcols = ColorMapSize = 1 << BitsPerPixel;
   BitMask = ColorMapSize - 1;
-  
+
   Background = NEXTBYTE;		/* background color... not used. */
-  
+
   aspect = NEXTBYTE;
   if (aspect) {
     if (!gif89) return(gifError(pinfo,"corrupt GIF file (screen descriptor)"));
     else normaspect = (float) (aspect + 15) / 64.0;   /* gif89 aspect ratio */
     if (DEBUG) fprintf(stderr,"GIF89 aspect = %f\n", normaspect);
   }
-  
-  
+
+
   /* Read in global colormap. */
-  
+
   if (HasColormap)
     for (i=0; i<ColorMapSize; i++) {
       pinfo->r[i] = NEXTBYTE;
@@ -221,11 +221,11 @@ int LoadGIF(fname, pinfo)
 	if (blocksize == 2) {
 	  aspnum = NEXTBYTE;
 	  aspden = NEXTBYTE;
-	  if (aspden>0 && aspnum>0) 
+	  if (aspden>0 && aspnum>0)
 	    normaspect = (float) aspnum / (float) aspden;
 	  else { normaspect = 1.0;  aspnum = aspden = 1; }
 
-	  if (DEBUG) fprintf(stderr,"GIF87 aspect extension: %d:%d = %f\n\n", 
+	  if (DEBUG) fprintf(stderr,"GIF87 aspect extension: %d:%d = %f\n\n",
 			     aspnum, aspden,normaspect);
 	}
 	else {
@@ -288,8 +288,8 @@ int LoadGIF(fname, pinfo)
       else if (fn == 0x01) {  /* PlainText Extension */
 	int j,sbsize,ch;
 	int tgLeft, tgTop, tgWidth, tgHeight, cWidth, cHeight, fg, bg;
-      
-	SetISTR(ISTR_INFO, "%s:  %s", bname, 
+
+	SetISTR(ISTR_INFO, "%s:  %s", bname,
 		"PlainText extension found in GIF file.  Ignored.");
 
 	sbsize   = NEXTBYTE;
@@ -303,11 +303,11 @@ int LoadGIF(fname, pinfo)
 	bg       = NEXTBYTE;
 	i=12;
 	for ( ; i<sbsize; i++) NEXTBYTE;   /* read rest of first subblock */
-      
+
 	if (DEBUG) fprintf(stderr,
 	   "PlainText: tgrid=%d,%d %dx%d  cell=%dx%d  col=%d,%d\n",
 	   tgLeft, tgTop, tgWidth, tgHeight, cWidth, cHeight, fg, bg);
-	
+
 	/* read (and ignore) data sub-blocks */
 	do {
 	  j = 0;
@@ -326,16 +326,16 @@ int LoadGIF(fname, pinfo)
 
 	if (DEBUG) fprintf(stderr,"Graphic Control extension\n\n");
 
-	SetISTR(ISTR_INFO, "%s:  %s", bname, 
+	SetISTR(ISTR_INFO, "%s:  %s", bname,
 		"Graphic Control Extension in GIF file.  Ignored.");
-	
+
 	/* read (and ignore) data sub-blocks */
 	do {
 	  j = 0; sbsize = NEXTBYTE;
 	  while (j<sbsize) { NEXTBYTE;  j++; }
 	} while (sbsize);
       }
-      
+
 
       else if (fn == 0xFF) {  /* Application Extension */
 	int j, sbsize;
@@ -348,7 +348,7 @@ int LoadGIF(fname, pinfo)
 	  while (j<sbsize) { NEXTBYTE;  j++; }
 	} while (sbsize);
       }
-      
+
 
       else { /* unknown extension */
 	int j, sbsize;
@@ -358,7 +358,7 @@ int LoadGIF(fname, pinfo)
 	SetISTR(ISTR_INFO,
 		"%s:  Unknown extension 0x%02x in GIF file.  Ignored.",
 		bname, fn);
-	
+
 	/* read (and ignore) data sub-blocks */
 	do {
 	  j = 0; sbsize = NEXTBYTE;
@@ -431,7 +431,7 @@ int LoadGIF(fname, pinfo)
   free(RawGIF);	 RawGIF = NULL;
   free(Raster);  Raster = NULL;
 
-  if (!gotimage) 
+  if (!gotimage)
      return( gifError(pinfo, "no image data found in GIF file") );
 
   return 1;
@@ -448,7 +448,7 @@ static int readImage(pinfo)
   npixels = maxpixels = 0;
 
   /* read in values from the image descriptor */
-  
+
   ch = NEXTBYTE;
   LeftOfs = ch + 0x100 * NEXTBYTE;
   ch = NEXTBYTE;
@@ -472,33 +472,33 @@ static int readImage(pinfo)
 
   if (!HasColormap && !(Misc&0x80)) {
     /* no global or local colormap */
-    SetISTR(ISTR_WARNING, "%s:  %s", bname, 
+    SetISTR(ISTR_WARNING, "%s:  %s", bname,
 	    "No colormap in this GIF file.  Assuming EGA colors.");
   }
-    
 
-  
+
+
   /* Start reading the raster data. First we get the intial code size
    * and compute decompressor constant values, based on this code size.
    */
-  
+
   CodeSize = NEXTBYTE;
 
   ClearCode = (1 << CodeSize);
   EOFCode = ClearCode + 1;
   FreeCode = FirstFree = ClearCode + 2;
-  
+
   /* The GIF spec has it that the code size is the code size used to
    * compute the above values is the code size given in the file, but the
    * code size used in compression/decompression is the code size given in
    * the file plus one. (thus the ++).
    */
-  
+
   CodeSize++;
   InitCodeSize = CodeSize;
   MaxCode = (1 << CodeSize);
   ReadMask = MaxCode - 1;
-  
+
 
 
   /* UNBLOCK:
@@ -506,7 +506,7 @@ static int readImage(pinfo)
    * to the Raster array, turning it from a series of blocks into one long
    * data stream, which makes life much easier for readCode().
    */
-  
+
   ptr1 = Raster;
   do {
     ch = ch1 = NEXTBYTE;
@@ -525,18 +525,18 @@ static int readImage(pinfo)
     fprintf(stderr,"xv: LoadGIF() - picture is %dx%d, %d bits, %sinterlaced\n",
 	    Width, Height, BitsPerPixel, Interlace ? "" : "non-");
   }
-  
+
 
   /* Allocate the 'pic' */
   maxpixels = Width*Height;
   picptr = pic8 = (byte *) malloc((size_t) maxpixels);
   if (!pic8) return( gifError(pinfo, "couldn't malloc 'pic8'") );
 
-  
+
   /* Decompress the file, continuing until you see the GIF EOF code.
    * One obvious enhancement is to add checking for corrupt files here.
    */
-  
+
   Code = readCode();
   while (Code != EOFCode) {
     /* Clear code sets everything back to its initial value, then reads the
@@ -552,7 +552,7 @@ static int readImage(pinfo)
       CurCode = OldCode = Code;
       FinChar = CurCode & BitMask;
       if (!Interlace) *picptr++ = FinChar;
-         else doInterlace(FinChar);
+	 else doInterlace(FinChar);
       npixels++;
     }
     else {
@@ -563,58 +563,58 @@ static int readImage(pinfo)
 			    break; }
 
       CurCode = InCode = Code;
-      
+
       /* If greater or equal to FreeCode, not in the hash table yet;
        * repeat the last character decoded
        */
-      
+
       if (CurCode >= FreeCode) {
 	CurCode = OldCode;
 	if (OutCount > 4096) {  /* printf("outcount1 blew up\n"); */ break; }
 	OutCode[OutCount++] = FinChar;
       }
-      
+
       /* Unless this code is raw data, pursue the chain pointed to by CurCode
        * through the hash table to its end; each code in the chain puts its
        * associated output code on the output queue.
        */
-      
+
       while (CurCode > BitMask) {
 	if (OutCount > 4096) break;   /* corrupt file */
 	OutCode[OutCount++] = Suffix[CurCode];
 	CurCode = Prefix[CurCode];
       }
-      
+
       if (OutCount > 4096) { /* printf("outcount blew up\n"); */ break; }
-      
+
       /* The last code in the chain is treated as raw data. */
-      
+
       FinChar = CurCode & BitMask;
       OutCode[OutCount++] = FinChar;
-      
+
       /* Now we put the data out to the Output routine.
        * It's been stacked LIFO, so deal with it that way...
        */
 
       /* safety thing:  prevent exceeding range of 'pic8' */
       if (npixels + OutCount > maxpixels) OutCount = maxpixels-npixels;
-	
+
       npixels += OutCount;
       if (!Interlace) for (i=OutCount-1; i>=0; i--) *picptr++ = OutCode[i];
-                else  for (i=OutCount-1; i>=0; i--) doInterlace(OutCode[i]);
+		else  for (i=OutCount-1; i>=0; i--) doInterlace(OutCode[i]);
       OutCount = 0;
 
       /* Build the hash table on-the-fly. No table is stored in the file. */
-      
+
       Prefix[FreeCode] = OldCode;
       Suffix[FreeCode] = FinChar;
       OldCode = InCode;
-      
+
       /* Point to the next slot in the table.  If we exceed the current
        * MaxCode value, increment the code size unless it's already 12.  If it
        * is, do nothing: the next code decompressed better be CLEAR
        */
-      
+
       FreeCode++;
       if (FreeCode >= MaxCode) {
 	if (CodeSize < 12) {
@@ -627,7 +627,7 @@ static int readImage(pinfo)
     Code = readCode();
     if (npixels >= maxpixels) break;
   }
-  
+
   if (npixels != maxpixels) {
     SetISTR(ISTR_WARNING,"%s:  %s", bname,
 	    "This GIF file seems to be truncated.  Winging it.");
@@ -640,7 +640,7 @@ static int readImage(pinfo)
   /* fill in the PICINFO structure */
 
   pinfo->pic     = pic8;
-  pinfo->w       = Width;           
+  pinfo->w       = Width;
   pinfo->h       = Height;
   pinfo->type    = PIC8;
   pinfo->frmType = F_GIF;
@@ -650,9 +650,9 @@ static int readImage(pinfo)
 
   sprintf(pinfo->fullInfo,
 	  "GIF%s, %d bit%s per pixel, %sinterlaced.  (%d bytes)",
- 	  (gif89) ? "89" : "87", BitsPerPixel, 
-	  (BitsPerPixel==1) ? "" : "s", 
- 	  Interlace ? "" : "non-", filesize);
+	  (gif89) ? "89" : "87", BitsPerPixel,
+	  (BitsPerPixel==1) ? "" : "s",
+	  Interlace ? "" : "non-", filesize);
 
   sprintf(pinfo->shrtInfo, "%dx%d GIF%s.",Width,Height,(gif89) ? "89" : "87");
 
@@ -668,13 +668,13 @@ static int readImage(pinfo)
  * maintain our location in the Raster array as a BIT Offset.  We compute
  * the byte Offset into the raster array by dividing this by 8, pick up
  * three bytes, compute the bit Offset into our 24-bit chunk, shift to
- * bring the desired code to the bottom, then mask it off and return it. 
+ * bring the desired code to the bottom, then mask it off and return it.
  */
 
 static int readCode()
 {
   int RawCode, ByteOffset;
-  
+
   ByteOffset = BitOffset / 8;
   RawCode = Raster[ByteOffset] + (Raster[ByteOffset + 1] << 8);
   if (CodeSize >= 8)
@@ -692,42 +692,42 @@ static void doInterlace(Index)
 {
   static byte *ptr = NULL;
   static int   oldYC = -1;
-  
+
   if (oldYC != YC) {  ptr = pic8 + YC * Width;  oldYC = YC; }
-  
+
   if (YC<Height)
     *ptr++ = Index;
-  
+
   /* Update the X-coordinate, and if it overflows, update the Y-coordinate */
-  
+
   if (++XC == Width) {
-    
+
     /* deal with the interlace as described in the GIF
      * spec.  Put the decoded scan line out to the screen if we haven't gone
      * past the bottom of it
      */
-    
+
     XC = 0;
-    
+
     switch (Pass) {
     case 0:
       YC += 8;
       if (YC >= Height) { Pass++; YC = 4; }
       break;
-      
+
     case 1:
       YC += 8;
       if (YC >= Height) { Pass++; YC = 2; }
       break;
-      
+
     case 2:
       YC += 4;
       if (YC >= Height) { Pass++; YC = 1; }
       break;
-      
+
     case 3:
       YC += 2;  break;
-      
+
     default:
       break;
     }
@@ -735,7 +735,7 @@ static void doInterlace(Index)
 }
 
 
-      
+
 /*****************************/
 static int gifError(pinfo, st)
      PICINFO *pinfo;

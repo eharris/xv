@@ -152,13 +152,13 @@ Win35Dict begin
 ErrHandler
 statusdict begin 0 setjobtimeout end
 statusdict begin statusdict /jobname (Microsoft Word - XV310.DOC) put end
-/oldDictCnt countdictstack def {}stopped 
-{ countdictstack oldDictCnt lt { Win35Dict begin } 
-{1 1 countdictstack oldDictCnt sub {pop end } for } ifelse } if 
+/oldDictCnt countdictstack def {}stopped
+{ countdictstack oldDictCnt lt { Win35Dict begin }
+{1 1 countdictstack oldDictCnt sub {pop end } for } ifelse } if
 /oldDictCnt countdictstack def {letter
-}stopped 
-{ countdictstack oldDictCnt lt { Win35Dict begin } 
-{1 1 countdictstack oldDictCnt sub {pop end } for } ifelse } if 
+}stopped
+{ countdictstack oldDictCnt lt { Win35Dict begin }
+{1 1 countdictstack oldDictCnt sub {pop end } for } ifelse } if
 [
 {mark 1.0 1.0 .98 .9 .82 .68 .56 .48 .28 .1 .06 .0 counttomark dup 3 add -1 roll exch 2 sub mul dup floor cvi dup 3 1 roll sub exch dup  3 add index exch 2 add index dup 4 1 roll sub mul add counttomark 1 add 1 roll  cleartomark } bind
 /exec load currenttransfer /exec load] cvx settransfer

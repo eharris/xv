@@ -12,7 +12,7 @@ echo "executing 'ranlib $1'..."
 # Is there a ranlib?  Let's try and then suffer the consequences...
 set haveranlib = `ranlib $1 >& /dev/null`
 
-if ( $status ) then 
+if ( $status ) then
 	echo "There doesn't seem to be a ranlib on this system..."
 	echo "Don't worry about it."
 endif

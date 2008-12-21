@@ -311,7 +311,7 @@ qt_getc (FILE * file)
 /* A comment/newline sequence is returned as a newline */
 {
   register int ch;
-  
+
   ch = getc(file);
   if (ch == '#') {
     do {
@@ -329,14 +329,14 @@ read_qt_integer (FILE * file)
 {
   register int ch;
   register long val;
-  
+
   /* Skip any leading whitespace, detect EOF */
   do {
     ch = qt_getc(file);
     if (ch == EOF)
       return EOF;
   } while (isspace(ch));
-  
+
   if (! isdigit(ch)) {
     fprintf(stderr, "%s: bogus data in quantization file\n", progname);
     exit(EXIT_FAILURE);

@@ -201,7 +201,7 @@ decompress_read (j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
     total_width = (JDIMENSION) jround_up((long) compptr->width_in_blocks,
 					 (long) compptr->h_samp_factor);
     for (yindex = 0; yindex < compptr->v_samp_factor; yindex++) {
-      jzero_far((void FAR *) buffer[ci][yindex], 
+      jzero_far((void FAR *) buffer[ci][yindex],
 		(size_t) (total_width * SIZEOF(JBLOCK)));
     }
   }

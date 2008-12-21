@@ -45,7 +45,7 @@ static hentry **hashtab;        /* Hash table */
 static int      hash_len;       /* number of hash buckets */
 static int	bufchar;	/* Buffered character from XpmGetc */
 static short	in_quote;	/* Is the current point in the file in */
-                                /*  a quoted string? */
+				/*  a quoted string? */
 
 /* Local Functions */
 static int     XpmLoadError  PARM((char*, char*));
@@ -63,7 +63,7 @@ int LoadXPM(fname, pinfo)
      PICINFO *pinfo;
 {
   /* returns '1' on success */
-  
+
   FILE    *fp;
   hentry   item;
   int      c;
@@ -77,96 +77,96 @@ int LoadXPM(fname, pinfo)
   hentry  *clmp;		/* colormap hash-table */
   hentry  *c_sptr;		/* cmap hash-table search pointer*/
   XColor   col;
-  
+
   bname = BaseName(fname);
   fp = fopen(fname, "r");
   if (!fp)
     return (XpmLoadError(bname, "couldn't open file"));
-  
+
   if (DEBUG)
     printf("LoadXPM(): Loading xpm from %s\n", fname);
-  
+
   fseek(fp, 0L, 2);
   filesize = ftell(fp);
   fseek(fp, 0L, 0);
-  
+
   bufchar = -2;
   in_quote = FALSE;
-  
+
   /* Read in the values line.  It is the first string in the
    * xpm, and contains four numbers.  w, h, num_colors, and
    * chars_per_pixel. */
-  
+
   /* First, get to the first string */
   while (((c = XpmGetc(fp))!=EOF) && (c != '"')) ;
   line_pos = 0;
-  
+
   /* Now, read in the string */
   while (((c = XpmGetc(fp))!=EOF) && (line_pos < VALUES_LEN) && (c != '"')) {
     values[line_pos++] = c;
   }
   if (c != '"')
     return (XpmLoadError(bname, "error parsing values line"));
-  
+
   values[line_pos] = '\0';
   sscanf(values, "%d%d%d%d", &w, &h, &nc, &cpp);
   if (nc <= 0 || cpp <= 0)
     return (XpmLoadError(bname, "No colours in Xpm?"));
-  
+
   if (nc > 256)
     pinfo->type = PIC24;
   else
     pinfo->type = PIC8;
-  
+
   if (DEBUG)
     printf("LoadXPM(): reading a %dx%d image (%d colors)\n", w, h, nc);
-  
+
   /* We got this far... */
   WaitCursor();
-  
+
   if (!hash_init(nc))
     return (XpmLoadError(bname, "Not enough memory to hash colormap"));
-  
+
   clmp = (hentry *) malloc(nc * sizeof(hentry)); /* Holds the colormap */
   if (pinfo->type == PIC8) pic = (byte *) malloc((size_t) (w*h));
-                      else pic = (byte *) malloc((size_t) (w*h*3));
-  
+		      else pic = (byte *) malloc((size_t) (w*h*3));
+
   if (!clmp || !pic)
     return (XpmLoadError(bname, "Not enough memory to load pixmap"));
-  
+
   c_sptr = clmp;
   i_sptr = pic;
-  
+
   /* initialize the 'hex' array for zippy ASCII-hex -> int conversion */
-  
+
   for (i = 0 ; i < 256 ; i++)   hex[i] = 0;
   for (i = '0'; i <= '9' ; i++) hex[i] = i - '0';
   for (i = 'a'; i <= 'f' ; i++) hex[i] = i - 'a' + 10;
   for (i = 'A'; i <= 'F' ; i++) hex[i] = i - 'A' + 10;
-  
+
   /* Again, we've made progress. */
   WaitCursor();
-  
+
   /* Now, we need to read the colormap. */
   pinfo->colType = F_BWDITHER;
   for (i = 0 ; i < nc ; i++) {
     while (((c = XpmGetc(fp))!=EOF) && (c != '"')) ;
     if (c != '"')
       return (XpmLoadError(bname, "Error reading colormap"));
-    
+
     for (j = 0 ; j < cpp ; j++)
       c_sptr->token[j] = XpmGetc(fp);
     c_sptr->token[j] = '\0';
-    
+
     while (((c = XpmGetc(fp))!=EOF) && ((c == ' ') || (c == '\t'))) ;
     if (c == EOF)		/* The failure condition of getc() */
       return (XpmLoadError(bname, "Error parsing colormap line"));
-    
+
     do {
       char  key[3];
       char  color[40];	/* Need to figure a good size for this... */
       short hd;		/* Hex digits per R, G, or B */
-      
+
       for (j=0; j<2 && (c != ' ') && (c != '\t') && (c != EOF); j++) {
 	key[j] = c;
 	c = XpmGetc(fp);
@@ -185,14 +185,14 @@ int LoadXPM(fname, pinfo)
 
       while ((c == ' ') || (c == '\t'))
 	c = XpmGetc(fp);
-      
+
       if (DEBUG > 1)
 	printf("LoadXPM(): Got color key '%s', color '%s'\n",
 	       key, color);
-      
+
       if (key[0] == 's')	/* Don't find a color for a symbolic name */
 	continue;
-      
+
       if (XParseColor(theDisp,theCmap,color,&col)) {
 	if (pinfo->type == PIC8) {
 	  pinfo->r[i] = col.red >> 8;
@@ -224,7 +224,7 @@ int LoadXPM(fname, pinfo)
 	      else
 		/* It's color */
 		pinfo->colType = F_FULLCOLOR;
-	  
+
 	}
 	else {   /* PIC24 */
 	  c_sptr->cv_rgb[0] = col.red >> 8;
@@ -242,7 +242,7 @@ int LoadXPM(fname, pinfo)
 	  Timer(1000);
 	  rgb = 0x808080;
 	}
-	
+
 	if (pinfo->type == PIC8) {
 	  pinfo->r[i] = (rgb>>16) & 0xff;
 	  pinfo->g[i] = (rgb>> 8) & 0xff;
@@ -256,39 +256,39 @@ int LoadXPM(fname, pinfo)
 	}
       }
 
-      
+
       xvbcopy((char *) c_sptr, (char *) &item, sizeof(item));
       hash_insert(&item);
-      
-      if (DEBUG > 1) 
+
+      if (DEBUG > 1)
 	printf("LoadXPM():  Cmap entry %d, 0x%02x 0x%02x 0x%02x, token '%s'\n",
 	       i, pinfo->r[i], pinfo->g[i], pinfo->b[i], c_sptr->token);
-      
+
       if (*key == 'c') {	/* This is the color entry, keep it. */
 	while (c!='"' && c!=EOF) c = XpmGetc(fp);
 	break;
       }
-      
+
     } while (c != '"');
     c_sptr++;
 
     if (!(i%13)) WaitCursor();
   } /* for */
-  
+
 
   if (DEBUG)
     printf("LoadXPM(): Read and stored colormap.\n");
-  
+
   /* Now, read the pixmap. */
   for (i = 0 ; i < h ; i++) {
     while (((c = XpmGetc(fp))!=EOF) && (c != '"')) ;
     if (c != '"')
       return (XpmLoadError(bname, "Error reading colormap"));
-    
+
     for (j = 0 ; j < w ; j++) {
       char pixel[TOKEN_LEN];
       hentry *mapentry;
-      
+
       for (k = 0 ; k < cpp ; k++)
 	pixel[k] = XpmGetc(fp);
       pixel[k] = '\0';
@@ -300,7 +300,7 @@ int LoadXPM(fname, pinfo)
 		 pixel);
 	return (XpmLoadError(bname, "Can't map resolve into colormap"));
       }
-      
+
       if (pinfo->type == PIC8)
 	*i_sptr++ = mapentry->cv_index;
       else {
@@ -310,27 +310,27 @@ int LoadXPM(fname, pinfo)
       }
     }  /* for ( j < w ) */
     (void)XpmGetc(fp);		/* Throw away the close " */
-  
+
     if (!(i%7)) WaitCursor();
   }  /* for ( i < h ) */
-  
+
   pinfo->pic = pic;
   pinfo->normw = pinfo->w = w;
   pinfo->normh = pinfo->h = h;
   pinfo->frmType = F_XPM;
 
   if (DEBUG) printf("LoadXPM(): pinfo->colType is %d\n", pinfo->colType);
-  
+
   sprintf(pinfo->fullInfo, "Xpm v3 Pixmap (%ld bytes)", filesize);
   sprintf(pinfo->shrtInfo, "%dx%d Xpm.", w, h);
   pinfo->comment = (char *)NULL;
-  
+
   hash_destroy();
   free(clmp);
-  
+
   if (fp != stdin)
     fclose(fp);
-  
+
   return(1);
 }
 
@@ -349,17 +349,17 @@ static int XpmGetc(f)
      FILE *f;
 {
   int	c, d, lastc;
-  
+
   if (bufchar != -2) {
     /* The last invocation of this routine read the character... */
     c = bufchar;
     bufchar = -2;
     return(c);
   }
-  
+
   if ((c = getc(f)) == EOF)
     return(EOF);
-  
+
   if (c == '"')
     in_quote = !in_quote;
   else if (!in_quote && c == '/') {	/* might be a C-style comment */
@@ -389,14 +389,14 @@ static int XpmGetc(f)
 
 
 /***************************************/
-static int hash(token) 
+static int hash(token)
      char *token;
 {
   int i, sum;
 
   for (i=sum=0; token[i] != '\0'; i++)
     sum += token[i];
-  
+
   sum = sum % hash_len;
   return (sum);
 }
@@ -414,7 +414,7 @@ static int hash_init(hsize)
    */
 
   int i;
-  
+
   hash_len = 257;
 
   hashtab = (hentry **) malloc(sizeof(hentry *) * hash_len);
@@ -425,7 +425,7 @@ static int hash_init(hsize)
 
   for (i = 0 ; i < hash_len ; i++)
     hashtab[i] = NULL;
-  
+
   return 1;
 }
 
@@ -436,22 +436,22 @@ static int hash_insert(entry)
 {
   int     key;
   hentry *tmp;
-  
+
   key = hash(entry->token);
-  
+
   tmp = (hentry *) malloc(sizeof(hentry));
   if (!tmp) {
     SetISTR(ISTR_WARNING, "Couldn't malloc hash entry in LoadXPM()!\n");
     return 0;
   }
-  
+
   xvbcopy((char *)entry, (char *)tmp, sizeof(hentry));
-  
+
   if (hashtab[key]) tmp->next = hashtab[key];
-               else tmp->next = NULL;
-  
+	       else tmp->next = NULL;
+
   hashtab[key] = tmp;
-  
+
   return 1;
 }
 
@@ -462,9 +462,9 @@ static hentry *hash_search(token)
 {
   int     key;
   hentry *tmp;
-  
+
   key = hash(token);
-  
+
   tmp = hashtab[key];
   while (tmp && strcmp(token, tmp->token)) {
     tmp = tmp->next;
@@ -479,7 +479,7 @@ static void hash_destroy()
 {
   int     i;
   hentry *tmp;
-  
+
   for (i=0; i<hash_len; i++) {
     while (hashtab[i]) {
       tmp = hashtab[i]->next;
@@ -487,7 +487,7 @@ static void hash_destroy()
       hashtab[i] = tmp;
     }
   }
-  
+
   free(hashtab);
   return;
 }
@@ -508,11 +508,11 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
   /* Note here, that tokenchars is assumed to contain 64 valid token */
   /* characters.  It's hardcoded to assume this for benefit of generating */
   /* tokens, when there are more than 64^2 colors. */
-  
+
   short	i, imax, j;	/* for() loop indices */
   short	cpp = 0;
-  char	*tokenchars = 
-            ".#abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  char	*tokenchars =
+	    ".#abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   char	*tokens;
   char	image_name[256], *foo;
   byte	grey;
@@ -523,20 +523,20 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
   long	li;		/* for() loop index */
   int	numcol;
 #endif
-  
+
   if (DEBUG)
     if (ptype == PIC8)
       printf("WriteXPM(): Write a %d color, colortype %d, PIC8 image.\n",
 	     nc, col);
     else
       printf("WriteXPM(): Write a colortype %d, PIC24 image.\n", col);
-  
+
   foo = BaseName(name);
   strcpy(image_name, foo);
   foo = (char *)strchr(image_name, '.');
   if (foo)
     *foo = '\0';		/* Truncate name at first '.' */
-  
+
 #ifdef USE_UNFINISHED_24BIT_WRITING_CODE
   if (ptype == PIC24)
     return -1;
@@ -547,15 +547,15 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
   /* 'packed'.  Code in here to do that should be removed if       */
   /* Conv24to8 is "fixed" to do this...                            */
   /*    Chris P. Ross (cross@eng.umd.edu)  28-Sept-94              */
-  
+
   numcol = 0;
-  
+
   if (ptype == PIC24) {
     /* Reduce to an 8-bit image.  Would be nice to actually write */
     /* the 24-bit image.  I'll have to code that someday...       */
     pic8 = Conv24to8(pic, w, h, 256, rtemp, gtemp, btemp);
     if (!pic8) {
-      SetISTR(ISTR_WARNING, 
+      SetISTR(ISTR_WARNING,
 	      "%s:  Unable to convert to 8-bit image in WriteXPM()",
 	      image_name);
       return 1;
@@ -594,7 +594,7 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
   }
 #endif
 
-  
+
 #ifdef USE_UNFINISHED_24BIT_WRITING_CODE
   if (ptype == PIC24) cpp = 4;
   else if (numcol > 64) cpp = 2;
@@ -609,7 +609,7 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
   fprintf(fp, "/* width height num_colors chars_per_pixel */\n");
   fprintf(fp, "\"   %3d   %3d   %6d            %1d\",\n", w, h, numcol, cpp);
   fprintf(fp, "/* colors */\n");
-  
+
   switch (cpp) {
 
   case 1:			/* <= 64 colors; index into tokenchars */
@@ -681,12 +681,12 @@ int WriteXPM(fp, pic, ptype, w, h, rp, gp, bp, nc, col, name, comments)
 
   case 4:
     /* Generate a colormap */
-    
+
     break;
   default:
     break;
   }
-  
+
   if (fprintf(fp, "\"\n};\n") == EOF) {
     return 1;
   } else

@@ -116,8 +116,8 @@ second byte:
 
 Second byte	Meaning
 
-0	End of line. 
-1	End of bitmap. 
+0	End of line.
+1	End of bitmap.
 2	Delta. The two bytes following the escape contain unsigned values
 indicating the horizontal and vertical offsets of the next pixel from the
 current position.
@@ -133,15 +133,15 @@ second column represent a color index for a single pixel):
 
 Compressed data		Expanded data
 
-03 04			04 04 04 
-05 06			06 06 06 06 06 
-00 03 45 56 67 00	45 56 67 
-02 78			78 78 
-00 02 05 01		Move 5 right and 1 down 
-02 78			78 78 
-00 00			End of line 
-09 1E			1E 1E 1E 1E 1E 1E 1E 1E 1E 
-00 01			End of RLE bitmap 
+03 04			04 04 04
+05 06			06 06 06 06 06
+00 03 45 56 67 00	45 56 67
+02 78			78 78
+00 02 05 01		Move 5 right and 1 down
+02 78			78 78
+00 00			End of line
+09 1E			1E 1E 1E 1E 1E 1E 1E 1E 1E
+00 01			End of RLE bitmap
 
 Compression of 4-Bits-per-Pixel Bitmaps
 
@@ -182,42 +182,42 @@ values in the second column represent a color index for a single pixel):
 
 Compressed data		Expanded data
 
-03 04			0 4 0 
-05 06			0 6 0 6 0 
-00 06 45 56 67 00	4 5 5 6 6 7 
-04 78			7 8 7 8 
-00 02 05 01		Move 5 right and 1 down 
-04 78			7 8 7 8 
-00 00			End of line 
-09 1E			1 E 1 E 1 E 1 E 1 
-00 01			End of RLE bitmap 
+03 04			0 4 0
+05 06			0 6 0 6 0
+00 06 45 56 67 00	4 5 5 6 6 7
+04 78			7 8 7 8
+00 02 05 01		Move 5 right and 1 down
+04 78			7 8 7 8
+00 00			End of line
+09 1E			1 E 1 E 1 E 1 E 1
+00 01			End of RLE bitmap
 
 Bitmap Example
 
 The following example is a text dump of a 16-color bitmap (4 bits per pixel):
 
 Win3DIBFile
-              BitmapFileHeader
-                  Type       19778
-                  Size       3118
-                  Reserved1  0
-                  Reserved2  0
-                  OffsetBits 118
-              BitmapInfoHeader
-                  Size            40
-                  Width           80
-                  Height          75
-                  Planes          1
-                  BitCount        4
-                  Compression     0
-                  SizeImage       3000
+	      BitmapFileHeader
+		  Type       19778
+		  Size       3118
+		  Reserved1  0
+		  Reserved2  0
+		  OffsetBits 118
+	      BitmapInfoHeader
+		  Size            40
+		  Width           80
+		  Height          75
+		  Planes          1
+		  BitCount        4
+		  Compression     0
+		  SizeImage       3000
 
-                  XPelsPerMeter   0
-                  YPelsPerMeter   0
-                  ColorsUsed      16
-                  ColorsImportant 16
-              Win3ColorTable
-                  Blue  Green  Red  Unused
+		  XPelsPerMeter   0
+		  YPelsPerMeter   0
+		  ColorsUsed      16
+		  ColorsImportant 16
+	      Win3ColorTable
+		  Blue  Green  Red  Unused
 [00000000]        84    252    84   0
 [00000001]        252   252    84   0
 [00000002]        84    84     252  0
@@ -234,7 +234,7 @@ Win3DIBFile
 [0000000D]        168   168    168  0
 [0000000E]        84    84     84   0
 [0000000F]        252   84     84   0
-              Image
+	      Image
     .
     .                                           Bitmap data
     .
@@ -262,11 +262,11 @@ typedef struct ICONDIR {
     ICONDIRENTRY  idEntries[1];
 } ICONHEADER;
 
-Following are the members in the ICONDIR structure: 
+Following are the members in the ICONDIR structure:
 
-idReserved	Reserved; must be zero. 
-idType		Specifies the resource type. This member is set to 1. 
-idCount		Specifies the number of entries in the directory. 
+idReserved	Reserved; must be zero.
+idType		Specifies the resource type. This member is set to 1.
+idCount		Specifies the number of entries in the directory.
 idEntries	Specifies an array of ICONDIRENTRY structures containing
 information about individual icons. The idCount member specifies the number
 of structures in the array.
@@ -287,7 +287,7 @@ struct IconDirectoryEntry {
     DWORD dwImageOffset;
 };
 
-Following are the members in the ICONDIRENTRY structure: 
+Following are the members in the ICONDIRENTRY structure:
 
 bWidth		Specifies the width of the icon, in pixels. Acceptable values
 are 16, 32, and 64.
@@ -298,10 +298,10 @@ values are 16, 32, and 64.
 bColorCount	Specifies the number of colors in the icon. Acceptable values
 are 2, 8, and 16.
 
-bReserved	Reserved; must be zero. 
-wPlanes		Specifies the number of color planes in the icon bitmap. 
-wBitCount	Specifies the number of bits in the icon bitmap. 
-dwBytesInRes	Specifies the size of the resource, in bytes. 
+bReserved	Reserved; must be zero.
+wPlanes		Specifies the number of color planes in the icon bitmap.
+wBitCount	Specifies the number of bits in the icon bitmap.
+dwBytesInRes	Specifies the size of the resource, in bytes.
 dwImageOffset	Specifies the offset, in bytes, from the beginning of the
 file to the icon image.
 
@@ -392,11 +392,11 @@ typedef struct _CURSORDIR {
     CURSORDIRENTRY cdEntries[];
 } CURSORDIR;
 
-Following are the members in the CURSORDIR structure: 
+Following are the members in the CURSORDIR structure:
 
-cdReserved	Reserved; must be zero. 
-cdType		Specifies the resource type. This member must be set to 2. 
-cdCount		Specifies the number of cursors in the file. 
+cdReserved	Reserved; must be zero.
+cdType		Specifies the resource type. This member must be set to 2.
+cdCount		Specifies the number of cursors in the file.
 cdEntries	Specifies an array of CURSORDIRENTRY structures containing
 information about individual cursors. The cdCount member specifies the number
 of structures in the array.
@@ -417,15 +417,15 @@ typedef struct _CURSORDIRENTRY {
     DWORD dwImageOffset;
 } CURSORDIRENTRY;
 
-Following are the members in the CURSORDIRENTRY structure: 
+Following are the members in the CURSORDIRENTRY structure:
 
-bWidth		Specifies the width of the cursor, in pixels. 
-bHeight		Specifies the height of the cursor, in pixels. 
-bColorCount	Reserved; must be zero. 
-bReserved	Reserved; must be zero. 
-wXHotspot	Specifies the x-coordinate, in pixels, of the hot spot. 
-wYHotspot	Specifies the y-coordinate, in pixels, of the hot spot. 
-lBytesInRes	Specifies the size of the resource, in bytes. 
+bWidth		Specifies the width of the cursor, in pixels.
+bHeight		Specifies the height of the cursor, in pixels.
+bColorCount	Reserved; must be zero.
+bReserved	Reserved; must be zero.
+wXHotspot	Specifies the x-coordinate, in pixels, of the hot spot.
+wYHotspot	Specifies the y-coordinate, in pixels, of the hot spot.
+lBytesInRes	Specifies the size of the resource, in bytes.
 dwImageOffset	Specifies the offset, in bytes, from the start of the file to
 the cursor image.
 
@@ -487,10 +487,10 @@ inverted, and transparent results:
 
 Pixel result	AND mask	XOR mask
 
-Black		0		0 
-White		0		1 
-Transparent	1		0 
-Inverted	1		1 
+Black		0		0
+White		0		1
+Transparent	1		0
+Inverted	1		1
 
 Windows Cursor Selection
 
@@ -519,10 +519,10 @@ layout of a device-independent bitmap (DIB) file.
 
 Member		Description
 
-bfType		Specifies the type of file. This member must be BM. 
-bfSize		Specifies the size of the file, in bytes. 
-bfReserved1	Reserved; must be set to zero. 
-bfReserved2	Reserved; must be set to zero. 
+bfType		Specifies the type of file. This member must be BM.
+bfSize		Specifies the size of the file, in bytes.
+bfReserved1	Reserved; must be set to zero.
+bfReserved2	Reserved; must be set to zero.
 bfOffBits	Specifies the byte offset from the BITMAPFILEHEADER structure
 to the actual bitmap data in the file.
 
@@ -533,7 +533,7 @@ BITMAPFILEHEADER structure in the DIB file.
 
 See Also
 
-BITMAPCOREINFO, BITMAPINFO 
+BITMAPCOREINFO, BITMAPINFO
 
 
 ==============================================================================
@@ -613,7 +613,7 @@ bitmap color table should contain explicit RGB values.
 
 See Also
 
-BITMAPINFOHEADER, RGBQUAD 
+BITMAPINFOHEADER, RGBQUAD
 
 ==============================================================================
 BITMAPINFOHEADER (3.0)
@@ -642,8 +642,8 @@ Member		Description
 biSize		Specifies the number of bytes required by the
 BITMAPINFOHEADER structure.
 
-biWidth		Specifies the width of the bitmap, in pixels. 
-biHeight	Specifies the height of the bitmap, in pixels. 
+biWidth		Specifies the width of the bitmap, in pixels.
+biHeight	Specifies the height of the bitmap, in pixels.
 
 biPlanes	Specifies the number of planes for the target device. This
 member must be set to 1.
@@ -656,7 +656,7 @@ can be one of the following values:
 
 Value		Meaning
 
-BI_RGB		Specifies that the bitmap is not compressed. 
+BI_RGB		Specifies that the bitmap is not compressed.
 
 BI_RLE8		Specifies a run-length encoded format for bitmaps with 8 bits
 per pixel. The compression format is a 2-byte format consisting of a count
@@ -731,8 +731,8 @@ pair. The following list shows the meaning of the second byte:
 
 Value	Meaning
 
-0	End of line. 
-1	End of bitmap. 
+0	End of line.
+1	End of bitmap.
 2	Delta. The two bytes following the escape contain unsigned values
 indicating the horizontal and vertical offset of the next pixel from the
 current position.
@@ -808,7 +808,7 @@ end of RLE bitmap
 
 See Also
 
-BITMAPINFO 
+BITMAPINFO
 
 ==============================================================================
 RGBQUAD (3.0)
@@ -828,14 +828,14 @@ consists of an array of RGBQUAD structures.
 
 Member		Description
 
-rgbBlue		Specifies the intensity of blue in the color. 
-rgbGreen	Specifies the intensity of green in the color. 
-rgbRed		Specifies the intensity of red in the color. 
-rgbReserved	Not used; must be set to zero. 
+rgbBlue		Specifies the intensity of blue in the color.
+rgbGreen	Specifies the intensity of green in the color.
+rgbRed		Specifies the intensity of red in the color.
+rgbReserved	Not used; must be set to zero.
 
 See Also
 
-BITMAPINFO 
+BITMAPINFO
 
 ==============================================================================
 RGB (2.x)
@@ -852,13 +852,13 @@ color capabilities of the output device.
 
 Parameter	Description
 
-cRed	Specifies the intensity of the red color field. 
-cGreen	Specifies the intensity of the green color field. 
-cBlue	Specifies the intensity of the blue color field. 
+cRed	Specifies the intensity of the red color field.
+cGreen	Specifies the intensity of the green color field.
+cBlue	Specifies the intensity of the blue color field.
 
 Returns
 
-The return value specifies the resultant RGB color. 
+The return value specifies the resultant RGB color.
 
 Comments
 
@@ -868,7 +868,7 @@ intensities are specified as 255, the result is white.
 
 Comments
 
-The RGB macro is defined in WINDOWS.H as follows: 
+The RGB macro is defined in WINDOWS.H as follows:
 
 
 
@@ -877,7 +877,7 @@ The RGB macro is defined in WINDOWS.H as follows:
 
 See Also
 
-GetBValue, GetGValue, GetRValue, PALETTEINDEX, PALETTERGB 
+GetBValue, GetGValue, GetRValue, PALETTEINDEX, PALETTERGB
 
 ==============================================================================
 BITMAPCOREINFO (3.0)
@@ -953,7 +953,7 @@ control, the bitmap color table should contain explicit RGB values.
 
 See Also
 
-BITMAPINFO, BITMAPCOREHEADER, RGBTRIPLE 
+BITMAPINFO, BITMAPCOREHEADER, RGBTRIPLE
 
 
 ==============================================================================
@@ -979,8 +979,8 @@ Member		Description
 bcSize		Specifies the number of bytes required by the
 BITMAPCOREHEADER structure.
 
-bcWidth		Specifies the width of the bitmap, in pixels. 
-bcHeight	Specifies the height of the bitmap, in pixels. 
+bcWidth		Specifies the width of the bitmap, in pixels.
+bcHeight	Specifies the height of the bitmap, in pixels.
 
 bcPlanes	Specifies the number of planes for the target device. This
 member must be set to 1.
@@ -1005,7 +1005,7 @@ lpColor = ((LPSTR) pBitmapCoreInfo + (UINT) (pBitmapCoreInfo->bcSize))
 
 See Also
 
-BITMAPCOREINFO, BITMAPINFOHEADER, BITMAPINFOHEADER 
+BITMAPCOREINFO, BITMAPINFOHEADER, BITMAPINFOHEADER
 
 =============================================================================
 RGBTRIPLE (3.0)
@@ -1027,13 +1027,13 @@ RGBTRIPLE structure.
 
 Member	Description
 
-rgbtBlue	Specifies the intensity of blue in the color. 
-rgbtGreen	Specifies the intensity of green in the color. 
-rgbtRed		Specifies the intensity of red in the color. 
+rgbtBlue	Specifies the intensity of blue in the color.
+rgbtGreen	Specifies the intensity of green in the color.
+rgbtRed		Specifies the intensity of red in the color.
 
 See Also
 
-BITMAPCOREINFO, BITMAPINFO, RGBQUAD 
+BITMAPCOREINFO, BITMAPINFO, RGBQUAD
 
 ==============================================================================
 

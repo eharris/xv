@@ -33,7 +33,7 @@ $ THIS_PATH = F$Element (0, "]", F$Environment ("PROCEDURE")) + "]"
 $ Set Default 'THIS_PATH'
 $ If F$Trnlnm ("X11") .eqs. "" Then Define X11 DECW$Include
 $! Test for ALPHA or VAX
-$ If F$GetSyi ("HW_MODEL") .gt. 1023 
+$ If F$GetSyi ("HW_MODEL") .gt. 1023
 $   Then        ! it's an ALPHA
 $       Define /NoLog Sys DECC$Library_Include
 $       QUALIFIERS = "/NoDebug /Optimize /Standard = VAXC"
@@ -64,10 +64,10 @@ $!
 $ CC := CC 'QUALIFIERS' 'DEFS' 'INCS' /NoList
 $!
 $ sources = "xvevent,xvroot,xvmisc,xvimage,xvcolor,xvsmooth,xv24to8,"     + -
-            "xvgif,xvpm,xvinfo,xvctrl,xvscrl,xvalg,xvgifwr,xvdir,xvbutt," + -
-            "xvpbm,xvxbm,xvgam,xvbmp,xvdial,xvgraf,xvsunras,xvjpeg,xvps," + -
-            "xvpopup,xvdflt,xvtiff,xvtiffwr,xvpds,xvrle,xviris,xvgrab,"   + -
-            "xvbrowse,xvtext,xvpcx,xvtarga,xvcut,xviff,xvxwd,xvxpm,xvfits,vms"
+	    "xvgif,xvpm,xvinfo,xvctrl,xvscrl,xvalg,xvgifwr,xvdir,xvbutt," + -
+	    "xvpbm,xvxbm,xvgam,xvbmp,xvdial,xvgraf,xvsunras,xvjpeg,xvps," + -
+	    "xvpopup,xvdflt,xvtiff,xvtiffwr,xvpds,xvrle,xviris,xvgrab,"   + -
+	    "xvbrowse,xvtext,xvpcx,xvtarga,xvcut,xviff,xvxwd,xvxpm,xvfits,vms"
 $!
 $ If F$Search ("[.bits]annot.h") .eqs. "" Then GoSub RENAME_BITMAPS
 $ new_objects = ""

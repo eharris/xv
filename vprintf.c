@@ -323,7 +323,7 @@ int c;
     p=s1;
     while(*p)
        if(*(p++) == c)
-           return p-1;
+	   return p-1;
 
     return NULL;
 }

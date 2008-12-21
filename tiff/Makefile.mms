@@ -68,7 +68,7 @@ FLAGS =		/Warnings = NoInformationals /Standard = VAXC
 DEFS = 		/Define = ("BSDTYPES=1", "USE_VARARGS=1", "USE_PROTOTYPES=0", \
 		"USE_CONST",__STDC__)
 .else
-FLAGS =		
+FLAGS =
 DEFS = 		/Define = ("BSDTYPES=1", "USE_VARARGS=1", "USE_PROTOTYPES=0", \
 		"USE_CONST", __STDC__)
 .endif
@@ -102,7 +102,7 @@ SRCS =	tif_fax3.c \
 	tif_jpeg.c \
 	tif_flush.c \
 	tif_lzw.c \
-        tif_next.c \
+	tif_next.c \
 	tif_open.c \
 	tif_packbits.c \
 	tif_print.c \
@@ -112,7 +112,7 @@ SRCS =	tif_fax3.c \
 	tif_thunder.c \
 	tif_tile.c \
 	tif_version.c \
-        tif_vms.c \
+	tif_vms.c \
 	tif_warning.c \
 	tif_write.c
 
@@ -132,7 +132,7 @@ OBJS =	tif_fax3.obj \
 	tif_jpeg.obj \
 	tif_flush.obj \
 	tif_lzw.obj \
-        tif_next.obj \
+	tif_next.obj \
 	tif_open.obj \
 	tif_packbits.obj \
 	tif_print.obj \
@@ -142,7 +142,7 @@ OBJS =	tif_fax3.obj \
 	tif_thunder.obj \
 	tif_tile.obj \
 	tif_version.obj \
-        tif_vms.obj \
+	tif_vms.obj \
 	tif_warning.obj \
 	tif_write.obj
 
@@ -164,7 +164,7 @@ lib :		$(TIFFLIB)
 	@ continue
 
 libtiff.olb :		$(OBJS)
-        If "''F$Search ("$(TIFFLIB)")'" .eqs. "" Then Library /Create $(TIFFLIB)
+	If "''F$Search ("$(TIFFLIB)")'" .eqs. "" Then Library /Create $(TIFFLIB)
 	Library /Replace $(TIFFLIB) $(OBJLIST)
 
 $(OBJS) : 	tiffio.h tiff.h tiffcomp.h tiffiop.h tiffconf.h
@@ -175,7 +175,7 @@ mkg3states.exe :	mkg3states.c t4.h
 	- $(CC) $(CFLAGS) mkg3states.c
 .ifdef ALPHA
 .else
-        - $ Define /User_Mode LNK$Library Sys$Library:VAXCRTL
+	- $ Define /User_Mode LNK$Library Sys$Library:VAXCRTL
 .endif
 	- $(LINK) $(LINKFLAGS) mkg3states
 

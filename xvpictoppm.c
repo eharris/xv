@@ -88,7 +88,7 @@ static byte *loadThumbFile(wptr, hptr)
   /* read comments until we see '#END_OF_COMMENTS', or hit EOF */
   while (1) {
     if (!fgets(buf, 256, fp)) errexit();
-    
+
     if (!strncmp(buf, "#END_OF_COMMENTS", (size_t) 16)) break;
 
     else if (!strncmp(buf, "#BUILTIN:",   (size_t)  9)) {
@@ -100,7 +100,7 @@ static byte *loadThumbFile(wptr, hptr)
 
 
   /* read width, height, maxval */
-  if (!fgets(buf, 256, fp) || sscanf(buf, "%d %d %d", &w, &h, &mv) != 3) 
+  if (!fgets(buf, 256, fp) || sscanf(buf, "%d %d %d", &w, &h, &mv) != 3)
     errexit();
 
 
@@ -117,7 +117,7 @@ static byte *loadThumbFile(wptr, hptr)
   i = fread(icon8, (size_t) 1, (size_t) w*h, fp);
   if (i != w*h) errexit();
 
-  
+
   /* make 24-bit version of icon */
   pic24 = (byte *) malloc((size_t) w * h * 3);
   if (!pic24) errexit();
@@ -162,8 +162,8 @@ static void writePPM(pic, w, h)
 }
 
 
-	  
-	  
+
+
 
 
 

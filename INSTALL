@@ -1,7 +1,7 @@
 XV Installation Instructions
 ============================
-Note: While an 'Imakefile' has been provided for you, I *strongly* recommend 
-that you using the regular 'Makefile', as that's what I use.  
+Note: While an 'Imakefile' has been provided for you, I *strongly* recommend
+that you using the regular 'Makefile', as that's what I use.
 
 Edit 'config.h'.
 
@@ -9,9 +9,9 @@ Edit the Makefile, and make appropriate changes, if any.  See notes below.
 
 Also Note:  The tiff library *REQUIRES* an ANSI C compiler.  Trying to build
 it with an old K&R-style C compiler will be painful, and probably a waste of
-time.  If your vendor-supplied C compiler (if any!) doesn't handle ANSI C, 
+time.  If your vendor-supplied C compiler (if any!) doesn't handle ANSI C,
 you're encouraged to get a copy of 'gcc' from prep.ai.mit.edu, in pub/gnu.
-In the interim, if you are unable to build the TIFF library, it is easy 
+In the interim, if you are unable to build the TIFF library, it is easy
 enough to disable XV's TIFF support in the XV Makefile.
 
 Do a 'make' to (hopefully) build XV, but read the system-specific notes below
@@ -21,7 +21,7 @@ FIRST.
 --------------------------------
 If you *insist* on using imake, do this, it might work:
   cd jpeg ; ./configure ; make libjpeg.a ; cd ..
-  xmkmf 
+  xmkmf
   make Makefiles
   make depend
   make
@@ -36,7 +36,7 @@ The following are installation instructions for some of the more common
 types of systems.
 
 	--------------------------------------------------------------
-        DECstations (alpha) running OSF/1
+	DECstations (alpha) running OSF/1
 	DECstations (mips) running Ultrix
 	SUNs running SunOS 4.x and MIT's X11R4 distribution
 	IBM RS/6000s running AIX (using IBM's 'cc')
@@ -47,7 +47,7 @@ types of systems.
 	Ignore such messages, as those functions don't need to be
 	optimized.)
 
-        Note: Sun's 'cc' compiler is *not* ANSI-compatible.  You will *not*
+	Note: Sun's 'cc' compiler is *not* ANSI-compatible.  You will *not*
 	be able to get the TIFF library compiled with it.  Either turn
 	off the tiff support (see the notes in the Makefile), or use 'gcc'.
 
@@ -66,7 +66,7 @@ types of systems.
 
 	Turn on the '-DSVR4' option in the Makefile.  Also see the note
 	above if you're running OpenWindows.  You may also have to add
-	'-lsocket -lnsl' to the CCOPTS line, as the X11 library may 
+	'-lsocket -lnsl' to the CCOPTS line, as the X11 library may
 	require the socket/networking libraries.
 
 	--------------------------------------------------------------
@@ -83,12 +83,12 @@ types of systems.
 	SGI IRIS running IRIX
 
 	Edit the Makefile, and turn on the SVR4 and SGI options
-	
+
 	--------------------------------------------------------------
 	Other SVR4 systems
-	
+
 	Edit the Makefile, and turn on the SVR4 option.
-	
+
 	--------------------------------------------------------------
 	IBM RS/6000s running AIX and using gcc
 

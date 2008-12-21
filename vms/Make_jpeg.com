@@ -18,7 +18,7 @@ $!  Updated: 19-JAN-1992   by Rick Dyson  (dyson@iowasp.physics.uiowa.edu)
 $!            9-MAR-1992   by Rick Dyson  for XV v2.11
 $!           20-MAR-1992   by Rick Dyson  for JPEG v3
 $!           28-APR-1992   by Rick Dyson  for XV v2.2a
-$!            6-MAY-1992   by Rick Dyson  for XV v2.21 
+$!            6-MAY-1992   by Rick Dyson  for XV v2.21
 $!            9-FEB-1993   by Rick Dyson  for XV v2.21b and ALPHA Support
 $!                                        (Thanks to merrill@stsci.edu)
 $!            2-MAR-1993   by Rick Dyson  for XV v3.00
@@ -48,11 +48,11 @@ $ Copy jconfig.vms jconfig.h
 $ Purge /NoLog jconfig.h
 $!
 $ sources = "jcapi,jcparam,jdatadst,jcmaster,jcmarker,jcmainct,jcprepct," + -
-            "jccoefct,jccolor,jcsample,jchuff,jcdctmgr,jfdctfst,jfdctflt," + -
-            "jfdctint,jdapi,jdatasrc,jdmaster,jdmarker,jdmainct,jdcoefct," + -
-            "jdpostct,jddctmgr,jidctfst,jidctflt,jidctint,jidctred,jdhuff," + -
-            "jdsample,jdcolor,jquant1,jquant2,jdmerge,jcomapi,jutils," + -
-            "jerror,jmemmgr,jmemnobs"
+	    "jccoefct,jccolor,jcsample,jchuff,jcdctmgr,jfdctfst,jfdctflt," + -
+	    "jfdctint,jdapi,jdatasrc,jdmaster,jdmarker,jdmainct,jdcoefct," + -
+	    "jdpostct,jddctmgr,jidctfst,jidctflt,jidctint,jidctred,jdhuff," + -
+	    "jdsample,jdcolor,jquant1,jquant2,jdmerge,jcomapi,jutils," + -
+	    "jerror,jmemmgr,jmemnobs"
 $!  search for missing object files.
 $!
 $ sndx = 0

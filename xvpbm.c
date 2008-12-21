@@ -95,7 +95,7 @@ int LoadPBM(fname, pinfo)
 
 
   if (c1=='1' || c1=='2' || c1=='3') pinfo->frmType = F_PBMASCII;
-                                else pinfo->frmType = F_PBMRAW;
+				else pinfo->frmType = F_PBMRAW;
 
   /* note:  pic, type, r,g,b, frmInfo, shortFrm, and colorType fields of
      picinfo struct are filled in in the format-specific loaders */
@@ -115,7 +115,7 @@ int LoadPBM(fname, pinfo)
   }
 
   return rv;
-}  
+}
 
 
 
@@ -135,7 +135,7 @@ static int loadpbm(fp, pinfo, raw)
 
   pinfo->pic  = pic8;
   pinfo->type = PIC8;
-  sprintf(pinfo->fullInfo, "PBM, %s format.  (%ld bytes)", 
+  sprintf(pinfo->fullInfo, "PBM, %s format.  (%ld bytes)",
 	  (raw) ? "raw" : "ascii", filesize);
   sprintf(pinfo->shrtInfo, "%dx%d PBM.", w, h);
   pinfo->colType = F_BWDITHER;
@@ -202,7 +202,7 @@ static int loadpgm(fp, pinfo, raw, maxv)
 
   pinfo->pic  = pic8;
   pinfo->type = PIC8;
-  sprintf(pinfo->fullInfo, "PGM, %s format.  (%ld bytes)", 
+  sprintf(pinfo->fullInfo, "PGM, %s format.  (%ld bytes)",
 	  (raw) ? "raw" : "ascii", filesize);
   sprintf(pinfo->shrtInfo, "%dx%d PGM.", pinfo->w, pinfo->h);
   pinfo->colType = F_GREYSCALE;
@@ -267,7 +267,7 @@ static int loadppm(fp, pinfo, raw, maxv)
 
   pinfo->pic  = pic24;
   pinfo->type = PIC24;
-  sprintf(pinfo->fullInfo, "PPM, %s format.  (%ld bytes)", 
+  sprintf(pinfo->fullInfo, "PPM, %s format.  (%ld bytes)",
 	  (raw) ? "raw" : "ascii", filesize);
   sprintf(pinfo->shrtInfo, "%dx%d PPM.", w, h);
   pinfo->colType = F_FULLCOLOR;
@@ -300,7 +300,7 @@ static int loadppm(fp, pinfo, raw, maxv)
       numgot = fread(pic24, (size_t) 1, (size_t) w*h*3, fp);  /* read data */
     }
   }
-  
+
   if (numgot != w*h*3) pbmError(bname, TRUNCSTR);
 
   if (garbage)
@@ -310,7 +310,7 @@ static int loadppm(fp, pinfo, raw, maxv)
   /* have to scale all RGB values up (Conv24to8 expects RGB values to
      range from 0-255 */
 
-  if (maxv<255) { 
+  if (maxv<255) {
     for (i=0; i<=maxv; i++) scale[i] = (i * 255) / maxv;
 
     for (i=0, pix=pic24; i<h; i++) {
@@ -360,8 +360,8 @@ static int getint(fp, pinfo)
 	  pinfo->comment[0] = '\0';
 	}
 	else {
-	  tmpptr = (char *) realloc(pinfo->comment, 
-		      strlen(pinfo->comment) + strlen(cmt) + 1); 
+	  tmpptr = (char *) realloc(pinfo->comment,
+		      strlen(pinfo->comment) + strlen(cmt) + 1);
 	  if (!tmpptr) FatalError("realloc failure in xvpbm.c getint");
 	  pinfo->comment = tmpptr;
 	}
@@ -445,8 +445,8 @@ static int getbit(fp, pinfo)
 	  pinfo->comment[0] = '\0';
 	}
 	else {
-	  tmpptr = (char *) realloc(pinfo->comment, 
-		      strlen(pinfo->comment) + strlen(cmt) + 1); 
+	  tmpptr = (char *) realloc(pinfo->comment,
+		      strlen(pinfo->comment) + strlen(cmt) + 1);
 	  if (!tmpptr) FatalError("realloc failure in xvpbm.c getint");
 	  pinfo->comment = tmpptr;
 	}
@@ -490,7 +490,7 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
      char *comment;
 {
   /* writes a PBM/PGM/PPM file to the already open stream
-     if (raw), writes as RAW bytes, otherwise writes as ASCII 
+     if (raw), writes as RAW bytes, otherwise writes as ASCII
      'colorstyle' single-handedly determines the type of file written
      if colorstyle==0, (Full Color) a PPM file is written
      if colorstyle==1, (Greyscale)  a PGM file is written
@@ -546,7 +546,7 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
 	  }
 	}
 	else {
-	  if (ptype==PIC8) 
+	  if (ptype==PIC8)
 	    fprintf(fp,"%3d %3d %3d ",rmap[*pix], gmap[*pix], bmap[*pix]);
 	  else
 	    fprintf(fp,"%3d %3d %3d ",pix[0], pix[1], pix[2]);
@@ -554,7 +554,7 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
 	  len+=12;
 	  if (len>58) { fprintf(fp,"\n");  len=0; }
 	}
-	
+
 	pix += (ptype==PIC24) ? 3 : 1;
       }
     }
@@ -573,7 +573,7 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
 
       else {
 	if (ptype==PIC8) fprintf(fp,"%3d ",rgb[*pix]);
-	            else fprintf(fp,"%3d ",MONO(pix[0],pix[1],pix[2]));
+		    else fprintf(fp,"%3d ",MONO(pix[0],pix[1],pix[2]));
 	len += 4;
 	if (len>66) { fprintf(fp,"\n");  len=0; }
       }
@@ -628,8 +628,8 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
 }
 
 
-	  
-	  
+
+
 
 
 

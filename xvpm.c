@@ -106,7 +106,7 @@ int LoadPM(fname, pinfo)
   w = thePic.pm_ncol;  h = thePic.pm_nrow;
 
   /* make sure that the input picture can be dealt with */
-  if ( thePic.pm_nband!=1 || 
+  if ( thePic.pm_nband!=1 ||
       (thePic.pm_form!=PM_I && thePic.pm_form!=PM_C) ||
       (thePic.pm_form==PM_I && thePic.pm_np>1) ||
       (thePic.pm_form==PM_C && (thePic.pm_np==2 || thePic.pm_np>4)) ) {
@@ -114,20 +114,20 @@ int LoadPM(fname, pinfo)
     fprintf(stderr,"(ie, 1-plane PM_I, or 1-, 3-, or 4-plane PM_C)\n");
 
     return pmError(bname, "PM file in unsupported format");
-  }	
+  }
 
 
   isize = pm_isize(&thePic);
 
-  if (DEBUG) 
+  if (DEBUG)
     fprintf(stderr,"%s: LoadPM() - loading a %dx%d %s pic, %d planes\n",
-	    cmd, w, h, (thePic.pm_form==PM_I) ? "PM_I" : "PM_C", 
+	    cmd, w, h, (thePic.pm_form==PM_I) ? "PM_I" : "PM_C",
 	    thePic.pm_np);
 
-	      
+
   /* allocate memory for picture and read it in */
   thePic.pm_image = (char *) malloc((size_t) isize);
-  if (thePic.pm_image == NULL) 
+  if (thePic.pm_image == NULL)
     return( pmError(bname, "unable to malloc PM picture") );
 
   if (fread(thePic.pm_image, (size_t) isize, (size_t) 1, fp) != 1)   {
@@ -147,7 +147,7 @@ int LoadPM(fname, pinfo)
       }
     }
   }
-   
+
   fclose(fp);
 
 
@@ -159,7 +159,7 @@ int LoadPM(fname, pinfo)
       if (thePic.pm_cmt) free(thePic.pm_cmt);
       return( pmError(bname, "unable to malloc 24-bit picture") );
     }
-      
+
     intptr = (int *) thePic.pm_image;
     picptr = pic24;
 
@@ -210,12 +210,12 @@ int LoadPM(fname, pinfo)
     pinfo->pic  = pic24;
     pinfo->type = PIC24;
   }
-  
+
 
   else if (thePic.pm_form == PM_C && thePic.pm_np==1) {
     /* don't have to convert, just point pic at thePic.pm_image */
     pic8 = (byte *) thePic.pm_image;
-    for (i=0; i<256; i++) 
+    for (i=0; i<256; i++)
       pinfo->r[i] = pinfo->g[i] = pinfo->b[i] = i;  /* build mono cmap */
 
     pinfo->pic  = pic8;
@@ -228,11 +228,11 @@ int LoadPM(fname, pinfo)
   pinfo->normw = pinfo->w;   pinfo->normh = pinfo->h;
 
   pinfo->frmType = F_PM;
-  pinfo->colType = (thePic.pm_form==PM_I || thePic.pm_np>1) 
-                         ? F_FULLCOLOR : F_GREYSCALE;
+  pinfo->colType = (thePic.pm_form==PM_I || thePic.pm_np>1)
+			 ? F_FULLCOLOR : F_GREYSCALE;
   sprintf(pinfo->fullInfo,"PM, %s.  (%d plane %s)  (%ld bytes)",
-	  (thePic.pm_form==PM_I || thePic.pm_np>1) 
-	        ? "24-bit color" : "8-bit greyscale",
+	  (thePic.pm_form==PM_I || thePic.pm_np>1)
+		? "24-bit color" : "8-bit greyscale",
 	  thePic.pm_np, (thePic.pm_form==PM_I) ? "PM_I" : "PM_C",
 	  isize + PM_IOHDR_SIZE + thePic.pm_cmtsize);
 
@@ -313,7 +313,7 @@ int WritePM(fp, pic, ptype, w, h, rmap, gmap, bmap, numcols, colorstyle,
 
   else if (colorstyle == 1) {    /* GreyScale: 8 bits per pixel */
     byte rgb[256];
-    
+
     if (ptype == PIC8) {
       for (i=0; i<numcols; i++) rgb[i] = MONO(rmap[i],gmap[i],bmap[i]);
       for (i=0, p=pic; i<w*h; i++, p++) {

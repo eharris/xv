@@ -54,7 +54,7 @@
 
 
 
-/* if your system doesn't have u_long, u_short ... typedefined  
+/* if your system doesn't have u_long, u_short ... typedefined
  * uncomment the following line:
  */
 /* BSDTYPES = -DBSDTYPES */
@@ -81,7 +81,7 @@
  */
 #if defined(VaxArchitecture) && !defined(UltrixArchitecture)
 VPRINTF=	-DNEED_VPRINTF -DINTSPRINTF -DLONGINT -DNOVOID
-#else 
+#else
 #  if defined(RtArchitecture) && !defined(AIXArchitecture)
 VPRINTF=	-DNEED_VPRINTF -DINTSPRINTF -DLONGINT -DNOSTDHDRS -U__STDC__
 #  else
@@ -135,8 +135,8 @@ PDS = -DDOPDS
 
 
 #if defined(SCOArchitecture)
-SCO= -Dsco -DPOSIX -DNO_RANDOM 
-SYS_LIBRARIES=        -lm -lc -lx 
+SCO= -Dsco -DPOSIX -DNO_RANDOM
+SYS_LIBRARIES=        -lm -lc -lx
 #else
 SYS_LIBRARIES=        -lm
 #endif
@@ -194,7 +194,7 @@ all::
 #    ifdef HaveTiff
        SUBDIRS = tiff
 #    else
-       SUBDIRS = 
+       SUBDIRS =
 #    endif
 #  else
      SUBDIRS = tiff
@@ -224,7 +224,7 @@ clean::
 #ifdef HaveTiff
 $(LIBTIFF):
 	cd $(TIFFDIR); $(MAKE) libtiff.a
- 
+
 clean::
 	@echo "  cleaning in $(TIFFDIR) ..."
 	@echo ""
@@ -235,7 +235,7 @@ clean::
 
 
 SRCS = $(SRCS1) $(SRCS2) $(SRCS3) $(SRCS4)
-  
+
 AllTarget($(PROGRAMS))
 DependTarget()
 #ifdef IHaveSubdirs
@@ -248,7 +248,7 @@ NormalProgramTarget(bggen,$(OBJS2),$(DEPLIBS),$(LOCAL_LIBRARIES),)
 NormalProgramTarget(xcmap,$(OBJS4),$(DEPLIBS),$(LOCAL_LIBRARIES),)
 NormalProgramTarget(xvpictoppm,$(OBJS5),$(DEPLIBS),$(LOCAL_LIBRARIES),)
 
- 
+
 InstallProgram(xv,$(BINDIR))
 InstallProgram(bggen,$(BINDIR))
 InstallProgram(xcmap,$(BINDIR))
@@ -259,7 +259,7 @@ NormalProgramTarget(vdcomp,$(OBJS3),$(DEPLIBS),$(LOCAL_LIBRARIES),)
 InstallProgram(vdcomp,$(BINDIR))
 #endif
 
- 
+
 InstallManPageLong(docs/xv,$(MANDIR),xv)
 InstallManPageLong(docs/bggen,$(MANDIR),bggen)
 InstallManPageLong(docs/xcmap,$(MANDIR),xcmap)

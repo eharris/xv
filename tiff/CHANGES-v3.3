@@ -20,7 +20,7 @@ Changes in libtiff:
     o the ExtraSamples tag is now fully supported; uses of the old Matteing tag
       should eliminated
     o TIFFGetFieldDefaulted now correctly handles the TransferFunction,
-      ReferenceBlackWhite, and ExtraSamples, tags 
+      ReferenceBlackWhite, and ExtraSamples, tags
     o ExtraSamples tags incorrectly written with a BYTE type are now accepted
       for compatiblity with Adobe Photoshop v2.5 (the 6.0 spec requires SHORTs)
     o strip chopping is now done for appropriately structured tiled images
@@ -67,10 +67,10 @@ Changes in libtiff:
     o support has been added for the non-standard, but widely used tag #330
       (SubIFD); this tag is valuable mostly for including thumbnail-style images
     o a new library interface, TIFFSetSubDirectory, was added for selecting
-      a directory according to a 32-bit file offset (especially useful for 
+      a directory according to a 32-bit file offset (especially useful for
       SubIFD support)
     o a new library interface, TIFFUnlinkDirectory, was added for removing
-      an IFD from the maiing list chained off the TIFF header (it cannot 
+      an IFD from the maiing list chained off the TIFF header (it cannot
       currently be used to unlink an IFD accessed via a SubIFD tag)
     o the strip chopping support now handles files separate PlanarConfiguration
     o it is now possible to append to a TIFF with byte order opposite to
@@ -85,7 +85,7 @@ Changes in libtiff:
     o TIFFPrintDirectory now prints ASCII strings with embedded unprintable
       or otherwise graphic-oriented characters using C-style escapes
     o TIFFReadTile, TIFFReadRawTile, and TIFFReadEncodedTile now properly
-      check any user-supplied byte count 
+      check any user-supplied byte count
     o TIFFNumberOfStrips and TIFFNumberOfTiles now return the proper value
       when the image has PlanarConfig separate
     o support for the Atari was contributed

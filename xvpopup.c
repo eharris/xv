@@ -1,4 +1,4 @@
-/* 
+/*
  * xvpopup.c - popup "Are you sure?  Yes/No/Maybe" sort of dialog box
  *
  * callable functions:
@@ -86,13 +86,13 @@ static int    padMthdLen=3;
 static char  *padMthdNames[] = { "Solid Fill", "Run 'bggen'", "Load Image" };
 
 static int    padColDefLen = 9;
-static char  *padColDefNames[] = { "black", "red",  "yellow", "green", 
-				   "cyan",  "blue", "magenta", "white", 
+static char  *padColDefNames[] = { "black", "red",  "yellow", "green",
+				   "cyan",  "blue", "magenta", "white",
 				   "50% gray" };
 
 static char  *padColDefVals[]  = { "black", "red", "yellow", "green",
 				   "cyan",  "blue", "magenta", "white",
-                                   "gray50" };
+				   "gray50" };
 
 static int    padBgDefLen = 8;
 static char  *padBgDefNames[] = {
@@ -105,8 +105,8 @@ static char  *padBgDefNames[] = {
   "Red Balls",
   "Red+Yellow Diamonds" };
 
-static char  *padBgDefVals[]  = { 
-  "black white", 
+static char  *padBgDefVals[]  = {
+  "black white",
   "100 100 255  50 50 150",
   "red green blue",
   "black red yellow green blue purple black",
@@ -150,11 +150,11 @@ void CenterMapWindow(win, dx, dy, w, h)
     if (wy + h > dispHIGH) wy = dispHIGH - h;
   }
 
-  
+
   if (winCtrPosKludge) {
     wx -= (p_offx + ch_offx);
     wy -= (p_offy + ch_offy);
-  } 
+  }
   else {
     wx -= (ch_offx);
     wy -= (ch_offy);
@@ -191,13 +191,13 @@ static int doPopUp(txt, labels, n, poptyp, wname)
   if (firsttime) createPUD();
 
   if (poptyp != ISPAD) { puwide = PUWIDE;      puhigh = PUHIGH;     }
-                  else { puwide = PAD_PUWIDE;  puhigh = PAD_PUHIGH; }
+		  else { puwide = PAD_PUWIDE;  puhigh = PAD_PUHIGH; }
 
 
   /* attach controls to popW, now that it exists */
   if      (poptyp==ISGRAB) ahideCB.win = popW;
   else if (poptyp == ISPAD) {
-    
+
     if (!padHaveDooDads) {
       DCreate(&padWDial, popW, 16,      puhigh-16-100-1,75,100,
 	      1, 2048, pWIDE, 10,
@@ -230,8 +230,8 @@ static int doPopUp(txt, labels, n, poptyp, wname)
     XMapWindow(theDisp, padWDial.win);
     XMapWindow(theDisp, padHDial.win);
     XMapWindow(theDisp, padODial.win);
-  }      
-  
+  }
+
 
   XResizeWindow(theDisp, popW, (u_int) puwide, (u_int) puhigh);
   XStoreName   (theDisp, popW, wname);
@@ -257,9 +257,9 @@ static int doPopUp(txt, labels, n, poptyp, wname)
   }
   else if (poptyp == ISPAD) {
     BTSetActive(&bts[0], (int) strlen(gsBuf));
-    i = pWIDE * 3;  RANGE(i,2048,9999);  
+    i = pWIDE * 3;  RANGE(i,2048,9999);
     DSetRange(&padWDial, 1, i, padWDial.val, 10);
-    i = pHIGH * 3;  RANGE(i,2048,9999);  
+    i = pHIGH * 3;  RANGE(i,2048,9999);
     DSetRange(&padHDial, 1, i, padHDial.val, 10);
 
     DSetActive(&padWDial, (padMode!=PAD_LOAD));  /* DSetRange activates dial */
@@ -283,14 +283,14 @@ static int doPopUp(txt, labels, n, poptyp, wname)
     }
   }
 
-  /* center first button in window around mouse position, with constraint that 
+  /* center first button in window around mouse position, with constraint that
      window be fully on the screen */
 
   CenterMapWindow(popW, 40 + bts[0].x, BUTTH/2 + bts[0].y, puwide, puhigh);
   popUp = poptyp;
 
   /* MUST wait for VisibilityNotify event to come in, else we run the risk
-     of UnMapping the window *before* the Map request completed.  This 
+     of UnMapping the window *before* the Map request completed.  This
      appears to be bad, (It leaves an empty window frame up.) though it
      generally only happens on slow servers.  Better safe than screwed... */
 
@@ -338,10 +338,10 @@ int GetStrPopUp(txt, labels, n, buf, buflen, filstr, allow)
      button labels have 1-character accellerators at the front, same
      as in PopUp().  Note that it would be suboptimal to make any
      of the 1-character accellerators be the same character as one of
-     the edit-text command keys 
+     the edit-text command keys
 
      Also note that the filter string should only contain normal printable
-     characters (' ' through '\177'), as ctrl chars are pre-filtered 
+     characters (' ' through '\177'), as ctrl chars are pre-filtered
      (ie, interpreted as emacs-like commands) */
 
   gsBuf = buf;        gsBufLen = buflen;
@@ -358,7 +358,7 @@ int GetStrPopUp(txt, labels, n, buf, buflen, filstr, allow)
     gsy = PUHIGH - 10 - BUTTH - 10 - gsh - 20;
 
   gsw = PUWIDE - gsx - 10;
-  
+
   changedGSBuf();      /* careful!  popW doesn't exist yet! */
 
   return doPopUp(txt, labels, n, ISGETSTR, "xv prompt");
@@ -390,7 +390,7 @@ int GrabPopUp(pHide, pDelay)
   changedGSBuf();      /* careful!  popW doesn't exist yet! */
 
   /* window value gets filled in in doPopUp() */
-  CBCreate(&ahideCB, (Window) NULL, 
+  CBCreate(&ahideCB, (Window) NULL,
 	   PUWIDE-10-18-StringWidth(HIDESTR),
 	   gsy+2, HIDESTR, infofg, infobg, hicol, locol);
   ahideCB.val = *pHide;
@@ -464,8 +464,8 @@ int PadPopUp(pMode, pStr, pWide,pHigh, pOpaque, pOmode)
 
   changedGSBuf();      /* careful!  popW doesn't exist yet! */
 
-  if (padHaveDooDads) { 
-    oldW = padWDial.val;  
+  if (padHaveDooDads) {
+    oldW = padWDial.val;
     oldH = padHDial.val;
     oldO = padODial.val;
   }
@@ -496,8 +496,8 @@ int PadPopUp(pMode, pStr, pWide,pHigh, pOpaque, pOmode)
   XUnmapWindow(theDisp, padODial.win);
 
   /* load up return values */
-  *pMode   = padMode;  
-  *pStr    = padBuf;  
+  *pMode   = padMode;
+  *pStr    = padBuf;
   *pWide   = padWDial.val;
   *pHigh   = padHDial.val;
   *pOpaque = padODial.val;
@@ -526,8 +526,8 @@ static void buildPadLists()
   build1PadList("load", padLoadVals, padLoadNames, &padLoadLen,
 		(char **) NULL, (char **) NULL, 0);
 }
-	
-      
+
+
 /***************************************************/
 static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
      char *typstr, **vals, **nams, **dvals, **dnams;
@@ -548,7 +548,7 @@ static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
       vals[*lenp] = (char *) malloc(strlen(def_str)+1);
       if (!vals[*lenp]) continue;
       strcpy(vals[*lenp], def_str);
-      
+
       sprintf(resname, "pad.%s.name%d", typstr, i);
       if (rd_str_cl(resname, "Dialog.Menu.Slot",0)) {  /* and it has a name! */
 	nams[*lenp] = (char *) malloc(strlen(def_str)+1);
@@ -561,12 +561,12 @@ static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
 	if (!nams[*lenp]) { free(vals[*lenp]); continue; }
 	strncpy(nams[*lenp], vals[*lenp], (size_t) 31);
       }
-      
+
       if (strlen(nams[*lenp]) > (size_t) 20) {   /* fix long names */
 	char *sp = nams[*lenp] + 18;
 	*sp++ = '.';  *sp++ = '.';  *sp++ = '.';  *sp++ = '\0';
       }
-	
+
       *lenp = (*lenp) + 1;
     }
   }
@@ -583,7 +583,7 @@ static void build1PadList(typstr, vals, nams, lenp, dvals, dnams, dlen)
     strcpy(nams[*lenp], dnams[i]);
     *lenp = (*lenp) + 1;
   }
-}    
+}
 
 
 
@@ -605,7 +605,7 @@ void ClosePopUp()
 void OpenAlert(txt)
      char *txt;
 {
-  /* pops up a window with txt displayed in it (*no buttons*).  
+  /* pops up a window with txt displayed in it (*no buttons*).
      returns immediately.  window is closed by 'CloseAlert()'.
      No 'PopUp()' calls are allowed while an Alert is displayed. */
 
@@ -624,14 +624,14 @@ void OpenAlert(txt)
   puwide = PUWIDE;  puhigh = PUHIGH;
   XResizeWindow(theDisp, popW, (u_int) puwide, (u_int) puhigh);
 
-  /* center last button in window around mouse position, with constraint that 
+  /* center last button in window around mouse position, with constraint that
      window be fully on the screen */
 
   CenterMapWindow(popW, puwide/2, puhigh/2, puwide, puhigh);
   popUp = ISALERT;
 
   /* MUST wait for VisibilityNotify event to come in, else we run the risk
-     of UnMapping the window *before* the Map request completed.  This 
+     of UnMapping the window *before* the Map request completed.  This
      appears to be bad, (It leaves an empty window frame up.) though it
      generally only happens on slow servers.  Better safe than screwed... */
 
@@ -695,7 +695,7 @@ int PUCheckEvent(xev)
     XKeyEvent *e = (XKeyEvent *) xev;
     char buf[128];  KeySym ks;
     int stlen, i, shift, ck;
-	
+
     stlen = XLookupString(e,buf,128,&ks,(XComposeStatus *) NULL);
     shift = e->state & ShiftMask;
     ck = CursorKey(ks, shift, 0);
@@ -725,7 +725,7 @@ int PUCheckEvent(xev)
 	rv = 1;
       }
 
-      if (!rv && (popUp==ISGETSTR || popUp==ISGRAB || popUp==ISPAD)) { 
+      if (!rv && (popUp==ISGETSTR || popUp==ISGRAB || popUp==ISPAD)) {
 	if (e->window == popW) { doGetStrKey(buf[0]);  rv = 1; }
       }
     }
@@ -775,10 +775,10 @@ void TextRect(win, txt, x, y, w, h, fg)
   int   i, inbreak, lineno, top, hardcr, maxln, len[TR_MAXLN];
 
   XSetForeground(theDisp, theGC, fg);
-  
+
   sp = txt;  lineno = hardcr = 0;
 
-  maxln = h / LINEHIGH;  
+  maxln = h / LINEHIGH;
   RANGE(maxln,0,TR_MAXLN);
   while (*sp && lineno<maxln) {
 
@@ -797,7 +797,7 @@ void TextRect(win, txt, x, y, w, h, fg)
     while (XTextWidth(mfinfo, sp, (int)(ep-sp))<= w && *ep && *ep!='\n') ep++;
     if (*ep=='\n') { ep++;  hardcr=1; }   /* eat newline */
 
-    /* if we got too wide, back off until we find a break position 
+    /* if we got too wide, back off until we find a break position
        (last char before a space or a '/') */
 
     if (XTextWidth(mfinfo, sp, (int)(ep-sp)) > w) {
@@ -812,7 +812,7 @@ void TextRect(win, txt, x, y, w, h, fg)
     }
 
     start[lineno] = sp;  len[lineno] = ep-sp;
-    
+
     /* make sure we don't print a trailing '\n' character! */
     if (len[lineno] > 0) {
       while (sp[len[lineno]-1] == '\n') len[lineno] = len[lineno] - 1;
@@ -835,7 +835,7 @@ void TextRect(win, txt, x, y, w, h, fg)
 /***************************************************/
 static void createPUD()
 {
-  popW = CreateWindow("xv confirm", "XVconfirm", "+0+0", 
+  popW = CreateWindow("xv confirm", "XVconfirm", "+0+0",
 		      PUWIDE, PUHIGH, infofg, infobg, 0);
   if (!popW) FatalError("can't create popup window!");
 
@@ -847,7 +847,7 @@ static void createPUD()
   bts = (BUTT *) NULL;
   nbts = selected = firsttime = 0;
 }
-  
+
 
 /***************************************************/
 static void attachPUD()
@@ -913,24 +913,24 @@ int x,y,w,h;
       XDrawLine(theDisp, popW, theGC, 16+1+75+75+5, puhigh-140 + 6+8,
 		16+1+75+75+5, puhigh-10-4);
     }
-      
+
 
     XSetForeground(theDisp, theGC, infofg);
-    XDrawRectangle(theDisp, popW, theGC, 268, puhigh-140, 
+    XDrawRectangle(theDisp, popW, theGC, 268, puhigh-140,
 		   (u_int) puwide - 10 - 268, 130-BUTTH-10);
-    Draw3dRect(popW, 268+1, puhigh-140+1, (u_int) puwide -10-268-2, 
+    Draw3dRect(popW, 268+1, puhigh-140+1, (u_int) puwide -10-268-2,
 	       130-2 - BUTTH-10, R3D_IN,2,hicol,locol,infobg);
-    
-    TextRect(popW,padInst,268+5, puhigh-140+3, puwide-10-268-10, 
+
+    TextRect(popW,padInst,268+5, puhigh-140+3, puwide-10-268-10,
 	     130-6 - BUTTH-10, infofg);
   }
 
   else {
     XCopyPlane(theDisp, iconPix, popW, theGC, 0,0, icon_width, icon_height,
 	       10,10+(puhigh-30-BUTTH-icon_height)/2, 1L);
-    
+
     xt = 10+icon_width+20;  yt = 10;
-    
+
     if (popUp == ISGETSTR) {
       TextRect(popW, text, xt, yt, puwide-10-xt, gsy-20, infofg);
       drawGSBuf();
@@ -947,22 +947,22 @@ int x,y,w,h;
 /***************************************************/
 static void drawPadOMStr()
 {
-  CenterString(popW, padODial.x + (padODial.w - 13)/2, 
+  CenterString(popW, padODial.x + (padODial.w - 13)/2,
 	       puhigh-16-100-12, padOMStr[padOMode]);
 }
-  
+
 /***************************************************/
 static void clickPUD(x,y)
      int x,y;
 {
   int i;
   BUTT *bp;
-  
+
   for (i=0; i<nbts; i++) {
     bp = &bts[i];
     if (PTINRECT(x, y, bp->x, bp->y, bp->w, bp->h)) break;
   }
-  
+
   if (i<nbts && BTTrack(bp)) {
     popUp = 0;  selected = i;  return;
   }
@@ -1017,11 +1017,11 @@ static void clickPUD(x,y)
       gsCurPos = strlen(gsBuf);
       gsStPos = gsEnPos = 0;
       changedGSBuf();
-      if (ctrlColor) 
-	XClearArea(theDisp, popW, gsx+3,gsy+3, 
+      if (ctrlColor)
+	XClearArea(theDisp, popW, gsx+3,gsy+3,
 		   (u_int)gsw-5, (u_int)gsh-5, False);
       else
-	XClearArea(theDisp, popW, gsx+1,gsy+1, 
+	XClearArea(theDisp, popW, gsx+1,gsy+1,
 		   (u_int)gsw-1, (u_int)gsh-1, False);
       drawGSBuf();
 
@@ -1032,7 +1032,7 @@ static void clickPUD(x,y)
       DSetActive (&padWDial,  (i!=PAD_LOAD));
       DSetActive (&padHDial,  (i!=PAD_LOAD));
 
-      XClearArea(theDisp, popW, 184+5, puhigh-140+3, 
+      XClearArea(theDisp, popW, 184+5, puhigh-140+3,
 		 (u_int) puwide-10-184-10, 130-6 - BUTTH-10, True);
 
       padMode = i;
@@ -1049,11 +1049,11 @@ static void clickPUD(x,y)
       gsCurPos = strlen(gsBuf);
       gsStPos = gsEnPos = 0;
       changedGSBuf();
-      if (ctrlColor) 
-	XClearArea(theDisp, popW, gsx+3,gsy+3, 
+      if (ctrlColor)
+	XClearArea(theDisp, popW, gsx+3,gsy+3,
 		   (u_int)gsw-5, (u_int)gsh-5, False);
       else
-	XClearArea(theDisp, popW, gsx+1,gsy+1, 
+	XClearArea(theDisp, popW, gsx+1,gsy+1,
 		   (u_int)gsw-1, (u_int)gsh-1, False);
       drawGSBuf();
 
@@ -1079,8 +1079,8 @@ static int doGSKey(c)
   /* handle characters typed at GetStrPopUp window.  Button accel. keys
      have already been checked for elsewhere.  Practical upshot is that
      we don't have to do anything with ESC or Return (as these will normally
-     be Cancel and Ok buttons) 
- 
+     be Cancel and Ok buttons)
+
      Normally returns '0'.  Returns '1' if character wasn't accepted, for
      whatever reason. */
 
@@ -1088,8 +1088,8 @@ static int doGSKey(c)
 
   len = strlen(gsBuf);
   if (gsFilter) flen = strlen(gsFilter);
-           else flen = 0;
-  
+	   else flen = 0;
+
 
   if (c>=' ' && c<'\177') {              /* 'NORMAL' CHARACTERS */
     if (flen) {                          /* check filter string */
@@ -1097,7 +1097,7 @@ static int doGSKey(c)
       if (!gsAllow && i< flen) return 1;    /* found in 'disallow' filter */
       if ( gsAllow && i==flen) return 1;    /* not found in 'allow' filter */
     }
-    
+
     if (len >= gsBufLen-1) return 1;     /* at max length */
 
     xvbcopy(&gsBuf[gsCurPos], &gsBuf[gsCurPos+1], (size_t) len-gsCurPos+1);
@@ -1147,7 +1147,7 @@ static int doGSKey(c)
 
   changedGSBuf();      /* compute gsEnPos, gsStPos */
 
-  if (ctrlColor) 
+  if (ctrlColor)
     XClearArea(theDisp, popW, gsx+3,gsy+3, (u_int)gsw-5, (u_int)gsh-5, False);
   else
     XClearArea(theDisp, popW, gsx+1,gsy+1, (u_int)gsw-1, (u_int)gsh-1, False);
@@ -1175,7 +1175,7 @@ static int doGSKey(c)
 /***************************************************/
 static void changedGSBuf()
 {
-  /* cursor position (or whatever) may have changed.  adjust displayed 
+  /* cursor position (or whatever) may have changed.  adjust displayed
      portion of gsBuf */
 
   int len;
@@ -1212,7 +1212,7 @@ static void drawGSBuf()
 
   XSetForeground(theDisp, theGC, infofg);
   XDrawRectangle(theDisp, popW, theGC, gsx, gsy, (u_int) gsw, (u_int) gsh);
-  Draw3dRect(popW, gsx+1, gsy+1, (u_int) gsw-2, (u_int) gsh-2, 
+  Draw3dRect(popW, gsx+1, gsy+1, (u_int) gsw-2, (u_int) gsh-2,
 	     R3D_IN, 2, hicol,locol,infobg);
 
   XSetForeground(theDisp, theGC, infofg);

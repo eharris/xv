@@ -85,7 +85,7 @@ int LoadSunRas(fname, pinfo)
       sunheader.ras_depth != 8 &&
       sunheader.ras_depth != 24 &&
       sunheader.ras_depth != 32) {
-    fprintf (stderr, "Sun rasterfile image has depth %d\n", 
+    fprintf (stderr, "Sun rasterfile image has depth %d\n",
 	     sunheader.ras_depth);
     fprintf (stderr, "Depths supported are 1, 8, 24, and 32\n");
     fclose(fp);
@@ -123,7 +123,7 @@ int LoadSunRas(fname, pinfo)
 
 
   /* compute length of the output (xv-format) image */
-  lsize = w * h;     
+  lsize = w * h;
   if (d == 24 || d == 32) lsize = lsize * 3;
 
 
@@ -134,7 +134,7 @@ int LoadSunRas(fname, pinfo)
   if (DEBUG) {
     fprintf(stderr,"%s: LoadSunRas() - loading a %dx%d pic, %d planes\n",
 	    cmd, w, h, d);
-    fprintf (stderr, 
+    fprintf (stderr,
 	  "type %d, maptype %d, isize %d, csize %d, lsize %d, linesize %d\n",
 	     sunheader.ras_type, sunheader.ras_maptype,
 	     isize, csize, lsize, linesize);
@@ -188,13 +188,13 @@ int LoadSunRas(fname, pinfo)
     }
 
     switch (d) {
-    case 1:  sunRas1to8 (image + w * i, line, w);	                
-             break;
+    case 1:  sunRas1to8 (image + w * i, line, w);
+	     break;
     case 8:  xvbcopy((char *) line, (char *) image + w * i, (size_t) w);
-             break;
+	     break;
     case 24: xvbcopy((char *) line, (char *) image + w * i * 3, (size_t) w*3);
-             break;
-      
+	     break;
+
     case 32:
       {
 	int k;
@@ -210,9 +210,9 @@ int LoadSunRas(fname, pinfo)
       }
     }
   }
-  
+
   free(line);
-  
+
   if (DEBUG) fprintf(stderr,"Sun ras: image loaded!\n");
 
 
@@ -224,7 +224,7 @@ int LoadSunRas(fname, pinfo)
   else pinfo->type = PIC8;
 
   pinfo->pic = image;
-  pinfo->w = w;  
+  pinfo->w = w;
   pinfo->h = h;
   pinfo->normw = pinfo->w;   pinfo->normh = pinfo->h;
   pinfo->frmType = F_SUNRAS;
@@ -270,10 +270,10 @@ FILE *fp;
 
 	if (count < 0) count &= 0xff;
 	if (count == 0) *ptr++ = c;
-        else {
-          if ((ch = getc(fp)) == EOF) break;
-          *ptr++ = ch;
-        }
+	else {
+	  if ((ch = getc(fp)) == EOF) break;
+	  *ptr++ = ch;
+	}
       }
       else *ptr++ = c;
     }
@@ -366,7 +366,7 @@ int WriteSunRas(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,userle)
   if (ptype == PIC24  && colorstyle == F_GREYSCALE) {
     graypic = (byte *) malloc((size_t) w*h);
     if (!graypic) FatalError("unable to malloc in WriteSunRas()");
-    
+
     for (i=0,sp=pic,dp=graypic; i<w*h; i++,sp+=3,dp++) {
       *dp = MONO(sp[0],sp[1],sp[2]);
     }
@@ -381,7 +381,7 @@ int WriteSunRas(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,userle)
 
   if      (ptype==PIC24)    { d = 24;  linesize = w * 3; }
   else if (colorstyle != F_BWDITHER) { d = 8;   linesize = w;     }
-  else { 
+  else {
     d = 1;
     linesize = w;
     if (linesize % 8) linesize += (8 - linesize % 8);

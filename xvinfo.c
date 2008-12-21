@@ -1,4 +1,4 @@
-/* 
+/*
  * xvinfo.c - 'Info' box handling functions
  *
  * callable functions:
@@ -8,7 +8,7 @@
  *                             maps/unmaps window, etc.
  *   RedrawInfo(x,y,w,h)    -  called by 'expose' events
  *   SetInfoMode(mode)      -  changes amount of info Info window shows
- *   SetISTR(st, fmt, args) - sprintf's into ISTR #st.  Redraws it in window 
+ *   SetISTR(st, fmt, args) - sprintf's into ISTR #st.  Redraws it in window
  *   char *GetISTR(st)      - returns pointer to ISTR #st, or NULL if st bogus
  */
 
@@ -45,18 +45,18 @@ static void redrawString  PARM((int));
 void CreateInfo(geom)
 char *geom;
 {
-  infoW = CreateWindow("xv info", "XVinfo", geom, INFOWIDE, INFOHIGH, 
+  infoW = CreateWindow("xv info", "XVinfo", geom, INFOWIDE, INFOHIGH,
 		       infofg, infobg, 0);
   if (!infoW) FatalError("can't create info window!");
-  
-  pennPix = XCreatePixmapFromBitmapData(theDisp, infoW, 
+
+  pennPix = XCreatePixmapFromBitmapData(theDisp, infoW,
 	(char *) penn_bits, penn_width, penn_height, infofg, infobg, dispDEEP);
 
   pnetPix = XCreatePixmapFromBitmapData(theDisp,infoW,
-	(char *) pennnet_bits, pennnet_width, pennnet_height, 
+	(char *) pennnet_bits, pennnet_width, pennnet_height,
 	infofg, infobg, dispDEEP);
 }
-  
+
 
 /***************************************************/
 void InfoBox(vis)
@@ -64,7 +64,7 @@ void InfoBox(vis)
 {
   if (vis) XMapRaised(theDisp, infoW);
   else     XUnmapWindow(theDisp, infoW);
-  
+
   infoUp = vis;
 }
 
@@ -74,15 +74,15 @@ void RedrawInfo(x,y,w,h)
      int x,y,w,h;
 {
   int  i;
-  
+
   XSetForeground(theDisp, theGC, infofg);
   XSetBackground(theDisp, theGC, infobg);
 
   /* draw the two icons */
   XCopyArea(theDisp, pennPix, infoW, theGC, 0, 0, penn_width, penn_height,
 	    36 - penn_width/2, 36 - penn_height/2);
-  XCopyArea(theDisp, pnetPix, infoW, theGC, 0, 0, pennnet_width, 
-	    pennnet_height, INFOWIDE - 36 - pennnet_width/2, 
+  XCopyArea(theDisp, pnetPix, infoW, theGC, 0, 0, pennnet_width,
+	    pennnet_height, INFOWIDE - 36 - pennnet_width/2,
 	    36 - pennnet_height/2);
 
   /* draw the credits */
@@ -90,7 +90,7 @@ void RedrawInfo(x,y,w,h)
   CenterString(infoW, INFOWIDE/2, 36-LINEHIGH, str);
   CenterString(infoW, INFOWIDE/2, 36,
 	       "by John Bradley  (bradley@dccs.upenn.edu)");
-  CenterString(infoW, INFOWIDE/2, 36+LINEHIGH, 
+  CenterString(infoW, INFOWIDE/2, 36+LINEHIGH,
 	       "Copyright 1994, John Bradley  -  All Rights Reserved");
 
 
@@ -139,8 +139,8 @@ static void drawFieldName(fnum)
 
   if (infoMode == INF_NONE || infoMode == INF_STR) return;
   if (infoMode == INF_PART && fnum>=3) return;
-  
-  XDrawString(theDisp, infoW, theGC, 10, TOPBASE + fnum*LINEHIGH, 
+
+  XDrawString(theDisp, infoW, theGC, 10, TOPBASE + fnum*LINEHIGH,
 	      fname[fnum], (int) strlen(fname[fnum]));
 }
 
@@ -150,7 +150,7 @@ static void redrawString(st)
      int st;
 {
   /* erase area of string, and draw it with new contents */
-  
+
   if (infoMode == INF_NONE) return;
   if (infoMode == INF_STR && st > ISTR_WARNING) return;
   if (infoMode == INF_PART && st > ISTR_RES) return;
@@ -170,12 +170,12 @@ static void redrawString(st)
   }
   else {
     XSetForeground(theDisp, theGC, infobg);
-    XFillRectangle(theDisp, infoW, theGC, 
-		   STLEFT, TOPBASE - ASCENT + (st-ISTR_FILENAME)*LINEHIGH, 
+    XFillRectangle(theDisp, infoW, theGC,
+		   STLEFT, TOPBASE - ASCENT + (st-ISTR_FILENAME)*LINEHIGH,
 		   (u_int) INFOWIDE-STLEFT, (u_int) LINEHIGH);
     XSetForeground(theDisp, theGC, infofg);
     XDrawString(theDisp, infoW, theGC, STLEFT,
-		TOPBASE	+ (st-ISTR_FILENAME)*LINEHIGH,	istrs[st], 
+		TOPBASE	+ (st-ISTR_FILENAME)*LINEHIGH,	istrs[st],
 		(int) strlen(istrs[st]));
   }
 }
@@ -187,21 +187,21 @@ void SetInfoMode(mode)
      int mode;
 {
   int y1, y2;
-  
+
   infoMode = mode;
   if (infoUp) {   /* only do this if window is mapped */
     y1 = TOPBASE - ASCENT;
     y2 = INFOHIGH-43;
-    
+
     XSetForeground(theDisp, theGC, infobg);
-    
-    XFillRectangle(theDisp,infoW,theGC,0,y1, 
+
+    XFillRectangle(theDisp,infoW,theGC,0,y1,
 		   (u_int) INFOWIDE, (u_int) y2-y1);
-    XFillRectangle(theDisp,infoW,theGC,0,INFOHIGH-39, 
+    XFillRectangle(theDisp,infoW,theGC,0,INFOHIGH-39,
 		   (u_int) INFOWIDE, (u_int) 17);
-    XFillRectangle(theDisp,infoW,theGC,0,INFOHIGH-19, 
+    XFillRectangle(theDisp,infoW,theGC,0,INFOHIGH-19,
 		   (u_int) INFOWIDE, (u_int) 17);
-    
+
     drawStrings();
   }
 }
@@ -237,9 +237,9 @@ va_dcl
     else istrs[stnum][0] = '\0';
   }
   va_end(args);
-  
+
   if (stnum == ISTR_COLOR) {
-    sprintf(istrs[ISTR_INFO], "%s  %s  %s", formatStr, 
+    sprintf(istrs[ISTR_INFO], "%s  %s  %s", formatStr,
 	    (picType==PIC8) ? "8-bit mode." : "24-bit mode.",
 	    istrs[ISTR_COLOR]);
   }
@@ -250,19 +250,19 @@ va_dcl
     XFlush(theDisp);
   }
 
-  if (ctrlUp && (stnum == ISTR_INFO || stnum == ISTR_WARNING || 
+  if (ctrlUp && (stnum == ISTR_INFO || stnum == ISTR_WARNING ||
 		 stnum == ISTR_COLOR)) {
     DrawCtrlStr();
     XFlush(theDisp);
   }
 
-  if (anyBrowUp && (stnum == ISTR_WARNING || stnum == ISTR_INFO) 
+  if (anyBrowUp && (stnum == ISTR_WARNING || stnum == ISTR_INFO)
       && strlen(istrs[stnum])) {
     SetBrowStr(istrs[stnum]);
     XFlush(theDisp);
   }
 
-  if (stnum == ISTR_WARNING && !ctrlUp && !infoUp && !anyBrowUp && 
+  if (stnum == ISTR_WARNING && !ctrlUp && !infoUp && !anyBrowUp &&
       strlen(istrs[stnum])) {
     OpenAlert(istrs[stnum]);
     sleep(3);

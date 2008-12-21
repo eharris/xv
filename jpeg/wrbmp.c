@@ -187,7 +187,7 @@ write_bmp_header (j_decompress_ptr cinfo, bmp_dest_ptr dest)
   /* File size */
   headersize = 14 + 40 + cmap_entries * 4; /* Header and colormap */
   bfSize = headersize + (INT32) dest->row_width * (INT32) cinfo->output_height;
-  
+
   /* Set unused fields of header to 0 */
   MEMZERO(bmpfileheader, SIZEOF(bmpfileheader));
   MEMZERO(bmpinfoheader, SIZEOF(bmpinfoheader));
@@ -252,7 +252,7 @@ write_os2_header (j_decompress_ptr cinfo, bmp_dest_ptr dest)
   /* File size */
   headersize = 14 + 12 + cmap_entries * 3; /* Header and colormap */
   bfSize = headersize + (INT32) dest->row_width * (INT32) cinfo->output_height;
-  
+
   /* Set unused fields of header to 0 */
   MEMZERO(bmpfileheader, SIZEOF(bmpfileheader));
   MEMZERO(bmpcoreheader, SIZEOF(bmpcoreheader));
@@ -325,7 +325,7 @@ write_colormap (j_decompress_ptr cinfo, bmp_dest_ptr dest,
 	putc(0, outfile);
     }
   }
-  /* Pad colormap with zeros to ensure specified number of colormap entries */ 
+  /* Pad colormap with zeros to ensure specified number of colormap entries */
   if (i > map_colors)
     ERREXIT1(cinfo, JERR_TOO_MANY_COLORS, i);
   for (; i < map_colors; i++) {

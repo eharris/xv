@@ -8,9 +8,9 @@
  *
  * if you have the gnu uncompression utility 'gunzip', XV can use it to
  * automatically 'unzip' any gzip'd files.  To enable this feature,
- * change 'undef' to 'define' in the following line.  Needless to say, if 
+ * change 'undef' to 'define' in the following line.  Needless to say, if
  * your gunzip is installed elsewhere on your machine, change the 'GUNZIP'
- * definition appropriately. (use 'which gunzip' to find if you have gunzip, 
+ * definition appropriately. (use 'which gunzip' to find if you have gunzip,
  * and where it lives)
  */
 #undef USE_GUNZIP
@@ -70,18 +70,18 @@
  * PostScript file input support:
  *
  * if you have the 'ghostscript' package installed (version 2.6 or later),
- * XV can use it to read and display PostScript files.  To do so, 
+ * XV can use it to read and display PostScript files.  To do so,
  * uncomment the '#define GS_PATH' line, below.  You probably will not
  * need to modify the GS_LIB or GS_DEV lines, but if you do modify them,
  * be sure to uncomment them, as well.
  *
- * the ghostscript package can be acquired via anonymous ftp on 
+ * the ghostscript package can be acquired via anonymous ftp on
  * prep.ai.mit.edu, in the 'pub/gnu' directory
  *
- * GS_PATH specifies the complete path to your gs executable.  
+ * GS_PATH specifies the complete path to your gs executable.
  *
- * GS_LIB should be set if there's some other gs libs that should be 
- * searched, but aren't by default.  (In which case you should probably 
+ * GS_LIB should be set if there's some other gs libs that should be
+ * searched, but aren't by default.  (In which case you should probably
  * just fix your 'gs' so it looks in the right places without being told...)
  *
  * GS_DEV is the file format that ghostscript will convert PS into.  It
@@ -97,7 +97,7 @@
  * 'old-style' XV logo image:
  *
  * XV now has a nifty, new logo image.  The downside is that it increases
- * the size of the 'xv' executable by 250K or so, and it's possible that 
+ * the size of the 'xv' executable by 250K or so, and it's possible that
  * your compiler may choke while compiling 'xvdflt.c'.  If you're compiler
  * can't handle it, or you're running Linux on a system with minimal memory,
  * change 'undef' to 'define' in the following line
@@ -108,8 +108,8 @@
 
 /***************************************************************************
  * Backing Store:
- * 
- * XV can request that 'Backing Store' may be turned on ('WhenMapped') for 
+ *
+ * XV can request that 'Backing Store' may be turned on ('WhenMapped') for
  * several of its windows, which may help performance over a slow network
  * connection.  However, it has been known to behave strangely (or crash)
  * on some X servers, so it's left here as an option.  If you run into trouble

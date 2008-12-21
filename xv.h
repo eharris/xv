@@ -1,6 +1,6 @@
 /*
  *  xv.h  -  header file for xv, but you probably guessed as much
- * 
+ *
  *  Author:    John Bradley  (bradley@cis.upenn.edu)
  */
 
@@ -259,7 +259,7 @@
  * make them if missing, along with a few fictitious ones
  *      Cameron Simpson  (cameron@cse.unsw.edu.au)
  */
- 
+
 #ifndef         S_ISDIR         /* missing POSIX-type macros */
 #  define       S_ISDIR(mode)   (((mode)&S_IFMT) == S_IFDIR)
 #  define       S_ISBLK(mode)   (((mode)&S_IFMT) == S_IFBLK)
@@ -308,7 +308,7 @@
 
 #ifndef VMS       /* VMS hates multi-line definitions */
 #  if defined(SVR4)  || defined(SYSV) || defined(sco) || \
-      defined(XENIX) || defined(__osf__) 
+      defined(XENIX) || defined(__osf__)
 #    undef  USE_GETCWD
 #    define USE_GETCWD          /* use 'getcwd()' instead of 'getwd()' */
 #  endif
@@ -442,7 +442,7 @@
 
 /* following list gives indicies into 'saveFormats[]' array in xvdir.c
    note that JPEG and TIFF entries may or may not exist, and following
-   constants have to be adjusted accordingly.  Also, don't worry about 
+   constants have to be adjusted accordingly.  Also, don't worry about
    duplicate cases if JPGINC or TIFINC = 0.  All code that references
    F_JPEG or F_TIFF is #ifdef'd, so it won't be a problem */
 
@@ -482,7 +482,7 @@
 /* return values from ReadFileType()
  * positive values are *definitely* readable formats (HAVE_*** is defined)
  * negative values are random files that XV can't read, but display as
- *   different icons in the visual browser 
+ *   different icons in the visual browser
  */
 #define RFT_ERROR    -1    /* couldn't open file, or whatever... */
 #define RFT_UNKNOWN   0
@@ -742,8 +742,8 @@
 
 typedef unsigned char byte;
 
-typedef struct scrl { 
-                 Window win;            /* window ID */
+typedef struct scrl {
+		 Window win;            /* window ID */
 		 int x,y,w,h;           /* window coords in parent */
 		 int len;               /* length of major axis */
 		 int vert;              /* true if vertical, else horizontal */
@@ -795,7 +795,7 @@ typedef struct { Window win;            /* parent window */
 
 
 typedef struct rbutt {
-                 Window        win;      /* parent window */
+		 Window        win;      /* parent window */
 		 int           x,y;      /* position in parent */
 		 char         *str;      /* the message string */
 		 int           selected; /* selected or not */
@@ -853,10 +853,10 @@ typedef struct { byte *pic;                  /* image data */
 		 int   type;                 /* PIC8 or PIC24 */
 
 		 byte  r[256],g[256],b[256];
-		                             /* colormap, if PIC8 */
+					     /* colormap, if PIC8 */
 
 		 int   normw, normh;         /* 'normal size' of image file
-					        (normally eq. w,h, except when
+						(normally eq. w,h, except when
 						doing 'quick' load for icons */
 
 		 int   frmType;              /* def. Format type to save in */
@@ -916,7 +916,7 @@ typedef struct {  int    spline;
 
 /* PTINRECT returns '1' if x,y is in rect */
 #define PTINRECT(x,y,rx,ry,rw,rh) \
-           ((x)>=(rx) && (y)>=(ry) && (x)<((rx)+(rw)) && (y)<((ry)+(rh)))
+	   ((x)>=(rx) && (y)>=(ry) && (x)<((rx)+(rw)) && (y)<((ry)+(rh)))
 
 /* MONO returns total intensity of r,g,b triple (i = .33R + .5G + .17B) */
 #define MONO(rd,gn,bl) ( ((int)(rd)*11 + (int)(gn)*16 + (int)(bl)*5) >> 5)
@@ -965,20 +965,20 @@ WHERE char           pageBaseName[64];      /* basename for multi-page files */
 
 WHERE byte          *cpic;         /* cropped version of pic */
 WHERE int           cWIDE, cHIGH,  /* size of cropped region */
-                    cXOFF, cYOFF;  /* offset of region from 0,0 of pic */
+		    cXOFF, cYOFF;  /* offset of region from 0,0 of pic */
 
 WHERE byte          *epic;         /* expanded version of cpic */
-                                   /* points to cpic when at 1:1 expansion */
-                                   /* this is converted to 'theImage' */
+				   /* points to cpic when at 1:1 expansion */
+				   /* this is converted to 'theImage' */
 WHERE int           eWIDE, eHIGH;  /* size of epic */
 
-WHERE byte          *egampic;      /* expanded, gammified cpic 
+WHERE byte          *egampic;      /* expanded, gammified cpic
 				      (only used in 24-bit mode) */
 
 WHERE int           p_offx, p_offy;  /* offset of reparented windows */
 WHERE int           ch_offx,ch_offy; /* ChngAttr ofst for reparented windows */
-WHERE int           kludge_offx,     /* WM kludges for SetWindowPos routine */ 
-                    kludge_offy;
+WHERE int           kludge_offx,     /* WM kludges for SetWindowPos routine */
+		    kludge_offy;
 WHERE int           winCtrPosKludge; /* kludge for popup positioning... */
 
 WHERE int            ignoreConfigs;  /* an evil kludge... */
@@ -1032,27 +1032,27 @@ WHERE char          fullfname[MAXPATHLEN]; /* full name of current file */
 WHERE char         *winTitle;      /* user-specified mainW title */
 
 WHERE int           bwidth,        /* border width of created windows */
-                    fixedaspect,   /* fixed aspect ratio */
-                    conv24,        /* 24to8 algorithm to use (CONV24_*) */
-                    ninstall,      /* true if using icccm-complaint WM
+		    fixedaspect,   /* fixed aspect ratio */
+		    conv24,        /* 24to8 algorithm to use (CONV24_*) */
+		    ninstall,      /* true if using icccm-complaint WM
 				      (a WM that will does install CMaps */
-                    useroot,       /* true if we should draw in rootW */
+		    useroot,       /* true if we should draw in rootW */
 		    nolimits,	   /* No limits on picture size */
 		    resetroot,     /* true if we should clear in window mode */
-                    noqcheck,      /* true if we should NOT do QuickCheck */
-                    epicMode,      /* either SMOOTH, DITH, or RAW */
-                    autoclose,     /* if true, autoclose when iconifying */
-                    polling,       /* if true, reload if file changes */
-                    viewonly,      /* if true, ignore any user input */
-                    noFreeCols,    /* don't free colors when loading new pic */
-                    autoquit,      /* quit in '-root' or when click on win */
-                    xerrcode,      /* errorcode of last X error */
-                    grabDelay;     /* # of seconds to sleep at start of Grab */
+		    noqcheck,      /* true if we should NOT do QuickCheck */
+		    epicMode,      /* either SMOOTH, DITH, or RAW */
+		    autoclose,     /* if true, autoclose when iconifying */
+		    polling,       /* if true, reload if file changes */
+		    viewonly,      /* if true, ignore any user input */
+		    noFreeCols,    /* don't free colors when loading new pic */
+		    autoquit,      /* quit in '-root' or when click on win */
+		    xerrcode,      /* errorcode of last X error */
+		    grabDelay;     /* # of seconds to sleep at start of Grab */
 
 WHERE int           state824;      /* displays warning when going 8->24 */
 
 WHERE float         defaspect,     /* default aspect ratio to use */
-                    normaspect;    /* normal aspect ratio of this picture */
+		    normaspect;    /* normal aspect ratio of this picture */
 
 WHERE unsigned long rootbg, rootfg;   /* fg/bg for root border */
 WHERE int           waitsec;          /* secs btwn pics. -1=wait for event */
@@ -1068,11 +1068,11 @@ WHERE char         *def_str;          /* used by rd_*() routines */
 WHERE int           def_int;
 WHERE char         *tmpdir;           /* equal to "/tmp" or $TMPDIR env var */
 WHERE Pixmap        gray25Tile,       /* used for 3d effect on 1-bit disp's */
-                    gray50Tile;
+		    gray50Tile;
 WHERE int           autoDelete;       /* delete cmd-line files on exit? */
 
 #define PRINTCMDLEN 256
-WHERE char          printCmd[PRINTCMDLEN]; 
+WHERE char          printCmd[PRINTCMDLEN];
 
 /* stuff used for 'info' box */
 WHERE Window        infoW;
@@ -1135,7 +1135,7 @@ WHERE int           clearR, clearG, clearB;  /* clear color in 24-bit mode */
 /* stuff used for 'ps' box */
 WHERE Window        psW;
 WHERE int           psUp;       /* is psW mapped, or what? */
-WHERE CBUTT         encapsCB, pscompCB;   
+WHERE CBUTT         encapsCB, pscompCB;
 WHERE char         *gsDev, *gsGeomStr;
 WHERE int           gsRes;
 
@@ -1210,7 +1210,7 @@ void KillOldRootInfo    PARM((void));
 
 /*************************** XVMISC.C ***************************/
 void StoreDeleteWindowProp  PARM((Window));
-Window CreateWindow         PARM((char *, char *, char *, int, int, 
+Window CreateWindow         PARM((char *, char *, char *, int, int,
 				  u_long, u_long, int));
 void DrawString             PARM((Window, int, int, char *));
 void CenterString           PARM((Window, int, int, char *));
@@ -1222,7 +1222,7 @@ void FakeKeyPress           PARM((Window, KeySym));
 void GenExpose              PARM((Window, int, int, u_int, u_int));
 void DimRect                PARM((Window, int, int, u_int, u_int, u_long));
 
-void Draw3dRect             PARM((Window, int, int, u_int, u_int, int, int, 
+void Draw3dRect             PARM((Window, int, int, u_int, u_int, int, int,
 				    u_long, u_long, u_long));
 
 void RemapKeyCheck          PARM((KeySym, char *, int *));
@@ -1237,7 +1237,7 @@ void WaitCursor             PARM((void));
 void SetCursors             PARM((int));
 char *BaseName              PARM((char *));
 
-void DrawTempGauge          PARM((Window, int, int, int, int, double, 
+void DrawTempGauge          PARM((Window, int, int, int, int, double,
 				  u_long, u_long, u_long, u_long, char *));
 void ProgressMeter          PARM((int, int, int, char *));
 void XVDeletedFile          PARM((char *));
@@ -1282,11 +1282,11 @@ void InstallNewPic          PARM((void));
 void DrawEpic               PARM((void));
 void KillOldPics            PARM((void));
 
-byte *FSDither              PARM((byte *, int, int, int, 
+byte *FSDither              PARM((byte *, int, int, int,
 				  byte *, byte *, byte *, int, int));
 
 void CreateXImage           PARM((void));
-XImage *Pic8ToXImage        PARM((byte *, u_int, u_int, u_long *, 
+XImage *Pic8ToXImage        PARM((byte *, u_int, u_int, u_long *,
 				  byte *, byte *, byte *));
 
 XImage *Pic24ToXImage       PARM((byte *, u_int, u_int));
@@ -1306,21 +1306,21 @@ void AlgInit                PARM((void));
 void DoAlg                  PARM((int));
 
 /*************************** XVSMOOTH.C ***************************/
-byte *SmoothResize          PARM((byte *, int, int, int, int, byte *, byte *, 
+byte *SmoothResize          PARM((byte *, int, int, int, int, byte *, byte *,
 				  byte *, byte *, byte *, byte *, int));
 
-byte *Smooth24              PARM((byte *, int, int, int, int, int, 
+byte *Smooth24              PARM((byte *, int, int, int, int, int,
 				  byte *, byte *, byte *));
 
-byte *DoColorDither         PARM((byte *, byte *, int, int, byte *, byte *, 
+byte *DoColorDither         PARM((byte *, byte *, int, int, byte *, byte *,
 				  byte *, byte *, byte *, byte *, int));
 
-byte *Do332ColorDither      PARM((byte *, byte *, int, int, byte *, byte *, 
+byte *Do332ColorDither      PARM((byte *, byte *, int, int, byte *, byte *,
 				  byte *, byte *, byte *, byte *, int));
 
 /*************************** XV24TO8.C **************************/
 void Init24to8             PARM((void));
-byte *Conv24to8            PARM((byte *, int, int, int, 
+byte *Conv24to8            PARM((byte *, int, int, int,
 				 byte *, byte *, byte *));
 
 byte *Conv8to24            PARM((byte *, int, int, byte *, byte *, byte *));
@@ -1337,7 +1337,7 @@ void DrawCtrlNumFiles      PARM((void));
 void DrawCtrlStr           PARM((void));
 void ScrollToCurrent       PARM((LIST *));
 
-void LSCreate              PARM((LIST *, Window, int, int, int, int, int, 
+void LSCreate              PARM((LIST *, Window, int, int, int, int, int,
 				 char **, int, u_long, u_long, u_long, u_long,
 				 void (*)(int, SCRL *), int, int));
 
@@ -1384,7 +1384,7 @@ int  Globify               PARM((char *));
 FILE *OpenOutFile          PARM((char *));
 int  CloseOutFile          PARM((FILE *, char *, int));
 
-byte *GenSavePic           PARM((int*, int*,int*, int*, int*, 
+byte *GenSavePic           PARM((int*, int*,int*, int*, int*,
 				 byte**, byte**, byte**));
 void GetSaveSize           PARM((int *, int *));
 
@@ -1451,11 +1451,11 @@ byte *GammifyPic24         PARM((byte *, int, int));
 void GamSetAutoApply       PARM((int));
 
 /*************************** XVSCRL.C ***************************/
-void SCCreate              PARM((SCRL *, Window, int, int, int, int, 
-				 int, int, int, int, u_long, u_long, 
+void SCCreate              PARM((SCRL *, Window, int, int, int, int,
+				 int, int, int, int, u_long, u_long,
 				 u_long, u_long, void (*)(int, SCRL *)));
 
-void SCChange              PARM((SCRL *, int, int, int, int, int, 
+void SCChange              PARM((SCRL *, int, int, int, int, int,
 				 int, int, int));
 
 void SCSetRange            PARM((SCRL *, int, int, int, int));
@@ -1465,8 +1465,8 @@ void SCTrack               PARM((SCRL *, int, int));
 
 
 /*************************** XVDIAL.C ***************************/
-void DCreate               PARM((DIAL *, Window, int, int, int, int, int, 
-				 int, int, int, u_long, u_long, u_long, 
+void DCreate               PARM((DIAL *, Window, int, int, int, int, int,
+				 int, int, int, u_long, u_long, u_long,
 				 u_long, char *, char *));
 
 void DSetRange             PARM((DIAL *, int, int, int, int));
@@ -1477,7 +1477,7 @@ int  DTrack                PARM((DIAL *, int, int));
 
 
 /**************************** XVBUTT.C ***************************/
-void BTCreate              PARM((BUTT *, Window, int, int, u_int, u_int, 
+void BTCreate              PARM((BUTT *, Window, int, int, u_int, u_int,
 				 char *, u_long, u_long, u_long, u_long));
 
 void BTSetActive           PARM((BUTT *, int));
@@ -1485,7 +1485,7 @@ void BTRedraw              PARM((BUTT *));
 int  BTTrack               PARM((BUTT *));
 
 
-RBUTT *RBCreate            PARM((RBUTT *, Window, int, int, char *, 
+RBUTT *RBCreate            PARM((RBUTT *, Window, int, int, char *,
 				 u_long, u_long, u_long, u_long));
 
 void   RBRedraw            PARM((RBUTT *, int));
@@ -1497,7 +1497,7 @@ int    RBClick             PARM((RBUTT *, int, int));
 int    RBTrack             PARM((RBUTT *, int));
 
 
-void   CBCreate            PARM((CBUTT *, Window, int, int, char *, 
+void   CBCreate            PARM((CBUTT *, Window, int, int, char *,
 				 u_long, u_long, u_long, u_long));
 
 void   CBRedraw            PARM((CBUTT *));
@@ -1506,8 +1506,8 @@ int    CBClick             PARM((CBUTT *,int,int));
 int    CBTrack             PARM((CBUTT *));
 
 
-void   MBCreate            PARM((MBUTT *, Window, int, int, u_int, u_int, 
-				 char *, 
+void   MBCreate            PARM((MBUTT *, Window, int, int, u_int, u_int,
+				 char *,
 				 char **, int,u_long,u_long, u_long, u_long));
 
 void   MBRedraw            PARM((MBUTT *));
@@ -1519,7 +1519,7 @@ int    MBTrack             PARM((MBUTT *));
 
 
 /**************************** XVGRAF.C ***************************/
-void   CreateGraf          PARM((GRAF *, Window, int, int, 
+void   CreateGraf          PARM((GRAF *, Window, int, int,
 				 u_long, u_long, char *));
 
 void   InitGraf            PARM((GRAF *));
@@ -1539,32 +1539,32 @@ double EvalSpline          PARM((int *, int *, double *, int, double));
 int LoadGIF                PARM((char *, PICINFO *));
 
 /*************************** XVGIFWR.C **************************/
-int WriteGIF               PARM((FILE *, byte *, int, int, int, 
+int WriteGIF               PARM((FILE *, byte *, int, int, int,
 				 byte *, byte *, byte *, int, int, char *));
 
 /**************************** XVPM.C ****************************/
 int LoadPM                 PARM((char *, PICINFO *));
-int WritePM                PARM((FILE *, byte *, int, int, int, byte *, 
+int WritePM                PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int, char *));
 
 /**************************** XVPBM.C ***************************/
 int LoadPBM                PARM((char *, PICINFO *));
-int WritePBM               PARM((FILE *, byte *, int, int, int, byte *, 
+int WritePBM               PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int, int, char *));
 
 /**************************** XVXBM.C ***************************/
 int LoadXBM                PARM((char *, PICINFO *));
-int WriteXBM               PARM((FILE *, byte *, int, int, byte *, byte *, 
+int WriteXBM               PARM((FILE *, byte *, int, int, byte *, byte *,
 				 byte *, char *));
 
 /**************************** XVSUNRAS.C ***************************/
 int LoadSunRas             PARM((char *, PICINFO *));
-int WriteSunRas            PARM((FILE *, byte *, int, int, int, byte *, 
+int WriteSunRas            PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte*, int, int, int));
 
 /**************************** XVBMP.C ***************************/
 int LoadBMP                PARM((char *, PICINFO *));
-int WriteBMP               PARM((FILE *, byte *, int, int, int, byte *, 
+int WriteBMP               PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int));
 
 /**************************** XVRLE.C ***************************/
@@ -1572,7 +1572,7 @@ int LoadRLE                PARM((char *, PICINFO *));
 
 /**************************** XVIRIS.C ***************************/
 int LoadIRIS               PARM((char *, PICINFO *));
-int WriteIRIS              PARM((FILE *, byte *, int, int, int, byte *, 
+int WriteIRIS              PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int));
 
 /**************************** XVPCX.C ***************************/
@@ -1583,12 +1583,12 @@ int LoadIFF                PARM((char *, PICINFO *));
 
 /**************************** XVTARGA.C ***************************/
 int LoadTarga              PARM((char *, PICINFO *));
-int WriteTarga             PARM((FILE *, byte *, int, int, int, byte *, 
+int WriteTarga             PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int));
 
 /**************************** XVXPM.C ***************************/
 int LoadXPM                PARM((char *, PICINFO *));
-int WriteXPM               PARM((FILE *, byte *, int, int, int, byte *, 
+int WriteXPM               PARM((FILE *, byte *, int, int, int, byte *,
 				 byte *, byte *, int, int, char *, char *));
 
 /**************************** XVXWD.C ***************************/
@@ -1628,7 +1628,7 @@ int   LoadPS               PARM((char *, PICINFO *, int));
 void  CenterMapWindow      PARM((Window, int, int, int, int));
 int   PopUp                PARM((char *, char **, int));
 void  ErrPopUp             PARM((char *, char *));
-int   GetStrPopUp          PARM((char *, char **, int, char *, int, 
+int   GetStrPopUp          PARM((char *, char **, int, char *, int,
 				 char *, int));
 int   GrabPopUp            PARM((int *, int *));
 int   PadPopUp             PARM((int *, char **, int *, int *, int *, int *));

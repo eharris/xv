@@ -26,62 +26,62 @@ SYSDEPMEM= jmemnobs.obj
 
 # source files: JPEG library proper
 LIBSOURCES= jcapi.c jccoefct.c jccolor.c jcdctmgr.c jchuff.c jcmainct.c \
-        jcmarker.c jcmaster.c jcomapi.c jcparam.c jcprepct.c jcsample.c \
-        jdapi.c jdatasrc.c jdatadst.c jdcoefct.c jdcolor.c jddctmgr.c \
-        jdhuff.c jdmainct.c jdmarker.c jdmaster.c jdpostct.c jdsample.c \
-        jerror.c jutils.c jfdctfst.c jfdctflt.c jfdctint.c jidctfst.c \
-        jidctflt.c jidctint.c jidctred.c jquant1.c jquant2.c jdmerge.c \
-        jmemmgr.c jmemansi.c jmemname.c jmemnobs.c jmemdos.c
+	jcmarker.c jcmaster.c jcomapi.c jcparam.c jcprepct.c jcsample.c \
+	jdapi.c jdatasrc.c jdatadst.c jdcoefct.c jdcolor.c jddctmgr.c \
+	jdhuff.c jdmainct.c jdmarker.c jdmaster.c jdpostct.c jdsample.c \
+	jerror.c jutils.c jfdctfst.c jfdctflt.c jfdctint.c jidctfst.c \
+	jidctflt.c jidctint.c jidctred.c jquant1.c jquant2.c jdmerge.c \
+	jmemmgr.c jmemansi.c jmemname.c jmemnobs.c jmemdos.c
 # source files: cjpeg/djpeg applications, also rdjpgcom/wrjpgcom
 APPSOURCES= cjpeg.c djpeg.c rdcolmap.c rdppm.c wrppm.c rdgif.c wrgif.c \
-        rdtarga.c wrtarga.c rdbmp.c wrbmp.c rdrle.c wrrle.c rdjpgcom.c \
-        wrjpgcom.c
+	rdtarga.c wrtarga.c rdbmp.c wrbmp.c rdrle.c wrrle.c rdjpgcom.c \
+	wrjpgcom.c
 SOURCES= $(LIBSOURCES) $(APPSOURCES)
 # files included by source files
 INCLUDES= jdct.h jerror.h jinclude.h jmemsys.h jmorecfg.h jpegint.h \
-        jpeglib.h jversion.h cdjpeg.h cderror.h
+	jpeglib.h jversion.h cdjpeg.h cderror.h
 # documentation, test, and support files
 DOCS= README install.doc usage.doc cjpeg.1 djpeg.1 rdjpgcom.1 wrjpgcom.1 \
-        example.c libjpeg.doc structure.doc coderules.doc filelist.doc \
-        change.log
+	example.c libjpeg.doc structure.doc coderules.doc filelist.doc \
+	change.log
 MKFILES= configure makefile.cfg makefile.ansi makefile.unix makefile.manx \
-        makefile.sas makcjpeg.st makdjpeg.st makljpeg.st makefile.bcc \
-        makefile.mc6 makefile.dj makefile.mms makefile.vms makvms.opt
+	makefile.sas makcjpeg.st makdjpeg.st makljpeg.st makefile.bcc \
+	makefile.mc6 makefile.dj makefile.mms makefile.vms makvms.opt
 CONFIGFILES= jconfig.cfg jconfig.manx jconfig.sas jconfig.st jconfig.bcc \
-        jconfig.mc6 jconfig.dj jconfig.vms
+	jconfig.mc6 jconfig.dj jconfig.vms
 OTHERFILES= jconfig.doc ckconfig.c ansi2knr.c ansi2knr.1 jmemdosa.asm
 TESTFILES= testorig.jpg testimg.ppm testimg.gif testimg.jpg
 DISTFILES= $(DOCS) $(MKFILES) $(CONFIGFILES) $(SOURCES) $(INCLUDES) \
-        $(OTHERFILES) $(TESTFILES)
+	$(OTHERFILES) $(TESTFILES)
 # library object files common to compression and decompression
 COMOBJECTS= jcomapi.obj jutils.obj jerror.obj jmemmgr.obj $(SYSDEPMEM)
 # compression library object files
 CLIBOBJECTS= jcapi.obj jcparam.obj jdatadst.obj jcmaster.obj jcmarker.obj \
-        jcmainct.obj jcprepct.obj jccoefct.obj jccolor.obj jcsample.obj \
-        jchuff.obj jcdctmgr.obj jfdctfst.obj jfdctflt.obj jfdctint.obj
+	jcmainct.obj jcprepct.obj jccoefct.obj jccolor.obj jcsample.obj \
+	jchuff.obj jcdctmgr.obj jfdctfst.obj jfdctflt.obj jfdctint.obj
 # decompression library object files
 DLIBOBJECTS= jdapi.obj jdatasrc.obj jdmaster.obj jdmarker.obj jdmainct.obj \
-        jdcoefct.obj jdpostct.obj jddctmgr.obj jidctfst.obj jidctflt.obj \
-        jidctint.obj jidctred.obj jdhuff.obj jdsample.obj jdcolor.obj \
-        jquant1.obj jquant2.obj jdmerge.obj
+	jdcoefct.obj jdpostct.obj jddctmgr.obj jidctfst.obj jidctflt.obj \
+	jidctint.obj jidctred.obj jdhuff.obj jdsample.obj jdcolor.obj \
+	jquant1.obj jquant2.obj jdmerge.obj
 # These objectfiles are included in libjpeg.olb
 LIBOBJECTS= $(CLIBOBJECTS) $(DLIBOBJECTS) $(COMOBJECTS)
 # object files for cjpeg and djpeg applications (excluding library files)
 COBJECTS= cjpeg.obj rdppm.obj rdgif.obj rdtarga.obj rdrle.obj rdbmp.obj
 DOBJECTS= djpeg.obj wrppm.obj wrgif.obj wrtarga.obj wrrle.obj wrbmp.obj \
-        rdcolmap.obj
+	rdcolmap.obj
 # objectfile lists with commas --- what a crock
 COBJLIST= cjpeg.obj,rdppm.obj,rdgif.obj,rdtarga.obj,rdrle.obj,rdbmp.obj
 DOBJLIST= djpeg.obj,wrppm.obj,wrgif.obj,wrtarga.obj,wrrle.obj,wrbmp.obj,\
-          rdcolmap.obj
+	  rdcolmap.obj
 LIBOBJLIST= jcapi.obj,jcparam.obj,jdatadst.obj,jcmaster.obj,jcmarker.obj,\
-          jcmainct.obj,jcprepct.obj,jccoefct.obj,jccolor.obj,jcsample.obj,\
-          jchuff.obj,jcdctmgr.obj,jfdctfst.obj,jfdctflt.obj,jfdctint.obj,\
-          jdapi.obj,jdatasrc.obj,jdmaster.obj,jdmarker.obj,jdmainct.obj,\
-          jdcoefct.obj,jdpostct.obj,jddctmgr.obj,jidctfst.obj,jidctflt.obj,\
-          jidctint.obj,jidctred.obj,jdhuff.obj,jdsample.obj,jdcolor.obj,\
-          jquant1.obj,jquant2.obj,jdmerge.obj,jcomapi.obj,jutils.obj,\
-          jerror.obj,jmemmgr.obj,$(SYSDEPMEM)
+	  jcmainct.obj,jcprepct.obj,jccoefct.obj,jccolor.obj,jcsample.obj,\
+	  jchuff.obj,jcdctmgr.obj,jfdctfst.obj,jfdctflt.obj,jfdctint.obj,\
+	  jdapi.obj,jdatasrc.obj,jdmaster.obj,jdmarker.obj,jdmainct.obj,\
+	  jdcoefct.obj,jdpostct.obj,jddctmgr.obj,jidctfst.obj,jidctflt.obj,\
+	  jidctint.obj,jidctred.obj,jdhuff.obj,jdsample.obj,jdcolor.obj,\
+	  jquant1.obj,jquant2.obj,jdmerge.obj,jcomapi.obj,jutils.obj,\
+	  jerror.obj,jmemmgr.obj,$(SYSDEPMEM)
 
 
 .first

@@ -1,7 +1,7 @@
 The Independent JPEG Group's JPEG software
 ==========================================
 
-Note: 	Greyscale downsampling patch of 12/21 has been applied to 
+Note: 	Greyscale downsampling patch of 12/21 has been applied to
 	jdmaster.c and jcmaster.c.  --jhb
 
 

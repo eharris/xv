@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
 #
-# getweather - gets the latest weather GIF image file from the anonymous ftp 
+# getweather - gets the latest weather GIF image file from the anonymous ftp
 # area of the server machine (SERVERHOST), in the directory (DIRNAME)
 # and copies it to the file WEATHERFILE if successful
 #

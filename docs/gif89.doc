@@ -80,15 +80,15 @@
 
 
 
-                        GRAPHICS INTERCHANGE FORMAT(sm)
+			GRAPHICS INTERCHANGE FORMAT(sm)
 
-                                  Version 89a
+				  Version 89a
 
-                            (c)1987,1988,1989,1990
+			    (c)1987,1988,1989,1990
 
-                                   Copyright
-                            CompuServe Incorporated
-                                Columbus, Ohio
+				   Copyright
+			    CompuServe Incorporated
+				Columbus, Ohio
 
 
 
@@ -131,7 +131,7 @@ Document Date : 31 July 1990                            Programming Reference
 
 
 
-                               Table of Contents
+			       Table of Contents
 
 Disclaimer.................................................................  1
 
@@ -260,7 +260,7 @@ On-line Capabilities Dialogue.............................................. 33
 
 
 
-                                                                         1
+									 1
 
 
 1. Disclaimer.
@@ -326,7 +326,7 @@ organizations who wish to receive copies of this document when it is corrected
 
 
 
-                                                                         2
+									 2
 
 
 or revised. This service is offered free of charge; please provide us with your
@@ -392,7 +392,7 @@ this document, there is an entry labeled Required Version which specifies the
 
 
 
-                                                                         3
+									 3
 
 
 earliest version number that includes the corresponding block.  The encoder
@@ -409,25 +409,25 @@ blocks needed for reproducing the original graphics.
 
 The encoder has the following primary responsibilities.
 
-            - Include in the Data Stream all the necessary information to
-            reproduce  the graphics.
+	    - Include in the Data Stream all the necessary information to
+	    reproduce  the graphics.
 
-            - Insure that a Data Stream is labeled with the earliest possible
-            Version Number that will cover the definition of all the blocks in
-            it; this is to ensure that the largest number of decoders can
-            process the Data Stream.
+	    - Insure that a Data Stream is labeled with the earliest possible
+	    Version Number that will cover the definition of all the blocks in
+	    it; this is to ensure that the largest number of decoders can
+	    process the Data Stream.
 
-            - Ensure encoding of the graphics in such a way that the decoding
-            process is optimized. Avoid redundant information as much as
-            possible.
+	    - Ensure encoding of the graphics in such a way that the decoding
+	    process is optimized. Avoid redundant information as much as
+	    possible.
 
-            - To the extent possible, avoid grouping graphics which might
-            require resetting hardware parameters during the decoding process.
+	    - To the extent possible, avoid grouping graphics which might
+	    require resetting hardware parameters during the decoding process.
 
-            - Set to zero (off) each of the bits of each and every field
-            designated as reserved. Note that some fields in the Logical Screen
-            Descriptor and the Image Descriptor were reserved under Version
-            87a, but are used under version 89a.
+	    - Set to zero (off) each of the bits of each and every field
+	    designated as reserved. Note that some fields in the Logical Screen
+	    Descriptor and the Image Descriptor were reserved under Version
+	    87a, but are used under version 89a.
 
 
 8. The Decoder.
@@ -439,11 +439,11 @@ data to render the graphics.
 
 The decoder has the following primary responsibilities.
 
-            - Process each graphic in the Data Stream in sequence, without
-            delays other than those specified in the control information.
+	    - Process each graphic in the Data Stream in sequence, without
+	    delays other than those specified in the control information.
 
-            - Set its hardware parameters to fit, as closely as possible, the
-            control information contained in the Data Stream.
+	    - Set its hardware parameters to fit, as closely as possible, the
+	    control information contained in the Data Stream.
 
 
 9. Compliance.
@@ -458,7 +458,7 @@ implements the definition of the standard associated with that version.  An
 
 
 
-                                                                         4
+									 4
 
 
 encoder or a decoder may be compliant with a given version number and not
@@ -524,7 +524,7 @@ hardware parameters.  Graphic-Rendering blocks such as the Image Descriptor and
 
 
 
-                                                                         5
+									 5
 
 
 the Plain Text Extension contain information and data used to render a graphic
@@ -590,7 +590,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                         6
+									 6
 
 
       c. Syntax.
@@ -616,11 +616,11 @@ Stream outside of the Stream itself.
 255  |               |
      +---------------+
 
-            i) Block Size - Number of bytes in the Data Sub-block; the size
-            must be within 0 and 255 bytes, inclusive.
+	    i) Block Size - Number of bytes in the Data Sub-block; the size
+	    must be within 0 and 255 bytes, inclusive.
 
-            ii) Data Values - Any 8-bit value. There must be exactly as many
-            Data Values as specified by the Block Size field.
+	    ii) Data Values - Any 8-bit value. There must be exactly as many
+	    Data Values as specified by the Block Size field.
 
       d. Extensions and Scope. This type of block always occurs as part of a
       larger unit. It does not have a scope of itself.
@@ -643,12 +643,10 @@ Stream outside of the Stream itself.
   0  |               |       Block Size                    Byte
      +---------------+
 
-            i) Block Size - Number of bytes in the Data Sub-block; this field
-            contains the fixed value 0x00.
+	    i) Block Size - Number of bytes in the Data Sub-block; this field
+	    contains the fixed value 0x00.
 
-            ii) Data Values - This block does not contain any data.
-
-
+	    ii) Data Values - This block does not contain any data.
 
 
 
@@ -656,7 +654,9 @@ Stream outside of the Stream itself.
 
 
 
-                                                                         7
+
+
+									 7
 
 
       d. Extensions and Scope. This block terminates the immediately preceding
@@ -696,24 +696,22 @@ Stream outside of the Stream itself.
    5 |               |
      +---------------+
 
-            i) Signature - Identifies the GIF Data Stream. This field contains
-            the fixed value 'GIF'.
+	    i) Signature - Identifies the GIF Data Stream. This field contains
+	    the fixed value 'GIF'.
 
-            ii) Version - Version number used to format the data stream.
-            Identifies the minimum set of capabilities necessary to a decoder
-            to fully process the contents of the Data Stream.
+	    ii) Version - Version number used to format the data stream.
+	    Identifies the minimum set of capabilities necessary to a decoder
+	    to fully process the contents of the Data Stream.
 
-            Version Numbers as of 10 July 1990 :       "87a" - May 1987
-                                                       "89a" - July 1989
+	    Version Numbers as of 10 July 1990 :       "87a" - May 1987
+						       "89a" - July 1989
 
-            Version numbers are ordered numerically increasing on the first two
-            digits starting with 87 (87,88,...,99,00,...,85,86) and
-            alphabetically increasing on the third character (a,...,z).
+	    Version numbers are ordered numerically increasing on the first two
+	    digits starting with 87 (87,88,...,99,00,...,85,86) and
+	    alphabetically increasing on the third character (a,...,z).
 
-            iii) Extensions and Scope. The scope of this block is the entire
-            Data Stream. This block cannot be modified by any extension.
-
-
+	    iii) Extensions and Scope. The scope of this block is the entire
+	    Data Stream. This block cannot be modified by any extension.
 
 
 
@@ -722,27 +720,29 @@ Stream outside of the Stream itself.
 
 
 
-                                                                         8
+
+
+									 8
 
 
       d. Recommendations.
 
-            i) Signature - This field identifies the beginning of the GIF Data
-            Stream; it is not intended to provide a unique signature for the
-            identification of the data. It is recommended that the GIF Data
-            Stream be identified externally by the application. (Refer to
-            Appendix G for on-line identification of the GIF Data Stream.)
+	    i) Signature - This field identifies the beginning of the GIF Data
+	    Stream; it is not intended to provide a unique signature for the
+	    identification of the data. It is recommended that the GIF Data
+	    Stream be identified externally by the application. (Refer to
+	    Appendix G for on-line identification of the GIF Data Stream.)
 
-            ii) Version - ENCODER : An encoder should use the earliest possible
-            version number that defines all the blocks used in the Data Stream.
-            When two or more Data Streams are combined, the latest of the
-            individual version numbers should be used for the resulting Data
-            Stream. DECODER : A decoder should attempt to process the data
-            stream to the best of its ability; if it encounters a version
-            number which it is not capable of processing fully, it should
-            nevertheless, attempt to process the data stream to the best of its
-            ability, perhaps after warning the user that the data may be
-            incomplete.
+	    ii) Version - ENCODER : An encoder should use the earliest possible
+	    version number that defines all the blocks used in the Data Stream.
+	    When two or more Data Streams are combined, the latest of the
+	    individual version numbers should be used for the resulting Data
+	    Stream. DECODER : A decoder should attempt to process the data
+	    stream to the best of its ability; if it encounters a version
+	    number which it is not capable of processing fully, it should
+	    nevertheless, attempt to process the data stream to the best of its
+	    ability, perhaps after warning the user that the data may be
+	    incomplete.
 
 
 18. Logical Screen Descriptor.
@@ -788,94 +788,94 @@ Stream outside of the Stream itself.
 
 
 
-                                                                         9
+									 9
 
 
      <Packed Fields>  =      Global Color Table Flag       1 Bit
-                             Color Resolution              3 Bits
-                             Sort Flag                     1 Bit
-                             Size of Global Color Table    3 Bits
+			     Color Resolution              3 Bits
+			     Sort Flag                     1 Bit
+			     Size of Global Color Table    3 Bits
 
-            i) Logical Screen Width - Width, in pixels, of the Logical Screen
-            where the images will be rendered in the displaying device.
+	    i) Logical Screen Width - Width, in pixels, of the Logical Screen
+	    where the images will be rendered in the displaying device.
 
-            ii) Logical Screen Height - Height, in pixels, of the Logical
-            Screen where the images will be rendered in the displaying device.
+	    ii) Logical Screen Height - Height, in pixels, of the Logical
+	    Screen where the images will be rendered in the displaying device.
 
-            iii) Global Color Table Flag - Flag indicating the presence of a
-            Global Color Table; if the flag is set, the Global Color Table will
-            immediately follow the Logical Screen Descriptor. This flag also
-            selects the interpretation of the Background Color Index; if the
-            flag is set, the value of the Background Color Index field should
-            be used as the table index of the background color. (This field is
-            the most significant bit of the byte.)
+	    iii) Global Color Table Flag - Flag indicating the presence of a
+	    Global Color Table; if the flag is set, the Global Color Table will
+	    immediately follow the Logical Screen Descriptor. This flag also
+	    selects the interpretation of the Background Color Index; if the
+	    flag is set, the value of the Background Color Index field should
+	    be used as the table index of the background color. (This field is
+	    the most significant bit of the byte.)
 
-            Values :    0 -   No Global Color Table follows, the Background
-                              Color Index field is meaningless.
-                        1 -   A Global Color Table will immediately follow, the
-                              Background Color Index field is meaningful.
+	    Values :    0 -   No Global Color Table follows, the Background
+			      Color Index field is meaningless.
+			1 -   A Global Color Table will immediately follow, the
+			      Background Color Index field is meaningful.
 
-            iv) Color Resolution - Number of bits per primary color available
-            to the original image, minus 1. This value represents the size of
-            the entire palette from which the colors in the graphic were
-            selected, not the number of colors actually used in the graphic.
-            For example, if the value in this field is 3, then the palette of
-            the original image had 4 bits per primary color available to create
-            the image.  This value should be set to indicate the richness of
-            the original palette, even if not every color from the whole
-            palette is available on the source machine.
+	    iv) Color Resolution - Number of bits per primary color available
+	    to the original image, minus 1. This value represents the size of
+	    the entire palette from which the colors in the graphic were
+	    selected, not the number of colors actually used in the graphic.
+	    For example, if the value in this field is 3, then the palette of
+	    the original image had 4 bits per primary color available to create
+	    the image.  This value should be set to indicate the richness of
+	    the original palette, even if not every color from the whole
+	    palette is available on the source machine.
 
-            v) Sort Flag - Indicates whether the Global Color Table is sorted.
-            If the flag is set, the Global Color Table is sorted, in order of
-            decreasing importance. Typically, the order would be decreasing
-            frequency, with most frequent color first. This assists a decoder,
-            with fewer available colors, in choosing the best subset of colors;
-            the decoder may use an initial segment of the table to render the
-            graphic.
+	    v) Sort Flag - Indicates whether the Global Color Table is sorted.
+	    If the flag is set, the Global Color Table is sorted, in order of
+	    decreasing importance. Typically, the order would be decreasing
+	    frequency, with most frequent color first. This assists a decoder,
+	    with fewer available colors, in choosing the best subset of colors;
+	    the decoder may use an initial segment of the table to render the
+	    graphic.
 
-            Values :    0 -   Not ordered.
-                        1 -   Ordered by decreasing importance, most
-                              important color first.
+	    Values :    0 -   Not ordered.
+			1 -   Ordered by decreasing importance, most
+			      important color first.
 
-            vi) Size of Global Color Table - If the Global Color Table Flag is
-            set to 1, the value in this field is used to calculate the number
-            of bytes contained in the Global Color Table. To determine that
-            actual size of the color table, raise 2 to [the value of the field
-            + 1].  Even if there is no Global Color Table specified, set this
-            field according to the above formula so that decoders can choose
-            the best graphics mode to display the stream in.  (This field is
-            made up of the 3 least significant bits of the byte.)
+	    vi) Size of Global Color Table - If the Global Color Table Flag is
+	    set to 1, the value in this field is used to calculate the number
+	    of bytes contained in the Global Color Table. To determine that
+	    actual size of the color table, raise 2 to [the value of the field
+	    + 1].  Even if there is no Global Color Table specified, set this
+	    field according to the above formula so that decoders can choose
+	    the best graphics mode to display the stream in.  (This field is
+	    made up of the 3 least significant bits of the byte.)
 
-            vii) Background Color Index - Index into the Global Color Table for
-
-
+	    vii) Background Color Index - Index into the Global Color Table for
 
 
 
 
 
-                                                                        10
 
 
-            the Background Color. The Background Color is the color used for
-            those pixels on the screen that are not covered by an image. If the
-            Global Color Table Flag is set to (zero), this field should be zero
-            and should be ignored.
+									10
 
-            viii) Pixel Aspect Ratio - Factor used to compute an approximation
-            of the aspect ratio of the pixel in the original image.  If the
-            value of the field is not 0, this approximation of the aspect ratio
-            is computed based on the formula:
 
-            Aspect Ratio = (Pixel Aspect Ratio + 15) / 64
+	    the Background Color. The Background Color is the color used for
+	    those pixels on the screen that are not covered by an image. If the
+	    Global Color Table Flag is set to (zero), this field should be zero
+	    and should be ignored.
 
-            The Pixel Aspect Ratio is defined to be the quotient of the pixel's
-            width over its height.  The value range in this field allows
-            specification of the widest pixel of 4:1 to the tallest pixel of
-            1:4 in increments of 1/64th.
+	    viii) Pixel Aspect Ratio - Factor used to compute an approximation
+	    of the aspect ratio of the pixel in the original image.  If the
+	    value of the field is not 0, this approximation of the aspect ratio
+	    is computed based on the formula:
 
-            Values :        0 -   No aspect ratio information is given.
-                       1..255 -   Value used in the computation.
+	    Aspect Ratio = (Pixel Aspect Ratio + 15) / 64
+
+	    The Pixel Aspect Ratio is defined to be the quotient of the pixel's
+	    width over its height.  The value range in this field allows
+	    specification of the widest pixel of 4:1 to the tallest pixel of
+	    1:4 in increments of 1/64th.
+
+	    Values :        0 -   No aspect ratio information is given.
+		       1..255 -   Value used in the computation.
 
       d. Extensions and Scope. The scope of this block is the entire Data
       Stream. This block cannot be modified by any extension.
@@ -892,7 +892,7 @@ Stream outside of the Stream itself.
       set to 1 in the Logical Screen Descriptor; if present, it immediately
       follows the Logical Screen Descriptor and contains a number of bytes
       equal to
-                    3 x 2^(Size of Global Color Table+1).
+		    3 x 2^(Size of Global Color Table+1).
 
       This block is OPTIONAL; at most one Global Color Table may be present
       per Data Stream.
@@ -920,7 +920,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        11
+									11
 
 
       c. Syntax.
@@ -986,7 +986,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        12
+									12
 
 
       c. Syntax.
@@ -1015,72 +1015,72 @@ Stream outside of the Stream itself.
      +---------------+
 
      <Packed Fields>  =      Local Color Table Flag        1 Bit
-                             Interlace Flag                1 Bit
-                             Sort Flag                     1 Bit
-                             Reserved                      2 Bits
-                             Size of Local Color Table     3 Bits
+			     Interlace Flag                1 Bit
+			     Sort Flag                     1 Bit
+			     Reserved                      2 Bits
+			     Size of Local Color Table     3 Bits
 
-           i) Image Separator - Identifies the beginning of an Image
-           Descriptor. This field contains the fixed value 0x2C.
+	   i) Image Separator - Identifies the beginning of an Image
+	   Descriptor. This field contains the fixed value 0x2C.
 
-           ii) Image Left Position - Column number, in pixels, of the left edge
-           of the image, with respect to the left edge of the Logical Screen.
-           Leftmost column of the Logical Screen is 0.
+	   ii) Image Left Position - Column number, in pixels, of the left edge
+	   of the image, with respect to the left edge of the Logical Screen.
+	   Leftmost column of the Logical Screen is 0.
 
-           iii) Image Top Position - Row number, in pixels, of the top edge of
-           the image with respect to the top edge of the Logical Screen. Top
-           row of the Logical Screen is 0.
+	   iii) Image Top Position - Row number, in pixels, of the top edge of
+	   the image with respect to the top edge of the Logical Screen. Top
+	   row of the Logical Screen is 0.
 
-           iv) Image Width - Width of the image in pixels.
+	   iv) Image Width - Width of the image in pixels.
 
-           v) Image Height - Height of the image in pixels.
+	   v) Image Height - Height of the image in pixels.
 
-           vi) Local Color Table Flag - Indicates the presence of a Local Color
-           Table immediately following this Image Descriptor. (This field is
-           the most significant bit of the byte.)
-
-
-           Values :    0 -   Local Color Table is not present. Use
-                             Global Color Table if available.
-                       1 -   Local Color Table present, and to follow
-                             immediately after this Image Descriptor.
+	   vi) Local Color Table Flag - Indicates the presence of a Local Color
+	   Table immediately following this Image Descriptor. (This field is
+	   the most significant bit of the byte.)
 
 
+	   Values :    0 -   Local Color Table is not present. Use
+			     Global Color Table if available.
+		       1 -   Local Color Table present, and to follow
+			     immediately after this Image Descriptor.
 
 
 
 
 
 
-                                                                        13
 
 
-           vii) Interlace Flag - Indicates if the image is interlaced. An image
-           is interlaced in a four-pass interlace pattern; see Appendix E for
-           details.
+									13
 
-           Values :    0 - Image is not interlaced.
-                       1 - Image is interlaced.
 
-            viii) Sort Flag - Indicates whether the Local Color Table is
-            sorted.  If the flag is set, the Local Color Table is sorted, in
-            order of decreasing importance. Typically, the order would be
-            decreasing frequency, with most frequent color first. This assists
-            a decoder, with fewer available colors, in choosing the best subset
-            of colors; the decoder may use an initial segment of the table to
-            render the graphic.
+	   vii) Interlace Flag - Indicates if the image is interlaced. An image
+	   is interlaced in a four-pass interlace pattern; see Appendix E for
+	   details.
 
-            Values :    0 -   Not ordered.
-                        1 -   Ordered by decreasing importance, most
-                              important color first.
+	   Values :    0 - Image is not interlaced.
+		       1 - Image is interlaced.
 
-            ix) Size of Local Color Table - If the Local Color Table Flag is
-            set to 1, the value in this field is used to calculate the number
-            of bytes contained in the Local Color Table. To determine that
-            actual size of the color table, raise 2 to the value of the field
-            + 1. This value should be 0 if there is no Local Color Table
-            specified. (This field is made up of the 3 least significant bits
-            of the byte.)
+	    viii) Sort Flag - Indicates whether the Local Color Table is
+	    sorted.  If the flag is set, the Local Color Table is sorted, in
+	    order of decreasing importance. Typically, the order would be
+	    decreasing frequency, with most frequent color first. This assists
+	    a decoder, with fewer available colors, in choosing the best subset
+	    of colors; the decoder may use an initial segment of the table to
+	    render the graphic.
+
+	    Values :    0 -   Not ordered.
+			1 -   Ordered by decreasing importance, most
+			      important color first.
+
+	    ix) Size of Local Color Table - If the Local Color Table Flag is
+	    set to 1, the value in this field is used to calculate the number
+	    of bytes contained in the Local Color Table. To determine that
+	    actual size of the color table, raise 2 to the value of the field
+	    + 1. This value should be 0 if there is no Local Color Table
+	    specified. (This field is made up of the 3 least significant bits
+	    of the byte.)
 
      d. Extensions and Scope. The scope of this block is the Table-based Image
      Data Block that follows it. This block may be modified by the Graphic
@@ -1097,7 +1097,7 @@ Stream outside of the Stream itself.
      the Local Color Table Flag being set to 1 in the Image Descriptor; if
      present, the Local Color Table immediately follows the Image Descriptor
      and contains a number of bytes equal to
-                          3x2^(Size of Local Color Table+1).
+			  3x2^(Size of Local Color Table+1).
      If present, this color table temporarily becomes the active color table
      and the following image should be processed using it. This block is
      OPTIONAL; at most one Local Color Table may be present per Image
@@ -1118,7 +1118,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        14
+									14
 
 
      c. Syntax.
@@ -1184,12 +1184,12 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        15
+									15
 
 
-            i) LZW Minimum Code Size.  This byte determines the initial number
-            of bits used for LZW codes in the image data, as described in
-            Appendix F.
+	    i) LZW Minimum Code Size.  This byte determines the initial number
+	    of bits used for LZW codes in the image data, as described in
+	    Appendix F.
 
      d. Extensions and Scope. This block has no scope, it contains raster
      data. Extensions intended to modify a Table-based image must appear
@@ -1238,77 +1238,11 @@ Stream outside of the Stream itself.
 
 
       <Packed Fields>  =     Reserved                      3 Bits
-                             Disposal Method               3 Bits
-                             User Input Flag               1 Bit
-                             Transparent Color Flag        1 Bit
+			     Disposal Method               3 Bits
+			     User Input Flag               1 Bit
+			     Transparent Color Flag        1 Bit
 
-            i) Extension Introducer - Identifies the beginning of an extension
-
-
-
-
-
-
-
-                                                                        16
-
-
-            block. This field contains the fixed value 0x21.
-
-            ii) Graphic Control Label - Identifies the current block as a
-            Graphic Control Extension. This field contains the fixed value
-            0xF9.
-
-            iii) Block Size - Number of bytes in the block, after the Block
-            Size field and up to but not including the Block Terminator.  This
-            field contains the fixed value 4.
-
-            iv) Disposal Method - Indicates the way in which the graphic is to
-            be treated after being displayed.
-
-            Values :    0 -   No disposal specified. The decoder is
-                              not required to take any action.
-                        1 -   Do not dispose. The graphic is to be left
-                              in place.
-                        2 -   Restore to background color. The area used by the
-                              graphic must be restored to the background color.
-                        3 -   Restore to previous. The decoder is required to
-                              restore the area overwritten by the graphic with
-                              what was there prior to rendering the graphic.
-                     4-7 -    To be defined.
-
-            v) User Input Flag - Indicates whether or not user input is
-            expected before continuing. If the flag is set, processing will
-            continue when user input is entered. The nature of the User input
-            is determined by the application (Carriage Return, Mouse Button
-            Click, etc.).
-
-            Values :    0 -   User input is not expected.
-                        1 -   User input is expected.
-
-            When a Delay Time is used and the User Input Flag is set,
-            processing will continue when user input is received or when the
-            delay time expires, whichever occurs first.
-
-            vi) Transparency Flag - Indicates whether a transparency index is
-            given in the Transparent Index field. (This field is the least
-            significant bit of the byte.)
-
-            Values :    0 -   Transparent Index is not given.
-                        1 -   Transparent Index is given.
-
-            vii) Delay Time - If not 0, this field specifies the number of
-            hundredths (1/100) of a second to wait before continuing with the
-            processing of the Data Stream. The clock starts ticking immediately
-            after the graphic is rendered. This field may be used in
-            conjunction with the User Input Flag field.
-
-            viii) Transparency Index - The Transparency Index is such that when
-            encountered, the corresponding pixel of the display device is not
-            modified and processing goes on to the next pixel. The index is
-            present if and only if the Transparency Flag is set to 1.
-
-            ix) Block Terminator - This zero-length data block marks the end of
+	    i) Extension Introducer - Identifies the beginning of an extension
 
 
 
@@ -1316,9 +1250,75 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        17
+									16
 
-            the Graphic Control Extension.
+
+	    block. This field contains the fixed value 0x21.
+
+	    ii) Graphic Control Label - Identifies the current block as a
+	    Graphic Control Extension. This field contains the fixed value
+	    0xF9.
+
+	    iii) Block Size - Number of bytes in the block, after the Block
+	    Size field and up to but not including the Block Terminator.  This
+	    field contains the fixed value 4.
+
+	    iv) Disposal Method - Indicates the way in which the graphic is to
+	    be treated after being displayed.
+
+	    Values :    0 -   No disposal specified. The decoder is
+			      not required to take any action.
+			1 -   Do not dispose. The graphic is to be left
+			      in place.
+			2 -   Restore to background color. The area used by the
+			      graphic must be restored to the background color.
+			3 -   Restore to previous. The decoder is required to
+			      restore the area overwritten by the graphic with
+			      what was there prior to rendering the graphic.
+		     4-7 -    To be defined.
+
+	    v) User Input Flag - Indicates whether or not user input is
+	    expected before continuing. If the flag is set, processing will
+	    continue when user input is entered. The nature of the User input
+	    is determined by the application (Carriage Return, Mouse Button
+	    Click, etc.).
+
+	    Values :    0 -   User input is not expected.
+			1 -   User input is expected.
+
+	    When a Delay Time is used and the User Input Flag is set,
+	    processing will continue when user input is received or when the
+	    delay time expires, whichever occurs first.
+
+	    vi) Transparency Flag - Indicates whether a transparency index is
+	    given in the Transparent Index field. (This field is the least
+	    significant bit of the byte.)
+
+	    Values :    0 -   Transparent Index is not given.
+			1 -   Transparent Index is given.
+
+	    vii) Delay Time - If not 0, this field specifies the number of
+	    hundredths (1/100) of a second to wait before continuing with the
+	    processing of the Data Stream. The clock starts ticking immediately
+	    after the graphic is rendered. This field may be used in
+	    conjunction with the User Input Flag field.
+
+	    viii) Transparency Index - The Transparency Index is such that when
+	    encountered, the corresponding pixel of the display device is not
+	    modified and processing goes on to the next pixel. The index is
+	    present if and only if the Transparency Flag is set to 1.
+
+	    ix) Block Terminator - This zero-length data block marks the end of
+
+
+
+
+
+
+
+									17
+
+	    the Graphic Control Extension.
 
       d. Extensions and Scope. The scope of this Extension is the graphic
       rendering block that follows it; it is possible for other extensions to
@@ -1327,24 +1327,24 @@ Stream outside of the Stream itself.
 
       e. Recommendations.
 
-            i) Disposal Method - The mode Restore To Previous is intended to be
-            used in small sections of the graphic; the use of this mode imposes
-            severe demands on the decoder to store the section of the graphic
-            that needs to be saved. For this reason, this mode should be used
-            sparingly.  This mode is not intended to save an entire graphic or
-            large areas of a graphic; when this is the case, the encoder should
-            make every attempt to make the sections of the graphic to be
-            restored be separate graphics in the data stream. In the case where
-            a decoder is not capable of saving an area of a graphic marked as
-            Restore To Previous, it is recommended that a decoder restore to
-            the background color.
+	    i) Disposal Method - The mode Restore To Previous is intended to be
+	    used in small sections of the graphic; the use of this mode imposes
+	    severe demands on the decoder to store the section of the graphic
+	    that needs to be saved. For this reason, this mode should be used
+	    sparingly.  This mode is not intended to save an entire graphic or
+	    large areas of a graphic; when this is the case, the encoder should
+	    make every attempt to make the sections of the graphic to be
+	    restored be separate graphics in the data stream. In the case where
+	    a decoder is not capable of saving an area of a graphic marked as
+	    Restore To Previous, it is recommended that a decoder restore to
+	    the background color.
 
-            ii) User Input Flag - When the flag is set, indicating that user
-            input is expected, the decoder may sound the bell (0x07) to alert
-            the user that input is being expected.  In the absence of a
-            specified Delay Time, the decoder should wait for user input
-            indefinitely.  It is recommended that the encoder not set the User
-            Input Flag without a Delay Time specified.
+	    ii) User Input Flag - When the flag is set, indicating that user
+	    input is expected, the decoder may sound the bell (0x07) to alert
+	    the user that input is being expected.  In the absence of a
+	    specified Delay Time, the decoder should wait for user input
+	    indefinitely.  It is recommended that the encoder not set the User
+	    Input Flag without a Delay Time specified.
 
 
 24. Comment Extension.
@@ -1382,7 +1382,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        18
+									18
 
 
       c. Syntax.
@@ -1404,34 +1404,34 @@ Stream outside of the Stream itself.
   0  |               |       Block Terminator              Byte
      +---------------+
 
-            i) Extension Introducer - Identifies the beginning of an extension
-            block. This field contains the fixed value 0x21.
+	    i) Extension Introducer - Identifies the beginning of an extension
+	    block. This field contains the fixed value 0x21.
 
-            ii) Comment Label - Identifies the block as a Comment Extension.
-            This field contains the fixed value 0xFE.
+	    ii) Comment Label - Identifies the block as a Comment Extension.
+	    This field contains the fixed value 0xFE.
 
-            iii) Comment Data - Sequence of sub-blocks, each of size at most
-            255 bytes and at least 1 byte, with the size in a byte preceding
-            the data.  The end of the sequence is marked by the Block
-            Terminator.
+	    iii) Comment Data - Sequence of sub-blocks, each of size at most
+	    255 bytes and at least 1 byte, with the size in a byte preceding
+	    the data.  The end of the sequence is marked by the Block
+	    Terminator.
 
-            iv) Block Terminator - This zero-length data block marks the end of
-            the Comment Extension.
+	    iv) Block Terminator - This zero-length data block marks the end of
+	    the Comment Extension.
 
       d. Extensions and Scope. This block does not have scope. This block
       cannot be modified by any extension.
 
       e. Recommendations.
 
-            i) Data - This block is intended for humans.  It should contain
-            text using the 7-bit ASCII character set. This block should
-            not be used to store control information for custom processing.
+	    i) Data - This block is intended for humans.  It should contain
+	    text using the 7-bit ASCII character set. This block should
+	    not be used to store control information for custom processing.
 
-            ii) Position - This block may appear at any point in the Data
-            Stream at which a block can begin; however, it is recommended that
-            Comment Extensions do not interfere with Control or Data blocks;
-            they should be located at the beginning or at the end of the Data
-            Stream to the extent possible.
+	    ii) Position - This block may appear at any point in the Data
+	    Stream at which a block can begin; however, it is recommended that
+	    Comment Extensions do not interfere with Control or Data blocks;
+	    they should be located at the beginning or at the end of the Data
+	    Stream to the extent possible.
 
 
 25. Plain Text Extension.
@@ -1448,7 +1448,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        19
+									19
 
 
       defined by the parameters in the block fields. Each character is rendered
@@ -1514,7 +1514,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        20
+									20
 
 
       c. Syntax.
@@ -1564,56 +1564,56 @@ Stream outside of the Stream itself.
   0  |               |       Block Terminator              Byte
      +---------------+
 
-            i) Extension Introducer - Identifies the beginning of an extension
-            block. This field contains the fixed value 0x21.
+	    i) Extension Introducer - Identifies the beginning of an extension
+	    block. This field contains the fixed value 0x21.
 
-            ii) Plain Text Label - Identifies the current block as a Plain Text
-            Extension. This field contains the fixed value 0x01.
+	    ii) Plain Text Label - Identifies the current block as a Plain Text
+	    Extension. This field contains the fixed value 0x01.
 
-            iii) Block Size - Number of bytes in the extension, after the Block
-            Size field and up to but not including the beginning of the data
-            portion. This field contains the fixed value 12.
-
-
+	    iii) Block Size - Number of bytes in the extension, after the Block
+	    Size field and up to but not including the beginning of the data
+	    portion. This field contains the fixed value 12.
 
 
 
 
 
-                                                                        21
 
 
-            iv) Text Grid Left Position - Column number, in pixels, of the left
-            edge of the text grid, with respect to the left edge of the Logical
-            Screen.
+									21
 
-            v) Text Grid Top Position - Row number, in pixels, of the top edge
-            of the text grid, with respect to the top edge of the Logical
-            Screen.
 
-            vi) Image Grid Width - Width of the text grid in pixels.
+	    iv) Text Grid Left Position - Column number, in pixels, of the left
+	    edge of the text grid, with respect to the left edge of the Logical
+	    Screen.
 
-            vii) Image Grid Height - Height of the text grid in pixels.
+	    v) Text Grid Top Position - Row number, in pixels, of the top edge
+	    of the text grid, with respect to the top edge of the Logical
+	    Screen.
 
-            viii) Character Cell Width - Width, in pixels, of each cell in the
-            grid.
+	    vi) Image Grid Width - Width of the text grid in pixels.
 
-            ix) Character Cell Height - Height, in pixels, of each cell in the
-            grid.
+	    vii) Image Grid Height - Height of the text grid in pixels.
 
-            x) Text Foreground Color Index - Index into the Global Color Table
-            to be used to render the text foreground.
+	    viii) Character Cell Width - Width, in pixels, of each cell in the
+	    grid.
 
-            xi) Text Background Color Index - Index into the Global Color Table
-            to be used to render the text background.
+	    ix) Character Cell Height - Height, in pixels, of each cell in the
+	    grid.
 
-            xii) Plain Text Data - Sequence of sub-blocks, each of size at most
-            255 bytes and at least 1 byte, with the size in a byte preceding
-            the data.  The end of the sequence is marked by the Block
-            Terminator.
+	    x) Text Foreground Color Index - Index into the Global Color Table
+	    to be used to render the text foreground.
 
-            xiii) Block Terminator - This zero-length data block marks the end
-            of the Plain Text Data Blocks.
+	    xi) Text Background Color Index - Index into the Global Color Table
+	    to be used to render the text background.
+
+	    xii) Plain Text Data - Sequence of sub-blocks, each of size at most
+	    255 bytes and at least 1 byte, with the size in a byte preceding
+	    the data.  The end of the sequence is marked by the Block
+	    Terminator.
+
+	    xiii) Block Terminator - This zero-length data block marks the end
+	    of the Plain Text Data Blocks.
 
       d. Extensions and Scope. The scope of this block is the Plain Text Data
       Block contained in it. This block may be modified by the Graphic Control
@@ -1646,7 +1646,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        22
+									22
 
 
       c. Syntax.
@@ -1695,34 +1695,34 @@ Stream outside of the Stream itself.
   0  |               |       Block Terminator              Byte
      +---------------+
 
-            i) Extension Introducer - Defines this block as an extension. This
-            field contains the fixed value 0x21.
+	    i) Extension Introducer - Defines this block as an extension. This
+	    field contains the fixed value 0x21.
 
-            ii) Application Extension Label - Identifies the block as an
-            Application Extension. This field contains the fixed value 0xFF.
+	    ii) Application Extension Label - Identifies the block as an
+	    Application Extension. This field contains the fixed value 0xFF.
 
-            iii) Block Size - Number of bytes in this extension block,
-            following the Block Size field, up to but not including the
-            beginning of the Application Data. This field contains the fixed
-            value 11.
-
-
+	    iii) Block Size - Number of bytes in this extension block,
+	    following the Block Size field, up to but not including the
+	    beginning of the Application Data. This field contains the fixed
+	    value 11.
 
 
 
 
 
-                                                                        23
 
 
-            iv) Application Identifier - Sequence of eight printable ASCII
-            characters used to identify the application owning the Application
-            Extension.
+									23
 
-            v) Application Authentication Code - Sequence of three bytes used
-            to authenticate the Application Identifier. An Application program
-            may use an algorithm to compute a binary code that uniquely
-            identifies it as the application owning the Application Extension.
+
+	    iv) Application Identifier - Sequence of eight printable ASCII
+	    characters used to identify the application owning the Application
+	    Extension.
+
+	    v) Application Authentication Code - Sequence of three bytes used
+	    to authenticate the Application Identifier. An Application program
+	    may use an algorithm to compute a binary code that uniquely
+	    identifies it as the application owning the Application Extension.
 
 
       d. Extensions and Scope. This block does not have scope. This block
@@ -1778,7 +1778,7 @@ Stream outside of the Stream itself.
 
 
 
-                                                                        24
+									24
 
 
 Appendix
@@ -1815,8 +1815,8 @@ Comment Extension           Opt. (*)   0xFE (254)  yes    89a
 Application Extension       Opt. (*)   0xFF (255)  yes    89a
 
 legend:           (1)   if present, at most one occurrence
-                  (*)   zero or more occurrences
-                  (+)   one or more occurrences
+		  (*)   zero or more occurrences
+		  (+)   one or more occurrences
 
 Notes : The Header is not subject to Version Numbers.
 (89a) The Logical Screen Descriptor and the Image Descriptor retained their
@@ -1844,7 +1844,7 @@ syntax from version 87a to version 89a, but some fields reserved under version
 
 
 
-                                                                        25
+									25
 
 
 Appendix
@@ -1861,11 +1861,11 @@ side consists of a sequence of entities, with the possible presence of special
 symbols. The following legend defines the symbols used in this grammar for GIF.
 
 Legend:           <>    grammar word
-                  ::=   defines symbol
-                  *     zero or more occurrences
-                  +     one or more occurrences
-                  |     alternate element
-                  []    optional element
+		  ::=   defines symbol
+		  *     zero or more occurrences
+		  +     one or more occurrences
+		  |     alternate element
+		  []    optional element
 
 Example:
 
@@ -1890,17 +1890,17 @@ The Grammar.
 <Logical Screen> ::=      Logical Screen Descriptor [Global Color Table]
 
 <Data> ::=                <Graphic Block>  |
-                          <Special-Purpose Block>
+			  <Special-Purpose Block>
 
 <Graphic Block> ::=       [Graphic Control Extension] <Graphic-Rendering Block>
 
 <Graphic-Rendering Block> ::=  <Table-Based Image>  |
-                               Plain Text Extension
+			       Plain Text Extension
 
 <Table-Based Image> ::=   Image Descriptor [Local Color Table] Image Data
 
 <Special-Purpose Block> ::=    Application Extension  |
-                               Comment Extension
+			       Comment Extension
 
 
 
@@ -1910,7 +1910,7 @@ The Grammar.
 
 
 
-                                                                        26
+									26
 
 
 NOTE : The grammar indicates that it is possible for a GIF Data Stream to
@@ -1976,7 +1976,7 @@ all.
 
 
 
-                                                                        27
+									27
 
 
 Appendix
@@ -2042,7 +2042,7 @@ Raster - Array of pixel values representing an image.
 
 
 
-                                                                        28
+									28
 
 
 Appendix
@@ -2108,7 +2108,7 @@ Reserved Fields - All Reserved Fields are expected to have each bit set to zero
 
 
 
-                                                                        29
+									29
 
 
 Appendix
@@ -2174,7 +2174,7 @@ ordered.
 
 
 
-                                                                        30
+									30
 
 
 Appendix
@@ -2206,25 +2206,25 @@ number of bits, the number of bits per LZW code is increased by one.
 The Raster Data stream that represents the actual output image can be
 represented as:
 
-         7 6 5 4 3 2 1 0
-        +---------------+
-        | LZW code size |
-        +---------------+
+	 7 6 5 4 3 2 1 0
+	+---------------+
+	| LZW code size |
+	+---------------+
 
-        +---------------+ ----+
-        |  block size   |     |
-        +---------------+     |
-        |               |     +-- Repeated as many
-        |  data bytes   |     |   times as necessary.
-        |               |     |
-        +---------------+ ----+
+	+---------------+ ----+
+	|  block size   |     |
+	+---------------+     |
+	|               |     +-- Repeated as many
+	|  data bytes   |     |   times as necessary.
+	|               |     |
+	+---------------+ ----+
 
-        . . .       . . . ------- The code that terminates the LZW
-                                  compressed data must appear before
-                                  Block Terminator.
-        +---------------+
-        |0 0 0 0 0 0 0 0|  Block Terminator
-        +---------------+
+	. . .       . . . ------- The code that terminates the LZW
+				  compressed data must appear before
+				  Block Terminator.
+	+---------------+
+	|0 0 0 0 0 0 0 0|  Block Terminator
+	+---------------+
 
 The conversion of the image from a series of pixel values to a transmitted or
 stored character stream involves several steps. In brief these steps are:
@@ -2240,7 +2240,7 @@ actual data.
 
 
 
-                                                                        31
+									31
 
 
 compression codes.
@@ -2306,7 +2306,7 @@ formed into a stream of bits as if they were packed right to left and then
 
 
 
-                                                                        32
+									32
 
 
 picked off 8 bits at a time to be output.
@@ -2326,7 +2326,7 @@ packed, an example layout would be similar to:
      +---------------+
   4  |               |    hhhhhggg
      +---------------+
-           . . .
+	   . . .
      +---------------+
   N  |               |
      +---------------+
@@ -2372,7 +2372,7 @@ June 1984.
 
 
 
-                                                                        33
+									33
 
 
 Appendix
@@ -2411,18 +2411,18 @@ well as a monitor screen. The general format of this message is:
 '#'            GIF Capabilities Response identifier character.
 version        GIF format version number;  initially '87a'.
 protocol='0'   No end-to-end protocol supported by decoder Transfer as direct
-               8-bit data stream.
+	       8-bit data stream.
 protocol='1'   Can use CIS B+ error correction protocol to transfer GIF data
-               interactively from the host directly to the display.
+	       interactively from the host directly to the display.
 dev = '0'      Screen parameter set follows.
 dev = '1'      Printer parameter set follows.
 width          Maximum supported display width in pixels.
 height         Maximum supported display height in pixels.
 color-bits     Number of bits per pixel supported. The number of supported
-               colors is therefore 2**color-bits.
+	       colors is therefore 2**color-bits.
 color-res      Number of bits per color component supported in the hardware
-               color palette. If color-res is '0' then no hardware palette
-               table is available.
+	       color palette. If color-res is '0' then no hardware palette
+	       table is available.
 
 Note that all values in the GIF Capabilities Response are returned as ASCII
 decimal numbers and the message is terminated by a Carriage Return character.
@@ -2438,7 +2438,7 @@ Enhanced Graphics Adapter configurations with no printer; the GIF data stream
 
 
 
-                                                                        34
+									34
 
 
 can be processed within an error correcting protocol:
@@ -2453,12 +2453,12 @@ selected. These sequences are:
 
 ESC[>1g     Display GIF image on screen
 
-                  0x1B 0x5B 0x3E 0x31 0x67
+		  0x1B 0x5B 0x3E 0x31 0x67
 
 ESC[>2g   Display image directly to an attached graphics printer. The image may
 optionally be displayed on the screen as well.
 
-                  0x1B 0x5B 0x3E 0x32 0x67
+		  0x1B 0x5B 0x3E 0x32 0x67
 
 Note that the 'g' character terminating each sequence is in lowercase.
 

@@ -4,23 +4,23 @@
  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994 Sam Leffler
  * Copyright (c) 1991, 1992, 1993, 1994 Silicon Graphics, Inc.
  *
- * Permission to use, copy, modify, distribute, and sell this software and 
+ * Permission to use, copy, modify, distribute, and sell this software and
  * its documentation for any purpose is hereby granted without fee, provided
  * that (i) the above copyright notices and this permission notice appear in
  * all copies of the software and related documentation, and (ii) the names of
  * Sam Leffler and Silicon Graphics may not be used in any advertising or
  * publicity relating to the software without the specific, prior written
  * permission of Sam Leffler and Silicon Graphics.
- * 
- * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
- * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
- * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
- * 
+ *
+ * THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY
+ * WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
  * IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
  * ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
  * OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
- * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
- * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+ * WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF
+ * LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
  * OF THIS SOFTWARE.
  */
 
@@ -274,8 +274,8 @@ TIFFReadDirectory(TIFF* tif)
 		MissingRequired(tif, "PlanarConfiguration");
 		goto bad;
 	}
-	/* 
- 	 * Setup appropriate structures (by strip or by tile)
+	/*
+	 * Setup appropriate structures (by strip or by tile)
 	 */
 	if (!TIFFFieldSet(tif, FIELD_TILEDIMENSIONS)) {
 		td->td_stripsperimage = (td->td_rowsperstrip == (uint32) -1 ?
@@ -480,16 +480,16 @@ TIFFReadDirectory(TIFF* tif)
 	if (!TIFFFieldSet(tif, FIELD_COMPRESSION))
 		TIFFSetField(tif, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 #if STRIPCHOP_SUPPORT
-        /*
-         * Some manufacturers make life difficult by writing
+	/*
+	 * Some manufacturers make life difficult by writing
 	 * large amounts of uncompressed data as a single strip.
 	 * This is contrary to the recommendations of the spec.
-         * The following makes an attempt at breaking such images
+	 * The following makes an attempt at breaking such images
 	 * into strips closer to the recommended 8k bytes.  A
 	 * side effect, however, is that the RowsPerStrip tag
 	 * value may be changed.
-         */
-        if (td->td_nstrips == 1 && td->td_compression == COMPRESSION_NONE &&
+	 */
+	if (td->td_nstrips == 1 && td->td_compression == COMPRESSION_NONE &&
 	    td->td_tilewidth == td->td_imagewidth)
 		ChopUpSingleUncompressedStrip(tif);
 #endif
@@ -542,7 +542,7 @@ EstimateStripByteCounts(TIFF* tif, TIFFDirEntry* dir, uint16 dircount)
 		 * should begin.  Since a strip of data must be contiguous,
 		 * it's safe to assume that we've overestimated the amount
 		 * of data in the strip and trim this number back accordingly.
-		 */ 
+		 */
 		i--;
 		if (td->td_stripoffset[i] + td->td_stripbytecount[i] > filesize)
 			td->td_stripbytecount[i] =
@@ -920,7 +920,7 @@ TIFFFetchNormalTag(TIFF* tif, TIFFDirEntry* dp)
 		case TIFF_SLONG:
 			{ uint32 v32 =
 		    TIFFExtractData(tif, dp->tdir_type, dp->tdir_offset);
-			  ok = (fip->field_passcount ? 
+			  ok = (fip->field_passcount ?
 			      TIFFSetField(tif, dp->tdir_tag, 1, &v32)
 			    : TIFFSetField(tif, dp->tdir_tag, v32));
 			}
@@ -928,7 +928,7 @@ TIFFFetchNormalTag(TIFF* tif, TIFFDirEntry* dp)
 		case TIFF_RATIONAL:
 		case TIFF_SRATIONAL:
 		case TIFF_FLOAT:
-			{ float v = (dp->tdir_type == TIFF_FLOAT ? 
+			{ float v = (dp->tdir_type == TIFF_FLOAT ?
 			      TIFFFetchFloat(tif, dp)
 			    : TIFFFetchRational(tif, dp));
 			  ok = (fip->field_passcount ?
@@ -951,7 +951,7 @@ TIFFFetchNormalTag(TIFF* tif, TIFFDirEntry* dp)
 
 #define	NITEMS(x)	(sizeof (x) / sizeof (x[0]))
 /*
- * Fetch samples/pixel short values for 
+ * Fetch samples/pixel short values for
  * the specified tag and verify that
  * all values are the same.
  */
@@ -1236,7 +1236,7 @@ ChopUpSingleUncompressedStrip(TIFF* tif)
 	newoffsets = (uint32*) CheckMalloc(tif, nstrips * sizeof (uint32),
 				"for chopped \"StripOffsets\" array");
 	if (newcounts == NULL || newoffsets == NULL) {
-	        /*
+		/*
 		 * Unable to allocate new strip information, give
 		 * up and use the original one strip information.
 		 */

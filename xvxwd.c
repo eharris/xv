@@ -1,10 +1,10 @@
-/* 
+/*
  ** Based on xwdtopnm.c - read and write an X11 or X10 window dump file
  **
  ** Modified heavily by Markus Baur (mbaur@ira.uka.de) for use as a part
  ** of xv-2.21, 12/30/92
  **
- ** Hacked up again to support xv-3.00 and XWDs from 64bit machines 
+ ** Hacked up again to support xv-3.00 and XWDs from 64bit machines
  ** (e.g. DEC Alphas), 04/10/94
  **
  ** Copyright (C) 1989, 1991 by Jef Poskanzer.
@@ -67,8 +67,8 @@ typedef struct {
 typedef byte pixel;
 
 /* local functions */
-static int    getinit         PARM((FILE *, int*, int*, int*, CARD32 *, 
-			                          CARD32, PICINFO *));
+static int    getinit         PARM((FILE *, int*, int*, int*, CARD32 *,
+						  CARD32, PICINFO *));
 static CARD32 getpixnum       PARM((FILE *));
 static int    xwdError        PARM((char *));
 static void   xwdWarning      PARM((char *));
@@ -116,12 +116,12 @@ int LoadXWD(fname, pinfo)
 
   ifp = xv_fopen(fname, "r");
   if (!ifp) return (xwdError("can't open file"));
-  
+
   /* figure out the file size (used to check colormap size) */
   fseek(ifp, 0L, 2);
   filesize = ftell(ifp);
   fseek(ifp, 0L, 0);
-  
+
 
   if (getinit(ifp, &cols, &rows, &padright, &visualclass, maxval, pinfo))
     return 0;
@@ -140,13 +140,13 @@ int LoadXWD(fname, pinfo)
     for (row=0; row<rows; row++) {
       for (col=0, xP=pic8+(row*cols); col<cols; col++, xP++)
 	*xP = getpixnum(ifp);
-      
+
       for (col=0; col<padright; col++) getpixnum(ifp);
     }
 
     pinfo->type = PIC8;
     pinfo->pic  = pic8;
-    break;      
+    break;
 
   case StaticColor:
   case PseudoColor:
@@ -162,10 +162,10 @@ int LoadXWD(fname, pinfo)
 	*xP = getpixnum(ifp);
       for (col=0; col<padright; col++) getpixnum(ifp);
     }
-    
+
     pinfo->type = PIC8;
     pinfo->pic  = pic8;
-    break;      
+    break;
 
   case TrueColor:
   case DirectColor:
@@ -179,7 +179,7 @@ int LoadXWD(fname, pinfo)
     for (row=0; row<rows; row++) {
       for (col=0, xP=pic24+(row*cols*3); col<cols; col++) {
 	CARD32 ul;
-	
+
 	ul = getpixnum(ifp);
 	switch (bits_per_pixel) {
 	case 16:
@@ -187,14 +187,14 @@ int LoadXWD(fname, pinfo)
 	  *xP++ = ((ul & green_mask) >> 5);
 	  *xP++ = ((ul & blue_mask)  >> 10);
 	  break;
-	  
+
 	case 24:
 	case 32:
 	  *xP++ = (ul    ) & 0xff;
 	  *xP++ = (ul>> 8) & 0xff;
 	  *xP++ = (ul>>16) & 0xff;
 	  break;
-	  
+
 	default:
 	  xwdError("True/Direct only supports 16, 24, and 32 bits");
 	  return 0;
@@ -203,18 +203,18 @@ int LoadXWD(fname, pinfo)
 
       for (col=0; col<padright; col++) getpixnum(ifp);
     }
-    
+
     pinfo->type = PIC24;
     pinfo->pic  = pic24;
     break;
-    
+
   default:
     xwdError("unknown visual class");
     return 0;
   }
 
   sprintf(pinfo->fullInfo, "XWD, %d-bit %s.  (%d bytes)",
-	  bits_per_pixel, 
+	  bits_per_pixel,
 	  ((visualclass == StaticGray ) ? "StaticGray"  :
 	   (visualclass == GrayScale  ) ? "GrayScale"   :
 	   (visualclass == StaticColor) ? "StaticColor" :
@@ -258,10 +258,10 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
   maxv = 255L;
 
   h11P = (X11WDFileHeader*) header;
-  
+
   if (fread(&header[0], sizeof(*h11P), (size_t) 1, file) != 1)
     return(xwdError("couldn't read X11 XWD file header"));
-  
+
   if (h11P->file_version != X11WD_FILE_VERSION) {
     byte_swap = 1;
     h11P->header_size      = bs_long(h11P->header_size);
@@ -294,7 +294,7 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
   for (i=0; i<h11P->header_size - sizeof(*h11P); i++)
     if (getc(file) == EOF)
       return(xwdError("couldn't read rest of X11 XWD file header"));
-      
+
   /* Check whether we can handle this dump. */
   if (h11P->pixmap_depth > 24)
     return(xwdError("can't handle X11 pixmap_depth > 24"));
@@ -314,16 +314,16 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
 	    h11P->bitmap_unit);
     return(xwdError(errstr));
   }
-  
+
   grayscale = 1;
   if (h11P->ncolors > 0) {      /* Read X11 colormap. */
     x11colors = (X11XColor*) malloc(h11P->ncolors * sizeof(X11XColor));
     if (!x11colors) return(xwdError("out of memory"));
-    
-    if (h11P->header_size + h11P->ncolors * sizeof(X11XColor) 
+
+    if (h11P->header_size + h11P->ncolors * sizeof(X11XColor)
 	+ h11P->pixmap_height * h11P->bytes_per_line + h11P->ncolors * 4
 	== filesize ) word64 = 1;
-    
+
     if (word64) {
       for (i = 0; i < h11P->ncolors; ++i) {
 	if (fread(&pad, sizeof(pad), (size_t) 1, file ) != 1)
@@ -334,11 +334,11 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
       }
     }
     else {
-      if (fread(x11colors, sizeof(X11XColor), (size_t) h11P->ncolors, file) 
+      if (fread(x11colors, sizeof(X11XColor), (size_t) h11P->ncolors, file)
 	  != h11P->ncolors)
 	return(xwdError("couldn't read X11 XWD colormap"));
     }
-    
+
     for (i = 0; i < h11P->ncolors; ++i) {
       if (byte_swap) {
 	x11colors[i].red   = (CARD16) bs_short(x11colors[i].red);
@@ -356,7 +356,7 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
 	grayscale = 0;
     }
   }
-  
+
   *visualclassP = h11P->visual_class;
   if (*visualclassP == TrueColor || *visualclassP == DirectColor) {
     if (h11P->bits_per_pixel == 16) maxv = 31;
@@ -389,21 +389,21 @@ static int getinit(file, colsP, rowsP, padrightP, visualclassP, maxv, pinfo)
       }
     }
   }
-      
+
   *colsP = h11P->pixmap_width;
   *rowsP = h11P->pixmap_height;
   *padrightP = h11P->bytes_per_line * 8 / h11P->bits_per_pixel -
     h11P->pixmap_width;
-  
+
   bits_per_item  = h11P->bitmap_unit;
   bits_used      = bits_per_item;
   bits_per_pixel = h11P->bits_per_pixel;
   byte_order     = h11P->byte_order;
   bit_order      = h11P->bitmap_bit_order;
-  
+
   if (bits_per_pixel == sizeof(pixel_mask) * 8)  pixel_mask = (CARD32) -1;
   else pixel_mask = (1 << bits_per_pixel) - 1;
-  
+
   red_mask   = h11P->red_mask;
   green_mask = h11P->green_mask;
   blue_mask  = h11P->blue_mask;
@@ -421,13 +421,13 @@ static CARD32 getpixnum(file)
      FILE* file;
 {
   int n;
-  
+
   if (bits_used == bits_per_item) {
     switch (bits_per_item) {
     case 8:
       *byteP = getc(file);
       break;
-      
+
     case 16:
       if (byte_order == MSBFirst) {
 	if (readbigshort(file, shortP) == -1)
@@ -438,7 +438,7 @@ static CARD32 getpixnum(file)
 	  xwdWarning("unexpected EOF");
       }
       break;
-      
+
     case 32:
       if (byte_order == MSBFirst) {
 	if (readbiglong(file, longP) == -1)
@@ -449,41 +449,41 @@ static CARD32 getpixnum(file)
 	  xwdWarning("unexpected EOF");
       }
       break;
-      
+
     default:
       xwdWarning("can't happen");
     }
     bits_used = 0;
-    
+
     if (bit_order == MSBFirst)
       bit_shift = bits_per_item - bits_per_pixel;
     else
       bit_shift = 0;
   }
-  
+
   switch (bits_per_item) {
   case 8:
     n = (*byteP >> bit_shift) & pixel_mask;
     break;
-    
+
   case 16:
     n = (*shortP >> bit_shift) & pixel_mask;
     break;
-    
+
   case 32:
     n = (*longP >> bit_shift) & pixel_mask;
     break;
-    
+
   default:
     n = 0;
     xwdWarning("can't happen");
   }
-  
+
   if (bit_order == MSBFirst) bit_shift -= bits_per_pixel;
-                        else bit_shift += bits_per_pixel;
+			else bit_shift += bits_per_pixel;
 
   bits_used += bits_per_pixel;
-  
+
   return n;
 }
 
@@ -511,7 +511,7 @@ static void xwdWarning(st)
 
 
 
-/* 
+/*
  * Byte-swapping junk.
  */
 
@@ -537,7 +537,7 @@ static CARD32 bs_long(l)
 {
   union cheat u;
   unsigned char t;
-  
+
   u.l = l;
   t = u.c[0];  u.c[0] = u.c[3];  u.c[3] = t;
   t = u.c[1];  u.c[1] = u.c[2];  u.c[2] = t;
@@ -549,7 +549,7 @@ static CARD32 bs_long(l)
 
 
 
-/* 
+/*
  * Endian I/O.
  */
 
@@ -584,7 +584,7 @@ static int readlittleshort(in, sP)
 {
   *sP  =  getc(in) & 0xff;
   *sP |= (getc(in) & 0xff) << 8;
-  
+
   if (ferror(in)) return -1;
   return 0;
 }

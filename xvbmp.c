@@ -69,7 +69,7 @@ int LoadBMP(fname, pinfo)
 
   fp = xv_fopen(fname,"r");
   if (!fp) return (bmpError(bname, "couldn't open file"));
-  
+
   fseek(fp, 0L, 2);      /* figure out the file size */
   filesize = ftell(fp);
   fseek(fp, 0L, 0);
@@ -104,11 +104,11 @@ int LoadBMP(fname, pinfo)
     biHeight        = getshort(fp);
     biPlanes        = getshort(fp);
     biBitCount      = getshort(fp);
-    
+
     /* Not in old versions so have to compute them*/
     biSizeImage = (((biPlanes * biBitCount*biWidth)+31)/32)*4*biHeight;
-    
-    biCompression   = BI_RGB; 
+
+    biCompression   = BI_RGB;
     biXPelsPerMeter = biYPelsPerMeter = 0;
     biClrUsed       = biClrImportant  = 0;
   }
@@ -127,7 +127,7 @@ int LoadBMP(fname, pinfo)
 
 
   /* error checking */
-  if ((biBitCount!=1 && biBitCount!=4 && biBitCount!=8 && biBitCount!=24) || 
+  if ((biBitCount!=1 && biBitCount!=4 && biBitCount!=8 && biBitCount!=24) ||
       biPlanes!=1 || biCompression>BI_RLE4) {
 
     sprintf(buf,"Bogus BMP File!  (bitCount=%d, Planes=%d, Compression=%d)",
@@ -154,7 +154,7 @@ int LoadBMP(fname, pinfo)
     /* skip ahead to colormap, using biSize */
     c = biSize - 40;    /* 40 bytes read from biSize to biClrImportant */
     for (i=0; i<c; i++) getc(fp);
-    
+
     bPad = bfOffBits - (biSize + 14);
   }
 
@@ -173,7 +173,7 @@ int LoadBMP(fname, pinfo)
       }
     }
 
-    if (FERROR(fp)) 
+    if (FERROR(fp))
       { bmpError(bname,"EOF reached in BMP colormap"); goto ERROR; }
 
     if (DEBUG>1) {
@@ -188,7 +188,7 @@ int LoadBMP(fname, pinfo)
   if (biSize != WIN_OS2_OLD) {
     /* Waste any unused bytes between the colour map (if present)
        and the start of the actual bitmap data. */
-    
+
     while (bPad > 0) {
       (void) getc(fp);
       bPad--;
@@ -254,7 +254,7 @@ int LoadBMP(fname, pinfo)
  ERROR:
   fclose(fp);
   return 0;
-}  
+}
 
 
 /*******************************************/
@@ -277,7 +277,7 @@ static int loadBMP1(fp, pic8, w, h)
 	c = getc(fp);
 	bitnum = 0;
       }
-      
+
       if (j<w) {
 	*pp++ = (c & 0x80) ? 1 : 0;
 	c <<= 1;
@@ -287,7 +287,7 @@ static int loadBMP1(fp, pic8, w, h)
   }
 
   return (FERROR(fp));
-}  
+}
 
 
 
@@ -299,24 +299,24 @@ static int loadBMP4(fp, pic8, w, h, comp)
 {
   int   i,j,c,c1,x,y,nybnum,padw,rv;
   byte *pp;
-  
-  
+
+
   rv = 0;
   c = c1 = 0;
-  
+
   if (comp == BI_RGB) {   /* read uncompressed data */
     padw = ((w + 7)/8) * 8; /* 'w' padded to a multiple of 8pix (32 bits) */
-    
+
     for (i=h-1; i>=0; i--) {
       pp = pic8 + (i * w);
       if ((i&0x3f)==0) WaitCursor();
-      
+
       for (j=nybnum=0; j<padw; j++,nybnum++) {
 	if ((nybnum & 1) == 0) { /* read next byte */
 	  c = getc(fp);
 	  nybnum = 0;
 	}
-	
+
 	if (j<w) {
 	  *pp++ = (c & 0xf0) >> 4;
 	  c <<= 4;
@@ -325,55 +325,55 @@ static int loadBMP4(fp, pic8, w, h, comp)
       if (FERROR(fp)) break;
     }
   }
-  
+
   else if (comp == BI_RLE4) {  /* read RLE4 compressed data */
-    x = y = 0;  
+    x = y = 0;
     pp = pic8 + x + (h-y-1)*w;
-    
+
     while (y<h) {
       c = getc(fp);  if (c == EOF) { rv = 1;  break; }
-      
+
       if (c) {                                   /* encoded mode */
 	c1 = getc(fp);
-	for (i=0; i<c; i++,x++,pp++) 
+	for (i=0; i<c; i++,x++,pp++)
 	  *pp = (i&1) ? (c1 & 0x0f) : ((c1>>4)&0x0f);
       }
-      
+
       else {    /* c==0x00  :  escape codes */
 	c = getc(fp);  if (c == EOF) { rv = 1;  break; }
-	
+
 	if      (c == 0x00) {                    /* end of line */
 	  x=0;  y++;  pp = pic8 + x + (h-y-1)*w;
-	} 
-	
+	}
+
 	else if (c == 0x01) break;               /* end of pic8 */
-	
+
 	else if (c == 0x02) {                    /* delta */
 	  c = getc(fp);  x += c;
 	  c = getc(fp);  y += c;
 	  pp = pic8 + x + (h-y-1)*w;
 	}
-	
+
 	else {                                   /* absolute mode */
 	  for (i=0; i<c; i++, x++, pp++) {
 	    if ((i&1) == 0) c1 = getc(fp);
 	    *pp = (i&1) ? (c1 & 0x0f) : ((c1>>4)&0x0f);
 	  }
-	  
+
 	  if (((c&3)==1) || ((c&3)==2)) getc(fp);  /* read pad byte */
 	}
       }  /* escape processing */
       if (FERROR(fp)) break;
     }  /* while */
   }
-  
+
   else {
     fprintf(stderr,"unknown BMP compression type 0x%0x\n", comp);
   }
-  
+
   if (FERROR(fp)) rv = 1;
   return rv;
-}  
+}
 
 
 
@@ -385,7 +385,7 @@ static int loadBMP8(fp, pic8, w, h, comp)
 {
   int   i,j,c,c1,padw,x,y,rv;
   byte *pp;
-  
+
   rv = 0;
 
   if (comp == BI_RGB) {   /* read uncompressed data */
@@ -404,7 +404,7 @@ static int loadBMP8(fp, pic8, w, h, comp)
   }
 
   else if (comp == BI_RLE8) {  /* read RLE8 compressed data */
-    x = y = 0;  
+    x = y = 0;
     pp = pic8 + x + (h-y-1)*w;
 
     while (y<h) {
@@ -420,7 +420,7 @@ static int loadBMP8(fp, pic8, w, h, comp)
 
 	if      (c == 0x00) {                    /* end of line */
 	  x=0;  y++;  pp = pic8 + x + (h-y-1)*w;
-	} 
+	}
 
 	else if (c == 0x01) break;               /* end of pic8 */
 
@@ -435,21 +435,21 @@ static int loadBMP8(fp, pic8, w, h, comp)
 	    c1 = getc(fp);
 	    *pp = c1;
 	  }
-	  
+
 	  if (c & 1) getc(fp);  /* odd length run: read an extra pad byte */
 	}
       }  /* escape processing */
       if (FERROR(fp)) break;
     }  /* while */
   }
-  
+
   else {
     fprintf(stderr,"unknown BMP compression type 0x%0x\n", comp);
   }
 
   if (FERROR(fp)) rv = 1;
   return rv;
-}  
+}
 
 
 
@@ -469,7 +469,7 @@ static int loadBMP24(fp, pic24, w, h)
   for (i=h-1; i>=0; i--) {
     pp = pic24 + (i * w * 3);
     if ((i&0x3f)==0) WaitCursor();
-    
+
     for (j=0; j<w; j++) {
       pp[2] = getc(fp);   /* blue */
       pp[1] = getc(fp);   /* green */
@@ -484,7 +484,7 @@ static int loadBMP24(fp, pic24, w, h)
   }
 
   return rv;
-}  
+}
 
 
 
@@ -505,7 +505,7 @@ static unsigned int getint(fp)
   int c, c1, c2, c3;
   c = getc(fp);  c1 = getc(fp);  c2 = getc(fp);  c3 = getc(fp);
   return ((unsigned int) c) +
-         (((unsigned int) c1) << 8) + 
+	 (((unsigned int) c1) << 8) +
 	 (((unsigned int) c2) << 16) +
 	 (((unsigned int) c3) << 24);
 }
@@ -529,7 +529,7 @@ static void putint(fp, i)
      int i;
 {
   int c, c1, c2, c3;
-  c  = ((unsigned int ) i)      & 0xff;  
+  c  = ((unsigned int ) i)      & 0xff;
   c1 = (((unsigned int) i)>>8)  & 0xff;
   c2 = (((unsigned int) i)>>16) & 0xff;
   c3 = (((unsigned int) i)>>24) & 0xff;
@@ -562,7 +562,7 @@ int WriteBMP(fp,pic824,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle)
    *    8-bit image
    * note that PIC24 and F_BWDITHER/F_REDUCED won't happen
    *
-   * if colorstyle == F_BWDITHER, it writes a 1-bit image 
+   * if colorstyle == F_BWDITHER, it writes a 1-bit image
    *
    */
 
@@ -611,7 +611,7 @@ int WriteBMP(fp,pic824,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle)
     for (i=0; i<numcols; i++) {
       /* see if color #i is a duplicate */
       for (j=0; j<i; j++) {
-	if (rmap[i] == rmap[j] && gmap[i] == gmap[j] && 
+	if (rmap[i] == rmap[j] && gmap[i] == gmap[j] &&
 	    bmap[i] == bmap[j]) break;
       }
 
@@ -689,13 +689,13 @@ int WriteBMP(fp,pic824,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle)
 #else
   if (!FERROR(fp)) return -1;
 #endif
-  
+
   return 0;
 }
 
 
-	  
-	  
+
+
 /*******************************************/
 static void writeBMP1(fp, pic8, w, h)
      FILE *fp;
@@ -708,7 +708,7 @@ static void writeBMP1(fp, pic8, w, h)
   padw = ((w + 31)/32) * 32;  /* 'w', padded to be a multiple of 32 */
 
   for (i=h-1; i>=0; i--) {
-    pp = pic8 + (i * w);  
+    pp = pic8 + (i * w);
     if ((i&0x3f)==0) WaitCursor();
 
     for (j=bitnum=c=0; j<=padw; j++,bitnum++) {
@@ -716,7 +716,7 @@ static void writeBMP1(fp, pic8, w, h)
 	putc(c,fp);
 	bitnum = c = 0;
       }
-      
+
       c <<= 1;
 
       if (j<w) {
@@ -724,7 +724,7 @@ static void writeBMP1(fp, pic8, w, h)
       }
     }
   }
-}  
+}
 
 
 
@@ -758,7 +758,7 @@ static void writeBMP4(fp, pic8, w, h)
       }
     }
   }
-}  
+}
 
 
 
@@ -780,7 +780,7 @@ static void writeBMP8(fp, pic8, w, h)
     for (j=0; j<w; j++) putc(pc2nc[*pp++], fp);
     for ( ; j<padw; j++) putc(0, fp);
   }
-}  
+}
 
 
 /*******************************************/
@@ -807,7 +807,7 @@ static void writeBMP24(fp, pic24, w, h)
 
     for (j=0; j<padb; j++) putc(0, fp);
   }
-}  
+}
 
 
 

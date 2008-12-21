@@ -47,11 +47,11 @@ $ DEFS = "/Define = (""BSDTYPES=1"", ""USE_VARARGS=1"", ""USE_PROTOTYPES=0"", ""
 $ CC := CC 'QUALIFIERS' 'DEFS' /NoList
 $!
 $ sources = "tif_fax3,tif_fax4,tif_aux,tif_ccittrle,tif_close,tif_compress," + -
-            "tif_dir,tif_dirinfo,tif_dirread,tif_dirwrite,tif_dumpmode,"     + -
-            "tif_error,tif_getimage,tif_jpeg,tif_flush,tif_lzw," + -
-            "tif_next,tif_open,tif_packbits,tif_print,tif_read,tif_swab,"    + -
-            "tif_strip,tif_thunder,tif_tile,tif_version,tif_vms,tif_warning,"+ -
-            "tif_write"
+	    "tif_dir,tif_dirinfo,tif_dirread,tif_dirwrite,tif_dumpmode,"     + -
+	    "tif_error,tif_getimage,tif_jpeg,tif_flush,tif_lzw," + -
+	    "tif_next,tif_open,tif_packbits,tif_print,tif_read,tif_swab,"    + -
+	    "tif_strip,tif_thunder,tif_tile,tif_version,tif_vms,tif_warning,"+ -
+	    "tif_write"
 $!
 $ new_objects = ""
 $!
@@ -84,13 +84,13 @@ $!
 $   Write Sys$Output "Building LIBTIFF.OLB..."
 $   If "''F$Search ("LIBTIFF.OLB")'" .eqs. "" Then Library /Create LIBTIFF.OLB
 $   Library /Replace LIBTIFF.OLB tif_fax3.obj,tif_fax4.obj,tif_aux.obj,    -
-             tif_ccittrle.obj,tif_close.obj,tif_compress.obj,tif_dir.obj,  -
-             tif_dirinfo.obj,tif_dirread.obj,tif_dirwrite.obj,             -
-             tif_dumpmode.obj,tif_error.obj,tif_getimage.obj,tif_jpeg.obj, -
-             tif_flush.obj,tif_lzw.obj,tif_next.obj,       -
-             tif_open.obj,tif_packbits.obj,tif_print.obj,tif_read.obj,     -
-             tif_swab.obj,tif_strip.obj,tif_thunder.obj,tif_tile.obj,      -
-             tif_version.obj,tif_vms.obj,tif_warning.obj,tif_write.obj 
+	     tif_ccittrle.obj,tif_close.obj,tif_compress.obj,tif_dir.obj,  -
+	     tif_dirinfo.obj,tif_dirread.obj,tif_dirwrite.obj,             -
+	     tif_dumpmode.obj,tif_error.obj,tif_getimage.obj,tif_jpeg.obj, -
+	     tif_flush.obj,tif_lzw.obj,tif_next.obj,       -
+	     tif_open.obj,tif_packbits.obj,tif_print.obj,tif_read.obj,     -
+	     tif_swab.obj,tif_strip.obj,tif_thunder.obj,tif_tile.obj,      -
+	     tif_version.obj,tif_vms.obj,tif_warning.obj,tif_write.obj
 $FINISHED:
 $   Write Sys$Output "Finished building LibTIFF"
 $EXIT:

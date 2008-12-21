@@ -1,5 +1,5 @@
-They said it couldn't be done.  They said it never *would* be done.  
-They smiled knowingly to themselves as each predicted release date 
+They said it couldn't be done.  They said it never *would* be done.
+They smiled knowingly to themselves as each predicted release date
 inevitably passed by, unmarked by the emergence of a new version...
 
 Well, who asked them!  And who do they think they are, anyhow!?!
@@ -7,13 +7,13 @@ Well, who asked them!  And who do they think they are, anyhow!?!
 Announcing the Exciting New Release of XV, Version 3.10!
 
 Finally, all the stuff you've been waiting for:  image cut & paste, pixel
-editing, text annotation (of a sort), nifty new algorithms, new image formats 
+editing, text annotation (of a sort), nifty new algorithms, new image formats
 (Targa, XPM, FITS, XWD, IFF), improved schnauzing capabilities, a spiffy
 new 'pad' command, and whatnot.  Plenty of whatnot.
 
 Of course, we're particularly proud of our Exclusive 3-D Fish Technology.
 
-At the moment, you can get this decidedly 'fine' piece of software via 
+At the moment, you can get this decidedly 'fine' piece of software via
 anonymous ftp on the following sites:
 
    Hostname			Directory
@@ -23,7 +23,7 @@ anonymous ftp on the following sites:
    ftp.duke.edu:		pub/archive/xv
    gatekeeper.dec.com:		pub/graphics/xv
 
-The file is called 'xv-3.10.tar.gz' (or 'xv-3.10.tar.Z' if you don't have 
+The file is called 'xv-3.10.tar.gz' (or 'xv-3.10.tar.Z' if you don't have
 the 'gunzip' program).
 
 BTW, if any of you fine folks can get these files put up on one of the major

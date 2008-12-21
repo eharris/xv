@@ -37,38 +37,38 @@ CHarles Rite'
 --- xv-3.01-fits/Makefile       Tue Jul 26 13:34:36 1994
 ***************
 *** 269,275 ****
-          bitmaps/p10 bitmaps/m10
+	  bitmaps/p10 bitmaps/m10
 
   SRCS1 =       xv.c xvevent.c xvroot.c xvmisc.c xvimage.c xvcolor.c xvsmooth.c !
  ggen.o xv24to8.c xvgif.c xvpm.c xvinfo.c xvctrl.c xvscrl.c xvalg.c \
-        xvgifwr.c xvdir.c xvbutt.c xvpbm.c xvxbm.c xvxpm.c xvgam.c xvbmp.c \
-        xvdial.c xvgraf.c xvsunras.c xvjpeg.c xvps.c xvpopup.c xvdflt.c \
-        xvtiff.c xvtiffwr.c xvpds.c xvrle.c xviris.c xvgrab.c vprintf.c \
+	xvgifwr.c xvdir.c xvbutt.c xvpbm.c xvxbm.c xvxpm.c xvgam.c xvbmp.c \
+	xvdial.c xvgraf.c xvsunras.c xvjpeg.c xvps.c xvpopup.c xvdflt.c \
+	xvtiff.c xvtiffwr.c xvpds.c xvrle.c xviris.c xvgrab.c vprintf.c \
 --- 269,275 ----
-          bitmaps/p10 bitmaps/m10
+	  bitmaps/p10 bitmaps/m10
 
   SRCS1 =       xv.c xvevent.c xvroot.c xvmisc.c xvimage.c xvcolor.c xvsmooth.c !
  dcomp* xv24to8.c xvgif.c xvpm.c xvfits.c xvinfo.c xvctrl.c xvscrl.c xvalg.c \
-        xvgifwr.c xvdir.c xvbutt.c xvpbm.c xvxbm.c xvxpm.c xvgam.c xvbmp.c \
-        xvdial.c xvgraf.c xvsunras.c xvjpeg.c xvps.c xvpopup.c xvdflt.c \
-        xvtiff.c xvtiffwr.c xvpds.c xvrle.c xviris.c xvgrab.c vprintf.c \
+	xvgifwr.c xvdir.c xvbutt.c xvpbm.c xvxbm.c xvxpm.c xvgam.c xvbmp.c \
+	xvdial.c xvgraf.c xvsunras.c xvjpeg.c xvps.c xvpopup.c xvdflt.c \
+	xvtiff.c xvtiffwr.c xvpds.c xvrle.c xviris.c xvgrab.c vprintf.c \
 ***************
 *** 276,282 ****
-        xvbrowse.c xvtext.c xvpcx.c
+	xvbrowse.c xvtext.c xvpcx.c
 
   OBJS1 =       xv.o xvevent.o xvroot.o xvmisc.o xvimage.o xvcolor.o xvsmooth.o !
  bsn> caxv24to8.o xvgif.o xvpm.o xvinfo.o xvctrl.o xvscrl.o xvalg.o \
-        xvgifwr.o xvdir.o xvbutt.o xvpbm.o xvxbm.o xvxpm.o xvgam.o xvbmp.o \
-        xvdial.o xvgraf.o xvsunras.o xvjpeg.o xvps.o xvpopup.o xvdflt.o \
-        xvtiff.o xvtiffwr.o xvpds.o xvrle.o xviris.o xvgrab.o vprintf.o \
+	xvgifwr.o xvdir.o xvbutt.o xvpbm.o xvxbm.o xvxpm.o xvgam.o xvbmp.o \
+	xvdial.o xvgraf.o xvsunras.o xvjpeg.o xvps.o xvpopup.o xvdflt.o \
+	xvtiff.o xvtiffwr.o xvpds.o xvrle.o xviris.o xvgrab.o vprintf.o \
 --- 276,282 ----
-        xvbrowse.c xvtext.c xvpcx.c
+	xvbrowse.c xvtext.c xvpcx.c
 
   OBJS1 =       xv.o xvevent.o xvroot.o xvmisc.o xvimage.o xvcolor.o xvsmooth.o !
  bsn> lsxv24to8.o xvgif.o xvpm.o xvfits.o xvinfo.o xvctrl.o xvscrl.o xvalg.o \
-        xvgifwr.o xvdir.o xvbutt.o xvpbm.o xvxbm.o xvxpm.o xvgam.o xvbmp.o \
-        xvdial.o xvgraf.o xvsunras.o xvjpeg.o xvps.o xvpopup.o xvdflt.o \
-        xvtiff.o xvtiffwr.o xvpds.o xvrle.o xviris.o xvgrab.o vprintf.o \
+	xvgifwr.o xvdir.o xvbutt.o xvpbm.o xvxbm.o xvxpm.o xvgam.o xvbmp.o \
+	xvdial.o xvgraf.o xvsunras.o xvjpeg.o xvps.o xvpopup.o xvdflt.o \
+	xvtiff.o xvtiffwr.o xvpds.o xvrle.o xviris.o xvgrab.o vprintf.o \
 
 =================== CUT THIS - MODIFICATIONS IN XV.C =====================
 
@@ -78,30 +78,30 @@ CHarles Rite'
 *** 92,98 ****
   extern Window pseudo_root();
   #endif
-  
-- 
+
+-
   /* program needs one of the following fonts.  Trys them in ascending order */
-  
+
   #define FONT1 "-*-lucida-medium-r-*-*-12-*"
 --- 92,97 ----
 ***************
 *** 2414,2419 ****
 --- 2413,2420 ----
-  
+
     else if (!strncmp((char *) magicno,"/* XPM */",8)) rv = RFT_XPM;
-  
+
 +   else if (strncmp((char *) magicno, "SIMPLE  ", 8)==0) rv = RFT_FITS;
-+ 
++
   #ifdef HAVE_JPEG
-    else if (magicno[0]==0xff && magicno[1]==0xd8 && 
-  	   magicno[2]==0xff) rv = RFT_JFIF;
+    else if (magicno[0]==0xff && magicno[1]==0xd8 &&
+	   magicno[2]==0xff) rv = RFT_JFIF;
 ***************
 *** 2433,2438 ****
 --- 2434,2440 ----
-        rv = RFT_PDSVICAR;
+	rv = RFT_PDSVICAR;
   #endif
-  
-+ 
+
++
   #ifdef GS_PATH
     else if (magicno[0] == '%' && magicno[1] == '!') rv = RFT_PS;
   #endif
@@ -112,7 +112,7 @@ CHarles Rite'
     case RFT_PCX:     rv = LoadPCX   (fname, pinfo);  break;
     case RFT_XPM:     rv = LoadXPM   (fname, pinfo);  break;
 +   case RFT_FITS:    rv = LoadFITS  (fname, pinfo);  break;
-  
+
   #ifdef HAVE_JPEG
     case RFT_JFIF:    rv = LoadJFIF  (fname, pinfo);  break;
 
@@ -124,9 +124,9 @@ CHarles Rite'
 *** 136,142 ****
   #include <stdlib.h>
   #endif
-  
-- 
-  /* include the appropriate string header file */ 
+
+-
+  /* include the appropriate string header file */
   #if defined(SVR4) || defined(__convex__) || defined(VMS)
   #include <string.h>
 --- 136,141 ----
@@ -135,7 +135,7 @@ CHarles Rite'
   #define F_BMP       6
   #define F_PS        7
   #define F_IRIS      8
-  
+
   #ifdef HAVE_JPEG
 !  #define F_JPEG      9
 !  #ifdef HAVE_TIFF
@@ -152,8 +152,8 @@ CHarles Rite'
 !   #define F_XPM       9
 !  #endif
   #endif
-  
-- 
+
+-
   /* return values from ReadFileType()
    * positive values are *definitely* readable formats (HAVE_*** is defined)
    * negative values are random files that XV can't read, but display as
@@ -162,7 +162,7 @@ CHarles Rite'
   #define F_PS        7
   #define F_IRIS      8
 + #define F_FITS      9
-  
+
   #ifdef HAVE_JPEG
 ! #define F_JPEG      10
 ! #ifdef HAVE_TIFF
@@ -179,7 +179,7 @@ CHarles Rite'
 + #define F_XPM       10
 + #endif
 + #endif
-  
+
   /* return values from ReadFileType()
    * positive values are *definitely* readable formats (HAVE_*** is defined)
    * negative values are random files that XV can't read, but display as
@@ -190,7 +190,7 @@ CHarles Rite'
   #define RFT_PS       14
   #define RFT_XPM      15
 + #define RFT_FITS     16
-  
+
   /* definitions for page up/down, arrow up/down list control */
   #define LS_PAGEUP   0
 ***************
@@ -198,11 +198,11 @@ CHarles Rite'
 --- 1344,1352 ----
   void   InitSpline(int *, int *, int, double *);
   double EvalSpline(int *, int *, double *, int, double);
-  
+
 + /**************************** XVFITS.C ***************************/
 + int LoadFITS(char *, int);
 + int WriteFITS(FILE *, byte *, int, int, byte *, byte *, byte *, int, int);
-  
+
   /**************************** XVGIF.C ***************************/
   int LoadGIF(char *, PICINFO *);
 ***************
@@ -210,11 +210,11 @@ CHarles Rite'
 --- 1604,1612 ----
   int    ClickGraf(), GrafKey(), Str2Graf(), SetGrafState();
   double EvalSpline();
-  
+
 + /**************************** XVFITS.C ***************************/
 + int LoadFITS();
 + int WriteFITS();
-  
+
   /**************************** XVGIF.C ***************************/
   int LoadGIF();
 
@@ -225,37 +225,37 @@ CHarles Rite'
 ***************
 *** 83,89 ****
   #define LISTW  237
-  
+
   #define DIRWIDE  350               /* (fixed) size of directory window */
 ! #define DIRHIGH  480
-  
+
   #define BUTTW   60
   #define BUTTH   24
 --- 83,89 ----
   #define LISTW  237
-  
+
   #define DIRWIDE  350               /* (fixed) size of directory window */
 ! #define DIRHIGH  500
-  
+
   #define BUTTW   60
   #define BUTTH   24
 ***************
 *** 220,226 ****
-  	   infofg, infobg,hicol,locol);
+	   infofg, infobg,hicol,locol);
     RBCreate(formatRB, dirW, 26, y+144, "IRIS",
-  	   infofg, infobg,hicol,locol);
+	   infofg, infobg,hicol,locol);
 !   y = y + 162;
-  
+
   #ifdef HAVE_JPEG
     RBCreate(formatRB, dirW, 26, y, "JPEG", infofg, infobg,hicol,locol);
 --- 220,228 ----
-  	   infofg, infobg,hicol,locol);
+	   infofg, infobg,hicol,locol);
     RBCreate(formatRB, dirW, 26, y+144, "IRIS",
-  	   infofg, infobg,hicol,locol);
+	   infofg, infobg,hicol,locol);
 !   RBCreate(formatRB, dirW, 26, y+162, "FITS",
 !            infofg, infobg,hicol,locol);
 !   y = y + 180;
-  
+
   #ifdef HAVE_JPEG
     RBCreate(formatRB, dirW, 26, y, "JPEG", infofg, infobg,hicol,locol);
 ***************
@@ -264,10 +264,10 @@ CHarles Rite'
     RBCreate(formatRB, dirW, 26, y, "TIFF", infofg, infobg,hicol,locol);
     y += 18;
   #endif
-+ 
++
     RBCreate(formatRB, dirW, 26, y, "XPM", infofg, infobg,hicol,locol);
     y += 18;
-  
+
 ***************
 *** 363,382 ****
   int x,y;
@@ -275,78 +275,78 @@ CHarles Rite'
     BUTT  *bp;
 !   int    bnum,i;
     char   buf[1024];
-  
-  
+
+
     /* check the RBUTTS first, since they don't DO anything */
-    if ( (bnum=RBClick(formatRB, x,y)) >= 0) { 
+    if ( (bnum=RBClick(formatRB, x,y)) >= 0) {
       if (RBTrack(formatRB, bnum)) {
 !       if (RBWhich(formatRB)==4) {  /* turn off all but B/W dithered */
-  	RBSetActive(colorRB,0,0);
-  	RBSetActive(colorRB,1,0);
-  	RBSetActive(colorRB,3,0);
-  	RBSelect(colorRB,2);
+	RBSetActive(colorRB,0,0);
+	RBSetActive(colorRB,1,0);
+	RBSetActive(colorRB,3,0);
+	RBSelect(colorRB,2);
 !       }
 !       else {                       /* turn on all but B/W dithered */
-  	RBSetActive(colorRB,0,1);
-  	RBSetActive(colorRB,1,1);
-  	RBSetActive(colorRB,3,(picType==PIC8) ? 1 : 0);
+	RBSetActive(colorRB,0,1);
+	RBSetActive(colorRB,1,1);
+	RBSetActive(colorRB,3,(picType==PIC8) ? 1 : 0);
 --- 366,391 ----
   int x,y;
   {
     BUTT  *bp;
 !   int    bnum,i,fmt;
     char   buf[1024];
-  
-  
+
+
     /* check the RBUTTS first, since they don't DO anything */
-    if ( (bnum=RBClick(formatRB, x,y)) >= 0) { 
+    if ( (bnum=RBClick(formatRB, x,y)) >= 0) {
 +     i = RBTrack(formatRB, bnum);
 +     fmt = RBWhich(formatRB);
       if (RBTrack(formatRB, bnum)) {
 !       if (fmt==4) {  /* turn off all but B/W dithered */
-  	RBSetActive(colorRB,0,0);
-  	RBSetActive(colorRB,1,0);
-  	RBSetActive(colorRB,3,0);
-  	RBSelect(colorRB,2);
+	RBSetActive(colorRB,0,0);
+	RBSetActive(colorRB,1,0);
+	RBSetActive(colorRB,3,0);
+	RBSelect(colorRB,2);
 !       } else if (fmt == F_FITS) {
 !         RBSetActive(colorRB,0,0);
 !         RBSetActive(colorRB,1,1);
 !         RBSetActive(colorRB,3,0);
 !         RBSelect(colorRB,1);
 !       } else {
-  	RBSetActive(colorRB,0,1);
-  	RBSetActive(colorRB,1,1);
-  	RBSetActive(colorRB,3,(picType==PIC8) ? 1 : 0);
+	RBSetActive(colorRB,0,1);
+	RBSetActive(colorRB,1,1);
+	RBSetActive(colorRB,3,(picType==PIC8) ? 1 : 0);
 ***************
 *** 1126,1131 ****
 --- 1135,1143 ----
-  
+
     case F_IRIS:
       rv = WriteIRIS(fp, thepic, ptype, w, h, rp, gp, bp, nc, col);  break;
-+ 
++
 +   case F_FITS:
 +     rv = WriteFITS(fp, thepic, w, h, rp, gp, bp, nc, col); break;
     }
-  
+
     if (CloseOutFile(fp, fullname, rv) == 0) {
 ***************
 *** 1294,1300 ****
-        (strcmp(lowsuf,"jfif")==0) ||
-        (strcmp(lowsuf,"tif" )==0) ||
-        (strcmp(lowsuf,"tiff")==0) ||
+	(strcmp(lowsuf,"jfif")==0) ||
+	(strcmp(lowsuf,"tif" )==0) ||
+	(strcmp(lowsuf,"tiff")==0) ||
 !       (strcmp(lowsuf,"xpm" )==0)) {
-  
+
       /* found one.  set lowsuf = to the new suffix, and tack on to filename */
-  
+
 --- 1306,1313 ----
-        (strcmp(lowsuf,"jfif")==0) ||
-        (strcmp(lowsuf,"tif" )==0) ||
-        (strcmp(lowsuf,"tiff")==0) ||
+	(strcmp(lowsuf,"jfif")==0) ||
+	(strcmp(lowsuf,"tif" )==0) ||
+	(strcmp(lowsuf,"tiff")==0) ||
 !       (strcmp(lowsuf,"xpm" )==0) ||
 !       (strcmp(lowsuf,"fits" )==0)) {
-  
+
       /* found one.  set lowsuf = to the new suffix, and tack on to filename */
-  
+
 ***************
 *** 1317,1322 ****
 --- 1330,1336 ----
@@ -354,7 +354,7 @@ CHarles Rite'
       case F_PS:       strcpy(lowsuf,"ps");   break;
       case F_IRIS:     strcpy(lowsuf,"rgb");  break;
 +     case F_FITS:     strcpy(lowsuf,"fits"); break;
-  
+
   #ifdef HAVE_JPEG
       case F_JPEG:     strcpy(lowsuf,"jpg");  break;
 
@@ -367,8 +367,8 @@ CHarles Rite'
   #include "bitmaps/br_tiff.xbm"
   #include "bitmaps/br_pds.xbm"
   #include "bitmaps/br_ps.xbm"
-  
-- 
+
+-
   #include "bitmaps/fcurs.xbm"
   #include "bitmaps/fccurs.xbm"
   #include "bitmaps/fcursm.xbm"
@@ -377,7 +377,7 @@ CHarles Rite'
   #include "bitmaps/br_pds.xbm"
   #include "bitmaps/br_ps.xbm"
 + #include "bitmaps/br_fits.xbm"
-  
+
   #include "bitmaps/fcurs.xbm"
   #include "bitmaps/fccurs.xbm"
   #include "bitmaps/fcursm.xbm"
@@ -387,32 +387,32 @@ CHarles Rite'
   #define BF_PS       22
   #define BF_XPM      23
 ! #define BF_MAX      24    /* # of built-in icons */
-  
+
   #define ISLOADABLE(ftyp) (ftyp!=BF_DIR  && ftyp!=BF_CHR && ftyp!=BF_BLK && \
-  			  ftyp!=BF_SOCK && ftyp!=BF_FIFO) 
+			  ftyp!=BF_SOCK && ftyp!=BF_FIFO)
 --- 132,139 ----
   #define BF_COMPRESS 21
   #define BF_PS       22
   #define BF_XPM      23
 ! #define BF_FITS     24
 ! #define BF_MAX      25    /* # of built-in icons */
-  
+
   #define ISLOADABLE(ftyp) (ftyp!=BF_DIR  && ftyp!=BF_CHR && ftyp!=BF_BLK && \
-  			  ftyp!=BF_SOCK && ftyp!=BF_FIFO) 
+			  ftyp!=BF_SOCK && ftyp!=BF_FIFO)
 ***************
 *** 606,612 ****
 --- 607,617 ----
-  			br_ps_bits,br_ps_width,
-  			br_ps_height, 1,0,1);
-  
-+   bfIcons[BF_FITS] = XCreatePixmapFromBitmapData(theDisp, br->win, 
+			br_ps_bits,br_ps_width,
+			br_ps_height, 1,0,1);
+
++   bfIcons[BF_FITS] = XCreatePixmapFromBitmapData(theDisp, br->win,
 + 			br_fits_bits,br_fits_width,
 + 			br_fits_height, 1,0,1);
-  
-+ 
+
++
     /* check that they all got built */
     for (i=0; i<BF_MAX && bfIcons[i]; i++);
-    if (i<BF_MAX) 
+    if (i<BF_MAX)
 ***************
 *** 2909,2914 ****
 --- 2914,2920 ----
@@ -432,7 +432,7 @@ CHarles Rite'
 +   case RFT_FITS:     strcat(str,"Fits file");             break;
     default:           strcat(str,"file of unknown type");  break;
     }
-    
+
 =================== CUT THIS - XVFITS.C CODE ===============
 
 /*
@@ -548,7 +548,7 @@ int LoadFITS(fname,pinfo)
   r[i] = g[i] = b[i] = i;
   pinfo->r[i] = i;
   pinfo->g[i] = i;
-  pinfo->b[i] = i; 
+  pinfo->b[i] = i;
   }
   return 1;
 }
@@ -634,7 +634,7 @@ int *nx, *ny, *bitpix;
     FILE *fp;
     int naxis, i;
     char *error;
-    
+
     fp = fopen(file, "rb");
     if (fp == NULL) return "Unable to open FITS file";
 
@@ -655,7 +655,7 @@ int *nx, *ny, *bitpix;
 /* get number of data */
     fs->ndata = 1;
     for (i=0; i < fs->naxis; i++) fs->ndata = fs->ndata*fs->axes[i];
-    
+
     naxis = fs->naxis;
 
     *nx = fs->axes[0];
@@ -902,7 +902,7 @@ int nelem;
     register int i, n=nelem;
     register unsigned char *ptr=buffer;
 
-/* conversions. Although the data may be signed, reverse using unsigned 
+/* conversions. Although the data may be signed, reverse using unsigned
    variables */
 /* convert from big-endian two-byte signed integer to native form */
     if (fs->bitpix == 16)
@@ -912,7 +912,7 @@ int nelem;
     else if (fs->bitpix == 32)
 	for (i=0; i < n; i++, ptr+=4)
 	    *(unsigned int *)ptr = (((unsigned int)*ptr) << 24) |
-		                   ((unsigned int)ptr[1] << 16) |
+				   ((unsigned int)ptr[1] << 16) |
 				   ((unsigned int)ptr[2] << 8)  |
 				   (unsigned int)ptr[3];
 /* convert from IEE 754 single precision to native form */
@@ -929,7 +929,7 @@ int nelem;
 	    for (i=151; i < 256; i++) exps[i] = 2.*exps[i-1];
 	    for (i=149; i >= 0; i--) exps[i] = 0.5*exps[i+1];
 	}
-	      
+
 
 	for (i=0; i < n; i++, ptr+=4)
 	{
@@ -937,7 +937,7 @@ int nelem;
 	    j = ((int)ptr[1] << 16) | ((int)ptr[2] << 8) | (int)ptr[3];
 	    expo = ((k & 127) << 1) | (j >> 23);
 	    if ((expo | j) == 0) *(float *)ptr = 0.;
-	    else 
+	    else
 		*(float *)ptr = exps[expo]*(float)(j | 0x800000);
 	    if (k & 128) *(float *)ptr = - *(float *)ptr;
 	}
@@ -956,7 +956,7 @@ int nelem;
 	    for (i=1076; i < 2048; i++) exps[i] = 2.*exps[i-1];
 	    for (i=1074; i >= 0; i--) exps[i] = 0.5*exps[i+1];
 	}
-	      
+
 	for (i=0; i < n; i++, ptr+=8)
 	{
 	    k = (int)*ptr;
@@ -965,7 +965,7 @@ int nelem;
 	    l = ((int)ptr[5] << 16) | ((int)ptr[6] << 8) | (int)ptr[7];
 	    expo = ((k & 127) << 4) | (j >> 28);
 	    if ((expo | j | l) == 0) *(double *)ptr = 0.;
-	    else 
+	    else
 		*(double *)ptr = exps[expo] * (16777216. *
 			    (double)((j&0x0FFFFFFF)|0x10000000) + (double)l);
 	    if (k & 128) *(double *)ptr = - *(double *)ptr;

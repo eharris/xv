@@ -16,14 +16,14 @@ Cc: kdd@munnari.oz.au
 
 There is a program called gplot from the Pittsburgh Supercompter Center
 which displays binary and clear text cgm. From the readme: ftp from
-ftp.psc.edu:/pub/gplot. This might be useful. 
+ftp.psc.edu:/pub/gplot. This might be useful.
 
-Are you *really* sure you don't want to support vector formats as an 
+Are you *really* sure you don't want to support vector formats as an
 overlay or as a format in it's own right?
 
 Thanks for an amazingly useful package.
 
-Ken Doig 
+Ken Doig
 Systems Manager
 
 E-Mail:		kdd@spl.oz.au

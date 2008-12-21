@@ -1,6 +1,6 @@
 #!/bin/csh -f
 #
-# getweather - gets the latest weather GIF image file from the anonymous ftp 
+# getweather - gets the latest weather GIF image file from the anonymous ftp
 # area of the server machine (SERVERHOST), in the directory (DIRNAME)
 # and copies it to the file WEATHERFILE if successful
 #
@@ -33,7 +33,7 @@ quit" | ftp -n -i -v -d
 if ( ! -e $FNAME) then
 # 	echo "new weather file $FNAME was not created" \
 #		| /usr/ucb/mail -s "getweather error" "$HOSTMANAGER"
- 	exit(-1)
+	exit(-1)
 endif
 
 if (-z $FNAME) then

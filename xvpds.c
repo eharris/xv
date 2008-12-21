@@ -12,9 +12,9 @@
  * alexd@world.std.com
  *
  * 5-3-93    added leading spaces back into sscanf's -- some huffmanized
- 	       files have them.
+	       files have them.
  * 5-2-93    slapped in Peter G. Ford <pgf@space.mit.edu>'s patches for
- 	     xv 3.00:
+	     xv 3.00:
    Adds code to Makefile to compile under SunOS 4.0.3 (as if anybody cares).
    Improves PDS/VICAR file recognition.
    Writes current directory name in Doggie's window title.
@@ -22,38 +22,38 @@
    Choice of algorithm for 16->8 bit conversion--linear or histogram stretch.
     (adds CONV24_HIST item in "24/8 bit" pull-down menu.)
    Uses any "palette.tab" file in cwd to color PDS/VICAR image.
- 
+
  * 9-2-91    began integration.	 Much of this code is lifted from vicar.c,
- 	     which I wrote for xloadimage.  This is a little simpler, though.
- 
+	     which I wrote for xloadimage.  This is a little simpler, though.
+
  * 10-17-91  pdsuncomp is called with system(), which typically feeds the
- 	     commandline to sh.  Make sure that your .profile adds wherever
- 	     you have pdsuncomp to the PATH, like
- 
- 		PATH=$PATH:/usr/local/bin
- 
+	     commandline to sh.  Make sure that your .profile adds wherever
+	     you have pdsuncomp to the PATH, like
+
+		PATH=$PATH:/usr/local/bin
+
  * 11-15-91  substituted vdcomp from Viking CD's for pdsuncomp. I added
-             recognition of - and shut off various messages
- 
+	     recognition of - and shut off various messages
+
  * 1-5-92    merged into xv rel 2
- 
+
  * 3-11-92   cleaned up some comments
- 
+
  * 3-24-92   Got some new CD's from NASA of mosics and other processed Viking
-             stuff.  There are actually records terminated with CRNLCR in
-             these images, as well as ones that identify the spacecraft name
-             as {VIKING_ORBITER_1, VIKING_ORBITER_2}.  I hacked up the code
-             yet further to deal with these.  There's a Sun 4 XView binary for
-             an image display program on these discs, but it's nowhere near as
-             neat as the good Mr. Bradley's XV.
- 
- 
+	     stuff.  There are actually records terminated with CRNLCR in
+	     these images, as well as ones that identify the spacecraft name
+	     as {VIKING_ORBITER_1, VIKING_ORBITER_2}.  I hacked up the code
+	     yet further to deal with these.  There's a Sun 4 XView binary for
+	     an image display program on these discs, but it's nowhere near as
+	     neat as the good Mr. Bradley's XV.
+
+
  * Sources of these CD's:
  *
  *  National Space Science Data Center
  *  Goddard Space Flight Center
  *  Code 933.4
- *  Greenbelt, Maryland  
+ *  Greenbelt, Maryland
  *  (301) 286-6695
  *   or call
  *  (301) 286-9000 (300,1200,2400 bps)
@@ -91,10 +91,10 @@ distribution.
  * Copyright 1989, 1990 by Anthony A. Datri
  *
  * Permission to use, copy, and distribute for non-commercial purposes,
- * is hereby granted without fee, providing that the above copyright   
+ * is hereby granted without fee, providing that the above copyright
  * notice appear in all copies, that both the copyright notice and this
  * permission notice appear in supporting documentation.
- * 
+ *
  * In exception to the above, permission to John Bradley is hereby granted to
  * distribute this code as he sees fit within the context of his "xv" image
  * viewer.
@@ -132,10 +132,10 @@ distribution.
 
 
 static int	lastwasinote = FALSE;
-static char	scanbuff         [MAX_SIZE], 
-                rtbuff         [RTBUFFSIZE], 
+static char	scanbuff         [MAX_SIZE],
+		rtbuff         [RTBUFFSIZE],
 		inote	   [20*COMMENTSIZE],
-                infobuff      [COMMENTSIZE],
+		infobuff      [COMMENTSIZE],
 		spacecraft    [COMMENTSIZE],
 		target        [COMMENTSIZE],
 		filtname      [COMMENTSIZE],
@@ -147,7 +147,7 @@ static char	scanbuff         [MAX_SIZE],
 		mphase        [COMMENTSIZE],
 		iname         [COMMENTSIZE],
 		itime         [COMMENTSIZE],
-                garbage       [1020],
+		garbage       [1020],
 		*tmptmp,
 		pdsuncompfname[FNAMESIZE];
 byte *image;
@@ -196,17 +196,17 @@ static int getpdsrec(f,buff)
     switch (c) {
 
     case '\r':  *bp='\0';
-                switch (c=fgetc(f)) {
+		switch (c=fgetc(f)) {
 		  case EOF:
 		  case '\n':  break;
-                  default:    ungetc(c,f);
+		  default:    ungetc(c,f);
 		  }
-                return(count);
+		return(count);
 
-    case EOF:	*bp='\0';  return(count);		    
-    
+    case EOF:	*bp='\0';  return(count);
+
     case '\0':  return(count);
-    
+
     default:	count++;  *bp++ = c;
     }
   }
@@ -242,7 +242,7 @@ static int getpdsrec(f,buff)
  * disc seem to leave off the first two bytes.  Sigh.  This may sometimes be
  * a distinction between the fixed and variable-record files.
  */
-            
+
 /*******************************************/
 int LoadPDS(fname, pinfo)
      char    *fname;
@@ -253,8 +253,8 @@ int LoadPDS(fname, pinfo)
   int tempnum;
   FILE	*zf;
   static int isfixed,teco,i,j,itype,vaxbyte,
-             recsize,hrecsize,irecsize,isimage,labelrecs,labelsofar,
-             x,y,lpsize,lssize,samplesize,returnp,labelsize,yy;
+	     recsize,hrecsize,irecsize,isimage,labelrecs,labelsofar,
+	     x,y,lpsize,lssize,samplesize,returnp,labelsize,yy;
   char	*tmp;
   char  *ftypstr;
   unsigned long filesize;
@@ -322,13 +322,13 @@ int LoadPDS(fname, pinfo)
   case PDSFIXED:
   case VICAR:
   case VIKINGFIXED:     isfixed=TRUE;
-                        sprintf(pinfo->fullInfo,
+			sprintf(pinfo->fullInfo,
 				"PDS/VICAR, 8 bits per pixel. (%ld bytes)",
 				filesize);
-                        break;
+			break;
   case PDSVARIABLE:
   case VIKINGVARIABLE:  isfixed=FALSE;
-                        sprintf(pinfo->fullInfo,
+			sprintf(pinfo->fullInfo,
 			"Huffman-encoded PDS, 8 bits per pixel. (%ld bytes)",
 				filesize);
   }
@@ -355,7 +355,7 @@ int LoadPDS(fname, pinfo)
 	/* AAAARGGGGH!  We've got a bloody variable-length file where
 	 * the headers are preceded by a byte count, as a VAX 16-bit
 	 * integer of all things.
-  	 *
+	 *
 	 * "A compressed image file is composed of variable-length records
 	 * defined according to the ISO standard.  Each variable length
 	 * record starts with a record length indicator, stored as a 16-bit
@@ -363,7 +363,7 @@ int LoadPDS(fname, pinfo)
 	 * length indicator. If the length indicator is odd, then a pad byte
 	 * is appended to the end of the record so that all records contain
 	 * an even number of bytes." */
-	                                                                    
+
 	i=getc(zf);
 	j=getc(zf);
 	if (j == EOF) {
@@ -371,7 +371,7 @@ int LoadPDS(fname, pinfo)
 	  fclose(zf);
 	  return 0;
 	}
-	
+
 	teco = i + (j << 8);
 	if (teco % 2) teco++;
 
@@ -380,7 +380,7 @@ int LoadPDS(fname, pinfo)
 	  fclose(zf);
 	  return 0;
 	}
-	
+
 	scanbuff[teco]='\0';
       }
 
@@ -472,7 +472,7 @@ int LoadPDS(fname, pinfo)
 
       } else if (sscanf(scanbuff," INSTRUMENT_GAIN_STATE = %s",gainmode)==1) {
 	lastwasinote=FALSE; continue;
-	
+
       } else if (sscanf(scanbuff," EDIT_MODE_ID = %s", editmode) == 1) {
 	lastwasinote=FALSE; continue;
 
@@ -531,11 +531,11 @@ int LoadPDS(fname, pinfo)
 	 *     get my hands on the clown who designed this format...
 	 *                             What we basically assume here
 	 *        is that a NOTE record that doesn't end with a " is
-	 *    followed by some number of continuations, one of which 
+	 *    followed by some number of continuations, one of which
 	 *   will have a " in it.  If this turns out to not be true,
 	 *          well, we'll segmentation fault real soon. We use
 	 * lastwasinote as a semaphore to indicate that the previous
-	 *       record was an unfinished NOTE record.  We clear the	  
+	 *       record was an unfinished NOTE record.  We clear the
 	 *      flag in each of the above record types for potential
 	 *   error recovery, although it really breaks up the beauty
 	 * of the cascading sscanfs.  Dykstra'd love me for this one */
@@ -568,10 +568,10 @@ int LoadPDS(fname, pinfo)
       fclose(zf);
       return 0;
     }
-    
+
     vaxbyte = strncmp(sampletype, "VAX_", (size_t) 4) == 0 ||
       strncmp(sampletype, "LSB_", (size_t) 4) == 0;
-    
+
   } else if (itype == VICAR) {
     /* we've got a VICAR file.  Let's find out how big the puppy is */
     ungetc(' ', zf);
@@ -582,7 +582,7 @@ int LoadPDS(fname, pinfo)
 	SetISTR(ISTR_WARNING,"LoadPDS: bad NL in VICAR\n");
 	returnp=TRUE;
       }
-      
+
       if (sscanf(tmp," NL = %d",&y) != 1) {
 	SetISTR(ISTR_WARNING,"LoadPDS: bad scan NL in VICAR\n");
 	returnp=TRUE;
@@ -599,17 +599,17 @@ int LoadPDS(fname, pinfo)
       }
 
       if ( (tmp=(char *) xv_strstr(scanbuff, " NBB=")))
-        if (sscanf(tmp, " NBB = %d",&lpsize) != 1) {
+	if (sscanf(tmp, " NBB = %d",&lpsize) != 1) {
 	  SetISTR(ISTR_WARNING,"LoadPDS: bad scan NBB in VICAR\n");
 	  returnp=TRUE;
-        }
+	}
 
       vaxbyte = (xv_strstr(scanbuff, " INTFMT='HIGH'") == NULL);
 
       if (xv_strstr(scanbuff, " FORMAT='BYTE'"))
-        samplesize = 8;
+	samplesize = 8;
       else if (xv_strstr(scanbuff, " FORMAT='HALF'"))
-        samplesize = 16;
+	samplesize = 16;
       else if (xv_strstr(scanbuff, " FORMAT=")) {
 	SetISTR(ISTR_WARNING,"LoadPDS: unsupported FORMAT in VICAR\n");
 	returnp=TRUE;
@@ -683,7 +683,7 @@ int LoadPDS(fname, pinfo)
   case VIKINGVARIABLE:
     sprintf(pinfo->fullInfo,
 	    "PDS, %d bits per pixel, Huffman-encoded. (%ld bytes)",
-               samplesize, filesize);
+	       samplesize, filesize);
     ftypstr = "PDS (Huffman)";
     fclose(zf);
 
@@ -745,20 +745,20 @@ int LoadPDS(fname, pinfo)
     /* (whatever a fell swoop is */
 
     for (yy=0; yy<y; yy++) {
-      if (lpsize && 
+      if (lpsize &&
 	  ((teco=(fread(scanbuff,(size_t) lpsize,(size_t) 1,zf))) != 1)) {
 	SetISTR(ISTR_WARNING, "LoadPDS: unexpected EOF reading prefix");
 	fclose(zf);
 	return 0;
       }
-      
+
       if ((teco=(fread(image+(yy*x), (size_t) x, (size_t) 1,zf))) != 1) {
 	SetISTR(ISTR_WARNING, "LoadPDS: unexpected EOF reading line %d",yy);
 	fclose(zf);
 	return 0;
       }
 
-      if (lssize && 
+      if (lssize &&
 	  ((teco=(fread(scanbuff,(size_t) lssize,(size_t) 1,zf))) != 1)) {
 	SetISTR(ISTR_WARNING, "LoadPDS: unexpected EOF reading suffix");
 	fclose(zf);
@@ -788,7 +788,7 @@ int LoadPDS(fname, pinfo)
   if (samplesize == 16)
      if (Convert16BitImage(fname, pinfo,
 	  vaxbyte ^ (*(char *)&samplesize == 16)) == 0)
-        return 0;
+	return 0;
 
   pinfo->frmType = -1;   /* can't save as PDS */
   pinfo->colType = F_GREYSCALE;
@@ -798,25 +798,25 @@ int LoadPDS(fname, pinfo)
   if (pinfo->comment) {
     char tmp[256];
     *(pinfo->comment) = '\0';
-    
+
     sprintf(tmp, "Spacecraft: %-28sTarget: %-32s\n", spacecraft, target);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Filter: %-32sMission phase: %-24s\n", filtname, mphase);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Image time: %-28sGain mode: %-29s\n", itime, gainmode);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Edit mode: %-29sScan mode: %-29s\n", editmode, scanmode);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Exposure: %-30sShutter mode: %-25s\n", exposure,shuttermode);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Instrument: %-28sImage time: %-28s\n", iname, itime);
     strcat(pinfo->comment, tmp);
-    
+
     sprintf(tmp, "Image Note: %-28s", inote);
     strcat(pinfo->comment, tmp);
   }
@@ -884,7 +884,7 @@ static int Convert16BitImage(fname, pinfo, swab)
 
   /* check whether histogram file exists */
 #ifdef VMS
-  c = (char *) rindex(strcpy(name, 
+  c = (char *) rindex(strcpy(name,
 			     (c = (char *) rindex(fname, ':')) ? c+1 : fname),
 		      ']');
 #else
@@ -896,7 +896,7 @@ static int Convert16BitImage(fname, pinfo, swab)
   if ((fp = xv_fopen(name, "r")) != NULL) {
     for (n = k = nTot = 0; n < 65536 && k != EOF; n++, nTot += j) {
       for (i = j = 0; i < 4 && (k = getc(fp)) != EOF; i++)
-        j = ((j >> 8) & 0xffffff) | ((k & 255) << 24);
+	j = ((j >> 8) & 0xffffff) | ((k & 255) << 24);
       hist[swab ? ((n & 255) << 8) | ((n >> 8) & 255) : n] = j;
     }
     fclose(fp);
@@ -924,7 +924,7 @@ static int Convert16BitImage(fname, pinfo, swab)
     for (n = j = 1; n < 65536; n++) {
       k = swab ? ((n & 255) << 8) | ((n >> 8) & 255) : n;
       if ((l += hist[k]) > m && j < 255)
-        j++, m += i;
+	j++, m += i;
       lut[k] = j;
     }
 
@@ -934,10 +934,10 @@ static int Convert16BitImage(fname, pinfo, swab)
     n = nTot/10000;
     for (m = 0, j = 1; j < 65536; j++)
       if ((m += hist[swab ? ((j & 255) << 8) | ((j >> 8) & 255) : j]) > n)
-        break;
+	break;
     for (m = 0, k = 65535; --k > 1; )
       if ((m += hist[swab ? ((k & 255) << 8) | ((k >> 8) & 255) : k]) > n)
-        break;
+	break;
 
     /* construct stretch table */
     for (n = 0; n < 65536; n++) {
@@ -979,16 +979,16 @@ static int LoadPDSPalette(fname, pinfo)
   FILE    *fp;
   char    name[1024], buf[256], *c;
   int     i, n, r, g, b;
-  
+
 #ifdef VMS
-  c = (char *) rindex(strcpy(name, 
+  c = (char *) rindex(strcpy(name,
 			     (c = (char *) rindex(fname, ':')) ? c+1 : fname),
 		      ']');
 #else
   c = (char *) rindex(strcpy(name, fname), '/');
 #endif /* VMS */
   (void)strcpy(c ? c+1 : name, "palette.tab");
-  
+
   if ((fp = xv_fopen(name, "r")) == NULL)
     return 0;
   for (i = 0; i < 256; i++) {

@@ -93,13 +93,13 @@ jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
 {
   int ci;
   jpeg_component_info *compptr;
-  
+
   if (cinfo->num_components == 1) {
     /* subsampling is a no-op, so it's safe to ignore it */
     cinfo->comp_info[0].h_samp_factor = 1;
     cinfo->comp_info[0].v_samp_factor = 1;
   }
-  
+
   /* Compute maximum sampling factors; check factor validity */
   cinfo->max_h_samp_factor = 1;
   cinfo->max_v_samp_factor = 1;
@@ -246,16 +246,16 @@ per_scan_setup (j_decompress_ptr cinfo)
 {
   int ci, mcublks, tmp;
   jpeg_component_info *compptr;
-  
+
   if (cinfo->comps_in_scan == 1) {
-    
+
     /* Noninterleaved (single-component) scan */
     compptr = cinfo->cur_comp_info[0];
-    
+
     /* Overall image size in MCUs */
     cinfo->MCUs_per_row = compptr->width_in_blocks;
     cinfo->MCU_rows_in_scan = compptr->height_in_blocks;
-    
+
     /* For noninterleaved scan, always one block per MCU */
     compptr->MCU_width = 1;
     compptr->MCU_height = 1;
@@ -263,18 +263,18 @@ per_scan_setup (j_decompress_ptr cinfo)
     compptr->MCU_sample_width = compptr->DCT_scaled_size;
     compptr->last_col_width = 1;
     compptr->last_row_height = 1;
-    
+
     /* Prepare array describing MCU composition */
     cinfo->blocks_in_MCU = 1;
     cinfo->MCU_membership[0] = 0;
-    
+
   } else {
-    
+
     /* Interleaved (multi-component) scan */
     if (cinfo->comps_in_scan <= 0 || cinfo->comps_in_scan > MAX_COMPS_IN_SCAN)
       ERREXIT2(cinfo, JERR_COMPONENT_COUNT, cinfo->comps_in_scan,
 	       MAX_COMPS_IN_SCAN);
-    
+
     /* Overall image size in MCUs */
     cinfo->MCUs_per_row = (JDIMENSION)
       jdiv_round_up((long) cinfo->image_width,
@@ -282,9 +282,9 @@ per_scan_setup (j_decompress_ptr cinfo)
     cinfo->MCU_rows_in_scan = (JDIMENSION)
       jdiv_round_up((long) cinfo->image_height,
 		    (long) (cinfo->max_v_samp_factor*DCTSIZE));
-    
+
     cinfo->blocks_in_MCU = 0;
-    
+
     for (ci = 0; ci < cinfo->comps_in_scan; ci++) {
       compptr = cinfo->cur_comp_info[ci];
       /* Sampling factors give # of blocks of component in each MCU */
@@ -307,7 +307,7 @@ per_scan_setup (j_decompress_ptr cinfo)
 	cinfo->MCU_membership[cinfo->blocks_in_MCU++] = ci;
       }
     }
-    
+
   }
 }
 
@@ -328,7 +328,7 @@ per_scan_setup (j_decompress_ptr cinfo)
  * For most steps we can mathematically guarantee that the initial value
  * of x is within MAXJSAMPLE+1 of the legal range, so a table running from
  * -(MAXJSAMPLE+1) to 2*MAXJSAMPLE+1 is sufficient.  But for the initial
- * limiting step (just after the IDCT), a wildly out-of-range value is 
+ * limiting step (just after the IDCT), a wildly out-of-range value is
  * possible if the input data is corrupt.  To avoid any chance of indexing
  * off the end of memory and getting a bad-pointer trap, we perform the
  * post-IDCT limiting thus:

@@ -234,7 +234,7 @@ compress_byte (gif_dest_ptr dinfo, int c)
     i -= HSIZE;
 
   probe_value = HASH_ENTRY(dinfo->waiting_code, c);
-  
+
   if (dinfo->hash_code[i] != 0) { /* is first probed slot empty? */
     if (dinfo->hash_value[i] == probe_value) {
       dinfo->waiting_code = dinfo->hash_code[i];

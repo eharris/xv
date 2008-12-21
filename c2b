@@ -1,7 +1,7 @@
 #!/bin/csh -f
 #
 # simple script to change all 'static char' references in bitmap files to
-# 'static unsigned char' (to appease those compilers that don't like 
+# 'static unsigned char' (to appease those compilers that don't like
 # values > 0x7f assigned to a signed char)
 #
 # --jhb, 3/21/94

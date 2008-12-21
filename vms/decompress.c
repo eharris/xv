@@ -1,5 +1,5 @@
-/* 
- *  D e c o m p r e s s   
+/*
+ *  D e c o m p r e s s
  *
  *  Data decompression program for LZW compression
  *
@@ -90,7 +90,7 @@ char ofname [100];
 
 int main (argc, argv)
 
-int argc; 
+int argc;
 char *argv[];
 
 {
@@ -98,33 +98,33 @@ char *argv[];
     char *fileptr;
 
     if (argc != 2) {
-        printf ("Usage: decompress filename.\n");
-        exit (BAD_EXIT);
+	printf ("Usage: decompress filename.\n");
+	exit (BAD_EXIT);
     }
 
     /* Get input file (no extension) */
 
-    fileptr = argv[1];     
+    fileptr = argv[1];
 
     /* Add .Z suffix */
 
     strcpy (tempname, fileptr);
     strcat (tempname, ".Z");
     fileptr = tempname;
-                
+
     /* Open input file */
 
     if ((freopen (fileptr, "r", stdin)) == NULL) {
-        perror (fileptr);
-        exit (BAD_EXIT);
+	perror (fileptr);
+	exit (BAD_EXIT);
     }
 
     /* Check the magic number */
 
     if ((getchar ( ) != (magic_header[0] & 0xFF)) ||
-        (getchar ( ) != (magic_header[1] & 0xFF))) {
-        fprintf (stderr, "%s: not in compressed format\n", fileptr);
-        exit (BAD_EXIT);
+	(getchar ( ) != (magic_header[1] & 0xFF))) {
+	fprintf (stderr, "%s: not in compressed format\n", fileptr);
+	exit (BAD_EXIT);
     }
 
     maxbits = getchar ( );        /* set bits from file */
@@ -133,21 +133,21 @@ char *argv[];
     maxmaxcode = 1 << maxbits;
 
     if (maxbits > BITS) {
-        fprintf (stderr, "%s: compressed with %d bits, can only handle %d bits\n",
-          fileptr, maxbits, BITS);
-        exit (BAD_EXIT);
+	fprintf (stderr, "%s: compressed with %d bits, can only handle %d bits\n",
+	  fileptr, maxbits, BITS);
+	exit (BAD_EXIT);
     }
 
     /* Generate output filename */
 
     strcpy (ofname, fileptr);
     ofname[strlen (fileptr) - 2] = '\0';  /* Strip off .Z */
-    
+
     /* Open output file */
 
     if (freopen (ofname, "w", stdout) == NULL) {
-        perror (ofname);
-        exit (BAD_EXIT);
+	perror (ofname);
+	exit (BAD_EXIT);
     }
 
     /* Actually do the decompression */
@@ -169,11 +169,11 @@ writeerr ( )
  *
  *  Decompress stdin to stdout.  This routine adapts to the codes in the
  *  file building the "string" table on-the-fly; requiring no table to
- *  be stored in the compressed file.  
+ *  be stored in the compressed file.
  *
  */
 
-decompress ( ) 
+decompress ( )
 {
     register char_type *stackp;
     register int finchar;
@@ -184,8 +184,8 @@ decompress ( )
     maxcode = MAXCODE (n_bits = INIT_BITS);
 
     for (code = 255; code >= 0; code--) {
-        tab_prefixof (code) = 0;
-        tab_suffixof (code) = (char_type) code;
+	tab_prefixof (code) = 0;
+	tab_suffixof (code) = (char_type) code;
     }
 
     free_ent = ((block_compress) ? FIRST : 256);
@@ -193,70 +193,70 @@ decompress ( )
     finchar = oldcode = getcode ( );
 
     if (oldcode == -1)                  /* EOF already? */
-        return;                         /* Get out of here */
+	return;                         /* Get out of here */
 
     putchar ((char) finchar);           /* first code must be 8 bits = char */
 
     if (ferror (stdout))                /* Crash if can't write */
-        writeerr ( );
+	writeerr ( );
 
     stackp = de_stack;
 
     while ((code = getcode ( )) > -1) {
 
-        if ((code == CLEAR) && block_compress) {
+	if ((code == CLEAR) && block_compress) {
 
-            for (code = 255; code >= 0; code--)
-                tab_prefixof (code) = 0;
+	    for (code = 255; code >= 0; code--)
+		tab_prefixof (code) = 0;
 
-            clear_flg = 1;
-            free_ent = FIRST - 1;
+	    clear_flg = 1;
+	    free_ent = FIRST - 1;
 
-            if ((code = getcode ( )) == -1)     /* O, untimely death! */
-                break;
-        }
+	    if ((code = getcode ( )) == -1)     /* O, untimely death! */
+		break;
+	}
 
-        incode = code;
+	incode = code;
 
-        /* Special case for KwKwK string */
+	/* Special case for KwKwK string */
 
-        if (code >= free_ent) {
-            *stackp++ = finchar;
-            code = oldcode;
-        }
+	if (code >= free_ent) {
+	    *stackp++ = finchar;
+	    code = oldcode;
+	}
 
-        /* Generate output characters in reverse order */
+	/* Generate output characters in reverse order */
 
-        while (code >= 256) {
-            *stackp++ = tab_suffixof (code);
-            code = tab_prefixof (code);
-        }
+	while (code >= 256) {
+	    *stackp++ = tab_suffixof (code);
+	    code = tab_prefixof (code);
+	}
 
-        *stackp++ = finchar = tab_suffixof (code);
+	*stackp++ = finchar = tab_suffixof (code);
 
-        /* And put them out in forward order */
+	/* And put them out in forward order */
 
-        do {
-            putchar (*--stackp);
-        } while (stackp > de_stack);
+	do {
+	    putchar (*--stackp);
+	} while (stackp > de_stack);
 
-        /* Generate the new entry */
+	/* Generate the new entry */
 
-        if ((code = free_ent) < maxmaxcode) {
-            tab_prefixof (code) = (unsigned short) oldcode;
-            tab_suffixof (code) = finchar;
-            free_ent = code + 1;
-        } 
+	if ((code = free_ent) < maxmaxcode) {
+	    tab_prefixof (code) = (unsigned short) oldcode;
+	    tab_suffixof (code) = finchar;
+	    free_ent = code + 1;
+	}
 
-        /* Remember previous code */
+	/* Remember previous code */
 
-        oldcode = incode;
+	oldcode = incode;
     }
 
     fflush (stdout);
 
     if (ferror (stdout))
-        writeerr ( );
+	writeerr ( );
 }
 
 /*
@@ -266,7 +266,7 @@ decompress ( )
  *
  */
 
-code_int getcode ( ) 
+code_int getcode ( )
 {
     register code_int code;
     static int offset = 0, size = 0;
@@ -276,37 +276,37 @@ code_int getcode ( )
 
     if (clear_flg > 0 || offset >= size || free_ent > maxcode) {
 
-        /*
-         * If the next entry will be too big for the current code
-         * size, then we must increase the size.  This implies reading
-         * a new buffer full, too.
-         *
-         */
+	/*
+	 * If the next entry will be too big for the current code
+	 * size, then we must increase the size.  This implies reading
+	 * a new buffer full, too.
+	 *
+	 */
 
-        if (free_ent > maxcode) {
-            n_bits++;
+	if (free_ent > maxcode) {
+	    n_bits++;
 
-            if (n_bits == maxbits)
-                maxcode = maxmaxcode;   /* Won't get any bigger now */
-            else
-                maxcode = MAXCODE (n_bits);
-        }
+	    if (n_bits == maxbits)
+		maxcode = maxmaxcode;   /* Won't get any bigger now */
+	    else
+		maxcode = MAXCODE (n_bits);
+	}
 
-        if (clear_flg > 0) {
-            maxcode = MAXCODE (n_bits = INIT_BITS);
-            clear_flg = 0;
-        }
+	if (clear_flg > 0) {
+	    maxcode = MAXCODE (n_bits = INIT_BITS);
+	    clear_flg = 0;
+	}
 
-        size = fread (buf, 1, n_bits, stdin);
+	size = fread (buf, 1, n_bits, stdin);
 
-        if (size <= 0)
-            return (-1);                /* End of file */
+	if (size <= 0)
+	    return (-1);                /* End of file */
 
-        offset = 0;
+	offset = 0;
 
-        /* Round size down to an integral number of codes */
+	/* Round size down to an integral number of codes */
 
-        size = (size << 3) - (n_bits - 1);
+	size = (size << 3) - (n_bits - 1);
     }
 
     r_off = offset;
@@ -326,9 +326,9 @@ code_int getcode ( )
     /* Get any 8 bit parts in the middle (<=1 for up to 16 bits) */
 
     if (bits >= 8) {
-        code |= *bp++ << r_off;
-        r_off += 8;
-        bits -= 8;
+	code |= *bp++ << r_off;
+	r_off += 8;
+	bits -= 8;
     }
 
     /* Handle the high order bits */

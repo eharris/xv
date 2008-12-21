@@ -1,4 +1,4 @@
-/* 
+/*
  * xvscrl.c - Scroll Bar handling functions
  *
  * callable functions:
@@ -6,7 +6,7 @@
  *   SCCreate()   -  creates the Scroll Bar window.
  *   SCChange()   -  resize/repositions the Scroll Bar window.
  *   SCSetRange() -  sets min/max/current values of control
- *   SCSetVal()   -  sets value of control 
+ *   SCSetVal()   -  sets value of control
  *   SCRedraw()   -  redraws scroll bar
  *   SCTrack()    -  called when clicked.  Operates control 'til mouseup
  */
@@ -50,8 +50,8 @@ static void drawThumb   PARM((SCRL *));
 
 
 /***************************************************/
-void SCCreate(sp, parent, x, y, vert, len, minv, maxv, curv, page, 
-	          fg, bg, hi, lo, func)
+void SCCreate(sp, parent, x, y, vert, len, minv, maxv, curv, page,
+		  fg, bg, hi, lo, func)
 SCRL         *sp;
 Window        parent;
 int           x,y,vert,len,minv,maxv,curv,page;
@@ -71,7 +71,7 @@ void          (*func)PARM((int, SCRL *));
     downhPix = MakePix1(parent, downh_bits,  downh_width,  downh_height);
     uph1Pix  = MakePix1(parent, uph1_bits,   uph1_width,   uph1_height);
     downh1Pix= MakePix1(parent, downh1_bits, downh1_width, downh1_height);
-    
+
     sgray    = XCreatePixmapFromBitmapData(theDisp, parent,
 		(char *) scrlgray_bits, scrlgray_width, scrlgray_height,
 					   fg,bg,dispDEEP);
@@ -124,7 +124,7 @@ int           x,y,vert,len,minv,maxv,curv,page;
   sp->len  = len;
   sp->uplit = sp->dnlit = 0;
 
-  if (vert) XMoveResizeWindow(theDisp, sp->win, x,y, 
+  if (vert) XMoveResizeWindow(theDisp, sp->win, x,y,
 			      (u_int) sp->tsize,(u_int) len);
   else      XMoveResizeWindow(theDisp, sp->win, x,y,
 			      (u_int) len, (u_int) sp->tsize);
@@ -144,11 +144,11 @@ void SCSetRange(sp, minv, maxv, curv, page)
   if (maxv<minv) maxv=minv;
   sp->min = minv;    sp->max = maxv;    sp->page = page;
   sp->active =  (minv < maxv);
-  
+
   /* adjust scroll bar background */
   if (sp->active) {
     if (ctrlColor) XSetWindowBackground(theDisp, sp->win, sp->lo);
-              else XSetWindowBackgroundPixmap(theDisp, sp->win, sgray);
+	      else XSetWindowBackgroundPixmap(theDisp, sp->win, sgray);
   }
   else XSetWindowBackground(theDisp, sp->win, sp->bg);
 
@@ -174,9 +174,9 @@ int   curv;
 
   sp->val = curv;
 
-  if (sp->active) 
+  if (sp->active)
     sp->tpos = sp->tmin + ((sp->tmax - sp->tmin)*(curv - sp->min))
-               / (sp->max - sp->min);
+	       / (sp->max - sp->min);
 
   drawThumb(sp);
   (sp->drawobj)(curv-oldval, sp);   /* redraw what the scrlbar controls */
@@ -194,20 +194,20 @@ SCRL *sp;
   XSetBackground(theDisp, theGC, sp->bg);
 
   XClearWindow(theDisp, sp->win);
-  
+
   drawArrow(sp,UPLINE);      /* draw up/down arrows */
   drawArrow(sp,DNLINE);
 
   XSetForeground(theDisp, theGC, sp->fg);
 
-  if (sp->vert) {    
+  if (sp->vert) {
     XDrawLine(theDisp, sp->win, theGC, 0, sp->tsize, sp->tsize, sp->tsize);
-    XDrawLine(theDisp, sp->win, theGC, 0, sp->len-sp->tsize-1, 
+    XDrawLine(theDisp, sp->win, theGC, 0, sp->len-sp->tsize-1,
 	      sp->tsize, sp->len-sp->tsize-1);
   }
   else {                       /* horizontal version */
     XDrawLine(theDisp, sp->win, theGC, sp->tsize, 0, sp->tsize, sp->tsize);
-    XDrawLine(theDisp, sp->win, theGC, sp->len - sp->tsize-1, 0, 
+    XDrawLine(theDisp, sp->win, theGC, sp->len - sp->tsize-1, 0,
 	      sp->len - sp->tsize-1, sp->tsize);
   }
 
@@ -225,24 +225,24 @@ int arr;
 
   if (arr == UPLINE) {
     XSetForeground(theDisp, theGC, sp->bg);
-    XFillRectangle(theDisp, sp->win, theGC, 0, 0, 
+    XFillRectangle(theDisp, sp->win, theGC, 0, 0,
 		   (u_int) sp->tsize, (u_int) sp->tsize);
 
     if (sp->vert) butpix = (sp->uplit) ? up1Pix  : upPix;
-             else butpix = (sp->uplit) ? uph1Pix : uphPix;
+	     else butpix = (sp->uplit) ? uph1Pix : uphPix;
 
     XSetForeground(theDisp, theGC, sp->fg);
     XSetBackground(theDisp, theGC, sp->bg);
     XCopyPlane(theDisp, butpix, sp->win, theGC, 0, 0, up_width,up_height,
 	       3,3, 1L);
-    Draw3dRect(sp->win, 0,0, (u_int) sp->tsize-1, (u_int) sp->tsize-1, 
+    Draw3dRect(sp->win, 0,0, (u_int) sp->tsize-1, (u_int) sp->tsize-1,
 	       (sp->uplit) ? R3D_IN : R3D_OUT, 2, sp->hi, sp->lo, sp->bg);
   }
 
   else if (arr == DNLINE) {
     if (sp->vert) {
       XSetForeground(theDisp, theGC, sp->bg);
-      XFillRectangle(theDisp, sp->win, theGC, 0, sp->len - sp->tsize, 
+      XFillRectangle(theDisp, sp->win, theGC, 0, sp->len - sp->tsize,
 		     (u_int) sp->tsize, (u_int) sp->tsize);
       butpix = (sp->dnlit) ? down1Pix : downPix;
 
@@ -251,8 +251,8 @@ int arr;
       XCopyPlane(theDisp, butpix, sp->win, theGC, 0, 0, up_width,up_height,
 		 3, sp->len - 3 - up_height, 1L);
 
-      Draw3dRect(sp->win, 0, sp->len - sp->tsize, 
-		 (u_int) sp->tsize-1, (u_int) sp->tsize-1, 
+      Draw3dRect(sp->win, 0, sp->len - sp->tsize,
+		 (u_int) sp->tsize-1, (u_int) sp->tsize-1,
 		 (sp->dnlit) ? R3D_IN : R3D_OUT, 2, sp->hi, sp->lo, sp->bg);
     }
 
@@ -267,8 +267,8 @@ int arr;
       XCopyPlane(theDisp, butpix, sp->win, theGC, 0, 0, up_width,up_height,
 		 sp->len - 3 - up_width, 3, 1L);
 
-      Draw3dRect(sp->win, sp->len - sp->tsize, 0, 
-		 (u_int) sp->tsize-1, (u_int) sp->tsize-1, 
+      Draw3dRect(sp->win, sp->len - sp->tsize, 0,
+		 (u_int) sp->tsize-1, (u_int) sp->tsize-1,
 		 (sp->dnlit) ? R3D_IN : R3D_OUT, 2, sp->hi, sp->lo, sp->bg);
     }
   }
@@ -283,17 +283,17 @@ SCRL *sp;
 {
   if (sp->vert) {
     /* clear out thumb area with background color */
-    XClearArea(theDisp, sp->win, 0, sp->tsize+1, (u_int) sp->tsize, 
+    XClearArea(theDisp, sp->win, 0, sp->tsize+1, (u_int) sp->tsize,
 	       (u_int) ((sp->len-sp->tsize-1)-(sp->tsize+1)), False);
 
     if (sp->active) {  /* a thumb is necessary */
 
       XSetForeground(theDisp, theGC, sp->bg);
-      XFillRectangle(theDisp, sp->win, theGC, 1, sp->tpos+1, 
+      XFillRectangle(theDisp, sp->win, theGC, 1, sp->tpos+1,
 		     (u_int) (sp->tsize-2), (u_int) (sp->tsize-2));
 
       XSetForeground(theDisp, theGC, sp->fg);
-      XDrawRectangle(theDisp, sp->win, theGC, 0, sp->tpos, 
+      XDrawRectangle(theDisp, sp->win, theGC, 0, sp->tpos,
 		     (u_int) (sp->tsize-1), (u_int) (sp->tsize-1));
 
       XDrawLine(theDisp, sp->win, theGC, 9-3, sp->tpos+6, 9+3, sp->tpos+6);
@@ -301,7 +301,7 @@ SCRL *sp;
       XDrawLine(theDisp, sp->win, theGC, 9-3, sp->tpos+10,9+3, sp->tpos+10);
       XDrawLine(theDisp, sp->win, theGC, 9-3, sp->tpos+12,9+3, sp->tpos+12);
 
-      Draw3dRect(sp->win, 1, sp->tpos+1, 
+      Draw3dRect(sp->win, 1, sp->tpos+1,
 		 (u_int) sp->tsize-3, (u_int) sp->tsize-3, R3D_OUT,2,
 		 sp->hi, sp->lo, sp->bg);
     }
@@ -309,17 +309,17 @@ SCRL *sp;
 
   else {   /* horizontal */
     /* clear out thumb area with background color */
-    XClearArea(theDisp, sp->win, sp->tsize+1, 0, 
-	       (u_int) ((sp->len-sp->tsize-1)-(sp->tsize+1)), 
+    XClearArea(theDisp, sp->win, sp->tsize+1, 0,
+	       (u_int) ((sp->len-sp->tsize-1)-(sp->tsize+1)),
 	       (u_int) sp->tsize, False);
 
     if (sp->active) {  /* a thumb is necessary */
       XSetForeground(theDisp, theGC, sp->bg);
-      XFillRectangle(theDisp, sp->win, theGC, sp->tpos+1, 1, 
+      XFillRectangle(theDisp, sp->win, theGC, sp->tpos+1, 1,
 		     (u_int) (sp->tsize-2), (u_int) (sp->tsize-2));
 
       XSetForeground(theDisp, theGC, sp->fg);
-      XDrawRectangle(theDisp, sp->win, theGC, sp->tpos, 0, 
+      XDrawRectangle(theDisp, sp->win, theGC, sp->tpos, 0,
 		     (u_int) (sp->tsize-1), (u_int) (sp->tsize-1));
 
       XDrawLine(theDisp, sp->win, theGC, sp->tpos+6, 9-3, sp->tpos+6, 9+3);
@@ -327,7 +327,7 @@ SCRL *sp;
       XDrawLine(theDisp, sp->win, theGC, sp->tpos+10,9-3, sp->tpos+10,9+3);
       XDrawLine(theDisp, sp->win, theGC, sp->tpos+12,9-3, sp->tpos+12,9+3);
 
-      Draw3dRect(sp->win, sp->tpos+1, 1, 
+      Draw3dRect(sp->win, sp->tpos+1, 1,
 		 (u_int) sp->tsize-3, (u_int) sp->tsize-3, R3D_OUT,2,
 		 sp->hi, sp->lo, sp->bg);
     }
@@ -393,24 +393,24 @@ int mx,my;
 
   switch (ipos) {
   case UPLINE:  sp->uplit = 1;
-                drawArrow(sp, UPLINE);
-                if (sp->val > sp->min) SCSetVal(sp,sp->val-1);
-                Timer(SCRLWAIT*3);
-                break;
+		drawArrow(sp, UPLINE);
+		if (sp->val > sp->min) SCSetVal(sp,sp->val-1);
+		Timer(SCRLWAIT*3);
+		break;
 
   case DNLINE:  sp->dnlit = 1;
-                drawArrow(sp, DNLINE);
-                if (sp->val < sp->max) SCSetVal(sp,sp->val+1);
-                Timer(SCRLWAIT*3);
-                break;
+		drawArrow(sp, DNLINE);
+		if (sp->val < sp->max) SCSetVal(sp,sp->val+1);
+		Timer(SCRLWAIT*3);
+		break;
 
   case UPPAGE:  SCSetVal(sp,sp->val - sp->page);  break;
   case DNPAGE:  SCSetVal(sp,sp->val + sp->page);  break;
   case THUMB:   tyoff = sp->tpos - my;
-                txoff = sp->tpos - mx;
-                ty = sp->tpos;
-                tx = sp->tpos;
-                break;
+		txoff = sp->tpos - mx;
+		ty = sp->tpos;
+		tx = sp->tpos;
+		break;
   }
 
   while (XQueryPointer(theDisp,sp->win,&rW,&cW,&rx,&ry,&x,&y,&mask)) {
@@ -450,10 +450,10 @@ int mx,my;
     case DNLINE:                     /* arrows */
       pos = whereInScrl(sp,x,y);
       if (pos == ipos) {
-	if (!lit) { 
-	  lit = 1; 
+	if (!lit) {
+	  lit = 1;
 	  if (ipos == UPLINE) { sp->uplit = 1;  drawArrow(sp,UPLINE); }
-	                 else { sp->dnlit = 1;  drawArrow(sp,DNLINE); }
+			 else { sp->dnlit = 1;  drawArrow(sp,DNLINE); }
 	}
 
 	else {
@@ -467,16 +467,16 @@ int mx,my;
 	  }
 	}
       }
-      
+
       else {
-	if (lit) { 
-	  lit = 0; 
+	if (lit) {
+	  lit = 0;
 	  if (ipos == UPLINE) { sp->uplit = 0;  drawArrow(sp,UPLINE); }
-	                 else { sp->dnlit = 0;  drawArrow(sp,DNLINE); }
+			 else { sp->dnlit = 0;  drawArrow(sp,DNLINE); }
 	}
       }
       break;
-      
+
     }
   }
 

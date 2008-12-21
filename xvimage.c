@@ -34,7 +34,7 @@ static void do_pan            PARM((int, int));
 static void do_pan_calc       PARM((int, int, int *, int *));
 static void crop1             PARM((int, int, int, int, int));
 static int  doAutoCrop24      PARM((void));
-static void floydDitherize1   PARM((XImage *, byte *, int, int, int, 
+static void floydDitherize1   PARM((XImage *, byte *, int, int, int,
 				    byte *, byte *,byte *));
 static int  highbit           PARM((unsigned long));
 
@@ -74,7 +74,7 @@ int w,h;
   GenerateEpic(w,h);
   CreateXImage();
 }
-                
+
 
 
 /********************************************/
@@ -90,15 +90,15 @@ void GenerateCpic()
 
   cp = cpic;
   bperpix = (picType == PIC8) ? 1 : 3;
-  
+
   for (i=0; i<cHIGH; i++) {
     if ((i&63)==0) WaitCursor();
     pp = pic + (i+cYOFF) * (pWIDE*bperpix) + (cXOFF * bperpix);
-    for (j=0; j<cWIDE*bperpix; j++) 
+    for (j=0; j<cWIDE*bperpix; j++)
       *cp++ = *pp++;
   }
 }
-  
+
 
 
 /***********************************/
@@ -112,10 +112,10 @@ int w,h;
   clptr = NULL;  cxarrp = NULL;  cy = 0;  /* shut up compiler */
 
   SetISTR(ISTR_EXPAND, "%.5g%% x %.5g%%  (%d x %d)",
-	  100.0 * ((float) w) / cWIDE, 
+	  100.0 * ((float) w) / cWIDE,
 	  100.0 * ((float) h) / cHIGH, w, h);
 
-  if (DEBUG) 
+  if (DEBUG)
     fprintf(stderr,"GenerateEpic(%d,%d) eSIZE=%d,%d cSIZE=%d,%d epicode=%d\n",
 		     w,h,eWIDE,eHIGH,cWIDE,cHIGH, epicMode);
 
@@ -124,7 +124,7 @@ int w,h;
   eWIDE = w;  eHIGH = h;
 
 
-  if (epicMode == EM_SMOOTH) {  
+  if (epicMode == EM_SMOOTH) {
     if (picType == PIC8) {
       epic = SmoothResize(cpic, cWIDE, cHIGH, eWIDE, eHIGH,
 			  rMap,gMap,bMap, rdisp,gdisp,bdisp, numcols);
@@ -143,7 +143,7 @@ int w,h;
 
 
   /* generate a 'raw' epic, as we'll need it for ColorDither if EM_DITH */
-    
+
   if (eWIDE==cWIDE && eHIGH==cHIGH) {  /* 1:1 expansion.  point epic at cpic */
     epic = cpic;
   }
@@ -163,13 +163,13 @@ int w,h;
     /* the scaling routine.  not really all that scary after all... */
 
     /* OPTIMIZATON:  Malloc an eWIDE array of ints which will hold the
-       values of the equation px = (pWIDE * ex) / eWIDE.  Faster than doing 
+       values of the equation px = (pWIDE * ex) / eWIDE.  Faster than doing
        a mul and a div for every point in picture */
 
     cxarr = (int *) malloc(eWIDE * sizeof(int));
     if (!cxarr) FatalError("unable to allocate cxarr");
 
-    for (ex=0; ex<eWIDE; ex++) 
+    for (ex=0; ex<eWIDE; ex++)
       cxarr[ex] = bperpix * ((cWIDE * ex) / eWIDE);
 
     elptr = epptr = epic;
@@ -182,7 +182,7 @@ int w,h;
       clptr = cpic + (cy * cWIDE * bperpix);
 
       if (bperpix == 1) {
-	for (ex=0, cxarrp = cxarr;  ex<eWIDE;  ex++, epptr++) 
+	for (ex=0, cxarrp = cxarr;  ex<eWIDE;  ex++, epptr++)
 	  *epptr = clptr[*cxarrp++];
       }
       else {
@@ -190,7 +190,7 @@ int w,h;
 
 	for (ex=0, cxarrp = cxarr; ex<eWIDE; ex++,cxarrp++) {
 	  cp = clptr + *cxarrp;
-	  for (j=0; j<bperpix; j++) 
+	  for (j=0; j<bperpix; j++)
 	    *epptr++ = *cp++;
 	}
       }
@@ -203,7 +203,7 @@ int w,h;
   if (picType == PIC8 && epicMode == EM_DITH) {
     byte *tmp;
 
-    tmp = DoColorDither(NULL, epic, eWIDE, eHIGH, rMap,gMap,bMap, 
+    tmp = DoColorDither(NULL, epic, eWIDE, eHIGH, rMap,gMap,bMap,
 			rdisp,gdisp,bdisp, numcols);
     if (tmp) {  /* success */
       FreeEpic();
@@ -214,7 +214,7 @@ int w,h;
     }
   }
 }
-                
+
 
 
 /***********************************/
@@ -254,10 +254,10 @@ static void do_zoom(mx,my)
   while (1) {
     if (!XQueryPointer(theDisp,mainW,&rW,&cW,&rtx,&rty,
 		       &mx,&my,&mask)) continue;
-    
+
     if (!(mask & ControlMask)) break;
     if (!(mask & Button1Mask)) break;  /* button released */
-    
+
     compute_zoom_rect(mx, my, &px, &py, &pw, &ph);
     if (px!=opx || py!=opy) {
       XDrawRectangle(theDisp,mainW,theGC, orx,ory, (u_int)orw, (u_int)orh);
@@ -283,7 +283,7 @@ static void do_zoom(mx,my)
     XSetPlaneMask(theDisp, theGC, AllPlanes);
     return;
   }
-    
+
 
   for (i=0; i<4; i++) {
     XDrawRectangle(theDisp, mainW, theGC, orx, ory, (u_int) orw, (u_int) orh);
@@ -297,7 +297,7 @@ static void do_zoom(mx,my)
   /* if rectangle is *completely* outside epic, don't zoom */
   if (orx+orw<0 || ory+orh<0 || orx>=eWIDE || ory>=eHIGH) return;
 
-  
+
   crop1(opx, opy, opw, oph, DO_ZOOM);
 }
 
@@ -306,15 +306,15 @@ static void do_zoom(mx,my)
 static void compute_zoom_rect(x, y, px, py, pw, ph)
      int x, y, *px, *py, *pw, *ph;
 {
-  /* given a mouse pos (in epic coords), return x,y,w,h PIC coords for 
-     a 'zoom in by 2x' rectangle to be tracked.  The rectangle stays 
+  /* given a mouse pos (in epic coords), return x,y,w,h PIC coords for
+     a 'zoom in by 2x' rectangle to be tracked.  The rectangle stays
      completely within 'pic' boundaries, and moves in 'pic' increments */
 
   CoordE2P(x, y, px, py);
-  *pw = (cWIDE+1)/2;  
+  *pw = (cWIDE+1)/2;
   *ph = (cHIGH+1)/2;
 
-  *px = *px - (*pw)/2;  
+  *px = *px - (*pw)/2;
   *py = *py - (*ph)/2;
 
   RANGE(*px, 0, pWIDE - *pw);
@@ -327,7 +327,7 @@ static void do_unzoom()
 {
   int x,y,w,h, x2,y2, ex,ey,ew,eh;
 
-  /* compute a cropping rectangle (in pic coordinates) that's twice 
+  /* compute a cropping rectangle (in pic coordinates) that's twice
      the size of eWIDE,eHIGH, centered around eWIDE/2, eHIGH/2, but no
      larger than pWIDE,PHIGH */
 
@@ -362,7 +362,7 @@ static void do_pan(mx,my)
   int i, ox,oy,offx,offy, rw,rh, px, py, dx, dy,m;
   Window rW, cW;  unsigned int mask;  int rx, ry;
 
-  offx = ox = mx;  
+  offx = ox = mx;
   offy = oy = my;
   rw = eWIDE-1;  rh = eHIGH-1;
   m = 0;
@@ -374,50 +374,50 @@ static void do_pan(mx,my)
 
   /* track until Button2 is released */
   while (1) {
-    if (!XQueryPointer(theDisp, mainW, &rW, &cW, &rx, &ry, 
+    if (!XQueryPointer(theDisp, mainW, &rW, &cW, &rx, &ry,
 		       &mx, &my, &mask)) continue;
     if (!(mask & ControlMask)) break;  /* cancelled */
     if (!(mask & Button2Mask)) break;  /* button released */
-    
+
     if (mask & ShiftMask) {    /* constrain mx,my to horiz or vertical */
       if (abs(mx-offx) > abs(my-offy)) my = offy;
       else mx = offx;
     }
-    
+
     do_pan_calc(offx, offy, &mx, &my);
-    
+
     if (mx!=ox || my!=oy) {
-      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy, 
+      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy,
 		     (u_int) rw, (u_int) rh);
-      XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy, 
+      XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy,
 		     (u_int) rw, (u_int) rh);
       ox = mx;  oy = my;
     }
     else {
-      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy, 
+      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy,
 		     (u_int) rw, (u_int) rh);
       m = (m+1)&7;
       XSetPlaneMask(theDisp, theGC, xorMasks[m]);
-      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy, 
+      XDrawRectangle(theDisp, mainW, theGC, ox-offx, oy-offy,
 		     (u_int) rw, (u_int) rh);
       XFlush(theDisp);
       Timer(100);
     }
   }
-      
+
   mx = ox;  my = oy;  /* in case mx,my changed on button release */
 
   if (!(mask & ControlMask)) {  /* cancelled */
-    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy, 
+    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy,
 		   (u_int) rw, (u_int) rh);
     XSetFunction(theDisp, theGC, GXcopy);
     XSetPlaneMask(theDisp, theGC, AllPlanes);
     return;
   }
-    
+
 
   for (i=0; i<4; i++) {
-    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy, 
+    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy,
 		   (u_int) rw, (u_int) rh);
     XFlush(theDisp);
     Timer(100);
@@ -430,7 +430,7 @@ static void do_pan(mx,my)
   dx = px - cXOFF;  dy = py - cYOFF;
 
   if (dx==0 && dy==0) {  /* didn't pan anywhere */
-    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy, 
+    XDrawRectangle(theDisp, mainW, theGC, mx-offx, my-offy,
 		   (u_int) rw, (u_int) rh);
     XSetFunction(theDisp, theGC, GXcopy);
     XSetPlaneMask(theDisp, theGC, AllPlanes);
@@ -529,7 +529,7 @@ void UnCrop()
   if (cpic == pic) return;     /* not cropped */
 
   BTSetActive(&but[BUNCROP],0);
-  
+
   if (epicMode == EM_SMOOTH) {   /* turn off smoothing */
     epicMode = EM_RAW;  SetEpicMode();
   }
@@ -538,7 +538,7 @@ void UnCrop()
   FreeEpic();
   if (cpic && cpic !=  pic) free(cpic);
   cpic = NULL;
-  
+
 
   w = (pWIDE * eWIDE) / cWIDE;   h = (pHIGH * eHIGH) / cHIGH;
   if (w>maxWIDE || h>maxHIGH) {
@@ -566,7 +566,7 @@ void UnCrop()
   WUnCrop();
   SetCropString();
 }
-  
+
 
 /***********************************/
 void AutoCrop()
@@ -583,7 +583,7 @@ void AutoCrop()
       WCrop(eWIDE, eHIGH, cXOFF-oldcx, cYOFF-oldcy);
     }
   }
-  
+
   SetCursors(-1);
 }
 
@@ -650,7 +650,7 @@ int DoAutoCrop()
 
   /* do the actual cropping */
   if (cleft || ctop || cbot || cright) {
-    DoCrop(cXOFF+cleft, cYOFF+ctop, 
+    DoCrop(cXOFF+cleft, cYOFF+ctop,
 	    cWIDE-(cleft+cright), cHIGH-(ctop+cbot));
     return 1;
   }
@@ -673,7 +673,7 @@ static int doAutoCrop24()
 # define NEIGHBOR 16		/* within 6% of neighboring pixels */
 # define MISSPCT 6		/* and up to 6% that don't match */
 # define inabsrange(a,n) ( (a) < n && (a) > -n )
-  
+
 
   if (cHIGH<3 || cWIDE<3) return 0;
 
@@ -739,7 +739,7 @@ static int doAutoCrop24()
   while (cleft + 1 < cWIDE) {  /* see if we can delete this line */
     oldr = bgR; oldg = bgG; oldb = bgB;
 
-    for (i=0, misses=0, cp1=cp; i<cHIGH && misses<maxmiss; 
+    for (i=0, misses=0, cp1=cp; i<cHIGH && misses<maxmiss;
 	 i++, cp1 += (cWIDE * 3)) {
       r=cp1[0]-bgR;  g=cp1[1]-bgG;  b=cp1[2]-bgB;
       R=cp1[0]-oldr; G=cp1[1]-oldg; B=cp1[2]-oldb;
@@ -763,7 +763,7 @@ static int doAutoCrop24()
   while (cleft + cright + 1 < cWIDE) {  /* see if we can delete this line */
     oldr = bgR; oldg = bgG; oldb = bgB;
 
-    for (i=0, misses=0, cp1=cp; i<cHIGH && misses<maxmiss; 
+    for (i=0, misses=0, cp1=cp; i<cHIGH && misses<maxmiss;
 	 i++, cp1 += (cWIDE*3)) {
       r=cp1[0]-bgR;  g=cp1[1]-bgG;  b=cp1[2]-bgB;
       R=cp1[0]-oldr; G=cp1[1]-oldg; B=cp1[2]-oldb;
@@ -784,8 +784,8 @@ static int doAutoCrop24()
   if (cleft || ctop || cbot || cright) {
     if (cWIDE - (cleft + cright) < 1 ||
 	cHIGH - (ctop  + cbot  ) < 1) return 0;    /* sanity check */
-    
-    DoCrop(cXOFF+cleft, cYOFF+ctop, 
+
+    DoCrop(cXOFF+cleft, cYOFF+ctop,
 	   cWIDE-(cleft+cright), cHIGH-(ctop+cbot));
     return 1;
   }
@@ -837,7 +837,7 @@ void DoCrop(x,y,w,h)
   else {
     /* at this point, we want to generate cpic, which will contain a
        cWIDE*cHIGH subsection of 'pic', top-left at cXOFF,cYOFF */
-    
+
     cpic = (byte *) malloc((size_t) (cWIDE * cHIGH * bperpix));
 
     if (cpic == NULL) {
@@ -852,7 +852,7 @@ void DoCrop(x,y,w,h)
     cp = cpic;
     for (i=0; i<cHIGH; i++) {
       pp = pic + (i+cYOFF) * (pWIDE*bperpix) + (cXOFF * bperpix);
-      for (j=0; j<cWIDE*bperpix; j++) 
+      for (j=0; j<cWIDE*bperpix; j++)
 	*cp++ = *pp++;
     }
   }
@@ -861,7 +861,7 @@ void DoCrop(x,y,w,h)
   SetCropString();
   BTSetActive(&but[BUNCROP], (cpic!=pic));
 
-  eWIDE = (int) (cWIDE * expw);  
+  eWIDE = (int) (cWIDE * expw);
   eHIGH = (int) (cHIGH * exph);
 
   if (eWIDE>maxWIDE || eHIGH>maxHIGH) {  /* make 'normal' size */
@@ -869,7 +869,7 @@ void DoCrop(x,y,w,h)
       double r,wr,hr;
       wr = ((double) cWIDE) / maxWIDE;
       hr = ((double) cHIGH) / maxHIGH;
-      
+
       r = (wr>hr) ? wr : hr;   /* r is the max(wr,hr) */
       eWIDE = (int) ((cWIDE / r) + 0.5);
       eHIGH = (int) ((cHIGH / r) + 0.5);
@@ -906,12 +906,12 @@ void DoRotate(dir)
      int dir;
 {
   int i;
-  
+
   /* dir=0: 90 degrees clockwise, else 90 degrees counter-clockwise */
   WaitCursor();
-  
+
   RotatePic(pic, picType, &pWIDE, &pHIGH, dir);
-  
+
   /* rotate clipped version and modify 'clip' coords */
   if (cpic != pic && cpic != NULL) {
     if (!dir) {
@@ -928,7 +928,7 @@ void DoRotate(dir)
     RotatePic(cpic, picType, &cWIDE, &cHIGH,dir);
   }
   else { cWIDE = pWIDE;  cHIGH = pHIGH; }
-  
+
   /* rotate expanded version */
   if (epic != cpic && epic != NULL) {
     WaitCursor();
@@ -940,7 +940,7 @@ void DoRotate(dir)
   SetISTR(ISTR_RES,"%d x %d",pWIDE,pHIGH);
 
   SetISTR(ISTR_EXPAND, "%.5g%% x %.5g%%  (%d x %d)",
-	  100.0 * ((float) eWIDE) / cWIDE, 
+	  100.0 * ((float) eWIDE) / cWIDE,
 	  100.0 * ((float) eHIGH) / cHIGH, eWIDE, eHIGH);
 }
 
@@ -951,7 +951,7 @@ void RotatePic(pic, ptype, wp, hp, dir)
      int  *wp, *hp;
      int   ptype, dir;
 {
-  /* rotates a w*h array of bytes 90 deg clockwise (dir=0) 
+  /* rotates a w*h array of bytes 90 deg clockwise (dir=0)
      or counter-clockwise (dir != 0).  swaps w and h */
 
   byte        *pic1, *pix1, *pix;
@@ -960,7 +960,7 @@ void RotatePic(pic, ptype, wp, hp, dir)
 
   bperpix = (ptype == PIC8) ? 1 : 3;
 
-  w = *wp;  h = *hp;  
+  w = *wp;  h = *hp;
   pix1 = pic1 = (byte *) malloc((size_t) (w*h*bperpix));
   if (!pic1) FatalError("Not enough memory to rotate!");
 
@@ -968,15 +968,15 @@ void RotatePic(pic, ptype, wp, hp, dir)
   if (dir==0) {
     for (i=0; i<w; i++) {       /* CW */
       if (bperpix == 1) {
-	for (j=h-1, pix=pic+(h-1)*w + i;  j>=0;  j--, pix1++, pix-=w) 
+	for (j=h-1, pix=pic+(h-1)*w + i;  j>=0;  j--, pix1++, pix-=w)
 	  *pix1 = *pix;
       }
       else {
 	int bperlin = w*bperpix;
 	int k;
-	
-	for (j=h-1, pix=pic+(h-1)*w*bperpix + i*bperpix;  
-	     j>=0;  j--, pix -= bperlin) 
+
+	for (j=h-1, pix=pic+(h-1)*w*bperpix + i*bperpix;
+	     j>=0;  j--, pix -= bperlin)
 	  for (k=0; k<bperpix; k++) *pix1++ = pix[k];
       }
     }
@@ -984,25 +984,25 @@ void RotatePic(pic, ptype, wp, hp, dir)
   else {
     for (i=w-1; i>=0; i--) {    /* CCW */
       if (bperpix == 1) {
-	for (j=0, pix=pic+i; j<h; j++, pix1++, pix+=w) 
+	for (j=0, pix=pic+i; j<h; j++, pix1++, pix+=w)
 	  *pix1 = *pix;
       }
       else {
 	int k;
 	int bperlin = w*bperpix;
-	
-	for (j=0, pix=pic+i*bperpix; j<h; j++, pix+=bperlin) 
+
+	for (j=0, pix=pic+i*bperpix; j<h; j++, pix+=bperlin)
 	  for (k=0; k<bperpix; k++) *pix1++ = pix[k];
       }
     }
   }
-  
-  
+
+
   /* copy the rotated buffer into the original buffer */
   xvbcopy((char *) pic1, (char *) pic, (size_t) (w*h*bperpix));
-  
+
   free(pic1);
-  
+
   /* swap w and h */
   *wp = h;  *hp = w;
 }
@@ -1017,7 +1017,7 @@ void Flip(dir)
    *
    * Note:  flips pic, cpic, and epic.  Doesn't touch Ximage, nor does it draw
    */
-  
+
   WaitCursor();
 
   if (HaveSelection()) {            /* only flip selection region */
@@ -1026,7 +1026,7 @@ void Flip(dir)
   }
 
   FlipPic(pic, pWIDE, pHIGH, dir);
-  
+
   /* flip clipped version */
   if (cpic && cpic != pic) {
     WaitCursor();
@@ -1048,21 +1048,21 @@ void FlipPic(pic, w, h, dir)
      int dir;
 {
   /* flips a w*h array of bytes horizontally (dir=0) or vertically (dir!=0) */
-  
+
   byte *plin;
   int   i,j,k,l,bperpix,bperlin;
-  
+
   bperpix = (picType == PIC8) ? 1 : 3;
   bperlin = w * bperpix;
-  
+
   if (dir==0) {                /* horizontal flip */
     byte *leftp, *rightp;
-    
+
     for (i=0; i<h; i++) {
       plin   = pic + i*bperlin;
       leftp  = plin;
       rightp = plin + (w-1)*bperpix;
-      
+
       for (j=0; j<w/2; j++, rightp -= (2*bperpix)) {
 	for (l=0; l<bperpix; l++, leftp++, rightp++) {
 	  k = *leftp;  *leftp = *rightp;  *rightp = k;
@@ -1070,14 +1070,14 @@ void FlipPic(pic, w, h, dir)
       }
     }
   }
-  
+
   else {                      /* vertical flip */
     byte *topp, *botp;
-    
+
     for (i=0; i<w; i++) {
       topp = pic + i*bperpix;
       botp = pic + (h-1)*bperlin + i*bperpix;
-      
+
       for (j=0; j<h/2; j++, topp+=(w-1)*bperpix, botp-=(w+1)*bperpix) {
 	for (l=0; l<bperpix; l++, topp++, botp++) {
 	  k = *topp;  *topp = *botp;  *botp = k;
@@ -1093,26 +1093,26 @@ static void flipSel(dir)
      int dir;
 {
   /* flips selected area in 'pic', regens cpic and epic appropriately */
-  
+
   int   x,y,w,h;
   byte *plin;
   int   i,j,k,l,bperpix;
-  
+
   GetSelRCoords(&x,&y,&w,&h);
   CropRect2Rect(&x,&y,&w,&h, 0,0,pWIDE,pHIGH);
   if (w<1) w=1;
   if (h<1) h=1;
-  
+
   bperpix = (picType == PIC8) ? 1 : 3;
-  
+
   if (dir==0) {                /* horizontal flip */
     byte *leftp, *rightp;
-    
+
     for (i=y; i<y+h; i++) {
       plin   = pic + (i*pWIDE + x) * bperpix;
       leftp  = plin;
       rightp = plin + (w-1)*bperpix;
-      
+
       for (j=0; j<w/2; j++, rightp -= (2*bperpix)) {
 	for (l=0; l<bperpix; l++, leftp++, rightp++) {
 	  k = *leftp;  *leftp = *rightp;  *rightp = k;
@@ -1120,14 +1120,14 @@ static void flipSel(dir)
       }
     }
   }
-  
+
   else {                      /* vertical flip */
     byte *topp, *botp;
-    
+
     for (i=x; i<x+w; i++) {
       topp = pic + ( y      * pWIDE + i) * bperpix;
       botp = pic + ((y+h-1) * pWIDE + i) * bperpix;
-      
+
       for (j=0; j<h/2; j++, topp+=(pWIDE-1)*bperpix, botp-=(pWIDE+1)*bperpix) {
 	for (l=0; l<bperpix; l++, topp++, botp++) {
 	  k = *topp;  *topp = *botp;  *botp = k;
@@ -1139,22 +1139,22 @@ static void flipSel(dir)
   GenerateCpic();
   GenerateEpic(eWIDE,eHIGH);
 }
-    
+
 
 /************************/
 void InstallNewPic()
 {
   /* given a new pic and colormap, (or new 24-bit pic) installs everything,
      regens cpic and epic, and redraws image */
-  
+
   /* toss old cpic and epic, if any */
   FreeEpic();
   if (cpic && cpic != pic) free(cpic);
   cpic = NULL;
-  
+
   /* toss old colors, and allocate new ones */
   NewPicGetColors(0,0);
-  
+
   /* generate cpic,epic,theImage from new 'pic' */
   crop1(cXOFF, cYOFF, cWIDE, cHIGH, DO_ZOOM);
   HandleDispMode();
@@ -1166,15 +1166,15 @@ void InstallNewPic()
 void DrawEpic()
 {
   /* given an 'epic', builds a new Ximage, and draws it.  Basically
-     called whenever epic is changed, or whenever color allocation 
-     changes (ie, the created X image will look different for the 
+     called whenever epic is changed, or whenever color allocation
+     changes (ie, the created X image will look different for the
      same epic) */
-  
+
   CreateXImage();
 
   if (useroot) MakeRootPic();
   else DrawWindow(0,0,eWIDE,eHIGH);
-  
+
   if (HaveSelection()) DrawSelection(0);
 }
 
@@ -1189,7 +1189,7 @@ void KillOldPics()
   if (pic) free(pic);
   xvDestroyImage(theImage);   theImage = NULL;
   pic = egampic = epic = cpic = NULL;
-  
+
   if (picComments) free(picComments);
   picComments = (char *) NULL;
   ChangeCommentText();
@@ -1203,7 +1203,7 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
      byte   *pic824, *rmap, *gmap, *bmap;
      int     ptype, wide, high;
 {
-  /* does floyd-steinberg ditherizing algorithm.  
+  /* does floyd-steinberg ditherizing algorithm.
    *
    * takes a wide*high input image, of type 'ptype' (PIC8, PIC24)
    *     (if PIC8, colormap is specified by rmap,gmap,bmap)
@@ -1212,14 +1212,14 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
    *
    * Note: this algorithm is *only* used when running on a 1-bit display
    */
-  
+
   register byte   pix8, bit;
   int            *thisline, *nextline;
   int            *thisptr, *nextptr, *tmpptr;
   int             i, j, err, bperpix, bperln, order;
   byte           *pp, *image, w1, b1, w8, b8, rgb[256];
-  
-  
+
+
   if (ptype == PIC8) {   /* monoify colormap */
     for (i=0; i<256; i++)
       rgb[i] = MONO(rmap[i], gmap[i], bmap[i]);
@@ -1234,7 +1234,7 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
 
   thisline = (int *) malloc(wide * sizeof(int));
   nextline = (int *) malloc(wide * sizeof(int));
-  if (!thisline || !nextline) 
+  if (!thisline || !nextline)
     FatalError("ran out of memory in floydDitherize1()\n");
 
 
@@ -1249,10 +1249,10 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
       *tmpptr++ = fsgamcr[rgb[*pp]];
   }
 
-      
+
   w1 = white&0x1;  b1=black&0x1;
   w8 = w1<<7;  b8 = b1<<7;        /* b/w bit in high bit */
-  
+
 
   for (i=0; i<high; i++) {
     if ((i&0x3f) == 0) WaitCursor();
@@ -1280,7 +1280,7 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
       bit = pix8 = 0;
       for (j=0; j<wide; j++, thisptr++, nextptr++) {
 	if (*thisptr<128) { err = *thisptr;     pix8 |= b8; }
-	             else { err = *thisptr-255; pix8 |= w8; }
+		     else { err = *thisptr-255; pix8 |= w8; }
 
 	if (bit==7) { *pp++ = pix8;  bit=pix8=0; }
 	       else { pix8 >>= 1;  bit++; }
@@ -1300,10 +1300,10 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
       bit = pix8 = 0;
       for (j=0; j<wide; j++, thisptr++, nextptr++) {
 	if (*thisptr<128) { err = *thisptr;     pix8 |= b1; }
-	             else { err = *thisptr-255; pix8 |= w1; }
+		     else { err = *thisptr-255; pix8 |= w1; }
 
 	if (bit==7) { *pp++ = pix8;  bit=pix8=0; }
- 	       else { pix8 <<= 1; bit++; }
+	       else { pix8 <<= 1; bit++; }
 
 	if (j<wide-1) thisptr[1] += ((err*7)/16);
 
@@ -1326,7 +1326,7 @@ static void floydDitherize1(ximage,pic824,ptype, wide, high, rmap, gmap, bmap)
 
 
 /************************/
-byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap, 
+byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
 	      bval, wval)
      byte *inpic, *rmap, *gmap, *bmap;
      int   w,h, intype, bval, wval;
@@ -1345,7 +1345,7 @@ byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
 
   outpic = (byte *) malloc((size_t) (w * h));
   if (!outpic) return outpic;
-    
+
 
   if (intype == PIC8) {       /* monoify colormap */
     for (i=0; i<256; i++)
@@ -1355,7 +1355,7 @@ byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
 
   thisline = (int *) malloc(w * sizeof(int));
   nextline = (int *) malloc(w * sizeof(int));
-  if (!thisline || !nextline) 
+  if (!thisline || !nextline)
     FatalError("ran out of memory in FSDither()\n");
 
 
@@ -1397,10 +1397,10 @@ byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
     if (i&1 == 0) {  /* go right */
       for (j=0; j<w; j++, pp++, thisptr++, nextptr++) {
 	if (*thisptr<128) { err = *thisptr;     *pp = (byte) bval; }
-	             else { err = *thisptr-255; *pp = (byte) wval; }
-	
+		     else { err = *thisptr-255; *pp = (byte) wval; }
+
 	if (j<w1) thisptr[1] += ((err*7)/16);
-	
+
 	if (i<h1) {
 	  nextptr[0] += ((err*5)/16);
 	  if (j>0)  nextptr[-1] += ((err*3)/16);
@@ -1413,10 +1413,10 @@ byte *FSDither(inpic, intype, w, h, rmap, gmap, bmap,
       pp += (w-1);  thisptr += (w-1);  nextptr += (w-1);
       for (j=w-1; j>=0; j--, pp--, thisptr--, nextptr--) {
 	if (*thisptr<128) { err = *thisptr;     *pp = (byte) bval; }
-	             else { err = *thisptr-255; *pp = (byte) wval; }
-	
+		     else { err = *thisptr-255; *pp = (byte) wval; }
+
 	if (j>0) thisptr[-1] += ((err*7)/16);
-	
+
 	if (i<h1) {
 	  nextptr[0] += ((err*5)/16);
 	  if (j>0)  nextptr[-1] += (err/16);
@@ -1449,8 +1449,8 @@ void CreateXImage()
   }
 
 
-  if (picType == PIC8) 
-    theImage = Pic8ToXImage(epic,     (u_int) eWIDE, (u_int) eHIGH, 
+  if (picType == PIC8)
+    theImage = Pic8ToXImage(epic,     (u_int) eWIDE, (u_int) eHIGH,
 			    cols, rMap, gMap, bMap);
   else if (picType == PIC24)
     theImage = Pic24ToXImage(egampic, (u_int) eWIDE, (u_int) eHIGH);
@@ -1482,7 +1482,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
   if (!pic8) return xim;  /* shouldn't happen */
 
-  if (DEBUG > 1) 
+  if (DEBUG > 1)
     fprintf(stderr,"Pic8ToXImage(): creating a %dx%d Ximage, %d bits deep\n",
 	    wide, high, dispDEEP);
 
@@ -1491,7 +1491,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
   if (dispDEEP == 1) {
     byte  *imagedata;
 
-    xim = XCreateImage(theDisp, theVisual, dispDEEP, XYPixmap, 0, NULL, 
+    xim = XCreateImage(theDisp, theVisual, dispDEEP, XYPixmap, 0, NULL,
 		       wide, high, 32, 0);
     if (!xim) FatalError("couldn't create xim!");
 
@@ -1506,11 +1506,11 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
   /* if ncols==0, do a 'black' and 'white' dither */
   if (ncols == 0) {
-    /* note that if dispDEEP > 8, dithpic will just have '0' and '1' instead 
+    /* note that if dispDEEP > 8, dithpic will just have '0' and '1' instead
        of 'black' and 'white' */
 
     dithpic = FSDither(pic8, PIC8, (int) wide, (int) high, rmap, gmap, bmap,
-		       (int) ((dispDEEP <= 8) ? black : 0), 
+		       (int) ((dispDEEP <= 8) ? black : 0),
 		       (int) ((dispDEEP <= 8) ? white : 1));
   }
 
@@ -1521,14 +1521,14 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
   case 8: {
     byte  *imagedata, *ip, *pp;
     int   j, imWIDE, nullCount;
-  
+
     nullCount = (4 - (wide % 4)) & 0x03;  /* # of padding bytes per line */
     imWIDE = wide + nullCount;
- 
+
     /* Now create the image data - pad each scanline as necessary */
     imagedata = (byte *) malloc((size_t) (imWIDE * high));
     if (!imagedata) FatalError("couldn't malloc imagedata");
-    
+
     pp = (dithpic) ? dithpic : pic8;
 
     for (i=0, ip=imagedata; i<high; i++) {
@@ -1543,9 +1543,9 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
       for (j=0; j<nullCount; j++, ip++) *ip = 0;
     }
-      
+
     xim = XCreateImage(theDisp,theVisual,dispDEEP,ZPixmap,0,
-		       (char *) imagedata,  wide,  high, 
+		       (char *) imagedata,  wide,  high,
 		       32, imWIDE);
     if (!xim) FatalError("couldn't create xim!");
   }
@@ -1554,14 +1554,14 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
 
     /*********************************/
-      
+
   case 4: {
     byte  *imagedata, *ip, *pp;
     byte *lip;
     int  bperline, half, j;
 
-    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
-		        wide,  high, 8, 0);
+    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
+			wide,  high, 8, 0);
     if (!xim) FatalError("couldn't create xim!");
 
     bperline = xim->bytes_per_line;
@@ -1569,7 +1569,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
     if (!imagedata) FatalError("couldn't malloc imagedata");
     xim->data = (char *) imagedata;
 
-    
+
     pp = (dithpic) ? dithpic : pic8;
 
     if (xim->bits_per_pixel == 4) {
@@ -1601,21 +1601,21 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
     else FatalError("This display's too bizarre.  Can't create XImage.");
   }
     break;
-      
+
 
     /*********************************/
-      
+
   case 2: {  /* by M.Kossa@frec.bull.fr (Marc Kossa) */
-             /* MSBFirst mods added by dale@ntg.com (Dale Luck) */
-             /* additional fixes by  evol@infko.uni-koblenz.de 
+	     /* MSBFirst mods added by dale@ntg.com (Dale Luck) */
+	     /* additional fixes by  evol@infko.uni-koblenz.de
 		(Randolf Werner) for NeXT 2bit grayscale with MouseX */
 
     byte  *imagedata, *ip, *pp;
     byte *lip;
     int  bperline, half, j;
 
-    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
-		        wide,  high, 8, 0);
+    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
+			wide,  high, 8, 0);
     if (!xim) FatalError("couldn't create xim!");
 
     bperline = xim->bytes_per_line;
@@ -1674,11 +1674,11 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 	*ip = (dithpic) ? *pp : (byte) xcolors[*pp];
       }
     }
-      
+
     else FatalError("This display's too bizarre.  Can't create XImage.");
   }
     break;
-      
+
 
   /*********************************/
 
@@ -1686,9 +1686,9 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
   case 6: {
     byte  *imagedata, *ip, *pp;
     int  bperline;
-    
-    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
-		        wide,  high, 8, 0);
+
+    xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
+			wide,  high, 8, 0);
     if (!xim) FatalError("couldn't create xim!");
 
     if (xim->bits_per_pixel != 8)
@@ -1707,7 +1707,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
     }
   }
     break;
-      
+
 
   /*********************************/
 
@@ -1747,7 +1747,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 	if (((i+1)&0x1ffff) == 0) WaitCursor();
 
 	if (dithpic) xcol = ((*pp) ? white : black) & 0xffff;
-	        else xcol = xcolors[*pp];
+		else xcol = xcolors[*pp];
 
 	/*  WAS *ip++ = ((xcol>>8) & 0xff) | ((xcol&0xff) << 8);  */
 	*ip++ = (unsigned short) (xcol);
@@ -1756,7 +1756,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
   }
     break;
 
-      
+
     /*********************************/
 
   case 24:
@@ -1766,7 +1766,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
     imagedata = (byte *) malloc((size_t) (4*wide*high));
     if (!imagedata) FatalError("couldn't malloc imagedata");
-      
+
     xim = XCreateImage(theDisp,theVisual,dispDEEP,ZPixmap,0,
 		       (char *) imagedata,  wide,  high, 32, 0);
     if (!xim) FatalError("couldn't create xim!");
@@ -1774,7 +1774,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
     do32 = (xim->bits_per_pixel == 32);
 
     pp = (dithpic) ? dithpic : pic8;
-      
+
     if (xim->byte_order == MSBFirst) {
       for (i=0, ip=imagedata; i<high; i++) {
 	if (((i+1)&0x7f) == 0) WaitCursor();
@@ -1809,8 +1809,8 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
 
 
     /*********************************/
-    
-  default: 
+
+  default:
     sprintf(str,"no code to handle this display type (%d bits deep)",
 	    dispDEEP);
     FatalError(str);
@@ -1840,8 +1840,8 @@ XImage *Pic24ToXImage(pic24, wide, high)
    * variation of RGB the X device in question wants.  No color allocation
    * is involved.
    *
-   * Alternately, if we're on a PseudoColor, GrayScale, StaticColor or 
-   * StaticGray display, we're going to continue to operate in an 8-bit 
+   * Alternately, if we're on a PseudoColor, GrayScale, StaticColor or
+   * StaticGray display, we're going to continue to operate in an 8-bit
    * mode.  (In that by this point, a 3/3/2 standard colormap has been
    * created for our use (though all 256 colors may not be unique...), and
    * we're just going to display the 24-bit picture by dithering with those
@@ -1861,8 +1861,8 @@ XImage *Pic24ToXImage(pic24, wide, high)
   if (dispDEEP == 1) {
     byte  *imagedata;
 
-    xim = XCreateImage(theDisp, theVisual, dispDEEP, XYPixmap, 0, NULL, 
-		        wide,  high, 32, 0);
+    xim = XCreateImage(theDisp, theVisual, dispDEEP, XYPixmap, 0, NULL,
+			wide,  high, 32, 0);
     if (!xim) FatalError("couldn't create xim!");
 
     imagedata = (byte *) malloc((size_t) (xim->bytes_per_line * high));
@@ -1904,7 +1904,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
     cshift = 7 - highbit((u_long) (maplen-1));
 
     xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
-		        wide,  high, 32, 0);
+			wide,  high, 32, 0);
     if (!xim) FatalError("couldn't create X image!");
 
     bperline = xim->bytes_per_line;
@@ -1929,8 +1929,8 @@ XImage *Pic24ToXImage(pic24, wide, high)
       for (j=0, ip=lip; j<wide; j++) {
 	r = *pp++;  g = *pp++;  b = *pp++;
 
-	/* shift r,g,b so that high bit of 8-bit color specification is 
-	 * aligned with high bit of r,g,b-mask in visual, 
+	/* shift r,g,b so that high bit of 8-bit color specification is
+	 * aligned with high bit of r,g,b-mask in visual,
 	 * AND each component with its mask,
 	 * and OR the three components together
 	 */
@@ -1944,13 +1944,13 @@ XImage *Pic24ToXImage(pic24, wide, high)
 
 	/* shift the bits around */
 	if (rshift<0) r = r << (-rshift);
-	         else r = r >> rshift;
-	
+		 else r = r >> rshift;
+
 	if (gshift<0) g = g << (-gshift);
-	         else g = g >> gshift;
+		 else g = g >> gshift;
 
 	if (bshift<0) b = b << (-bshift);
-	         else b = b >> bshift;
+		 else b = b >> bshift;
 
 	r = r & rmask;
 	g = g & gmask;
@@ -2019,17 +2019,17 @@ XImage *Pic24ToXImage(pic24, wide, high)
     bwdith = 0;
 
     if (ncols == 0 && dispDEEP != 1) {   /* do 'black' and 'white' dither */
-      /* note that if dispDEEP > 8, pic8 will just have '0' and '1' instead 
+      /* note that if dispDEEP > 8, pic8 will just have '0' and '1' instead
 	 of 'black' and 'white' */
 
-      pic8 = FSDither(pic24, PIC24, (int) wide, (int) high, NULL, NULL, NULL, 
-		      (int) ((dispDEEP <= 8) ? black : 0), 
+      pic8 = FSDither(pic24, PIC24, (int) wide, (int) high, NULL, NULL, NULL,
+		      (int) ((dispDEEP <= 8) ? black : 0),
 		      (int) ((dispDEEP <= 8) ? white : 1));
       bwdith = 1;
     }
 
     else {                               /* do color dither using stdcmap */
-      pic8 = Do332ColorDither(pic24, NULL, (int) wide, (int) high, 
+      pic8 = Do332ColorDither(pic24, NULL, (int) wide, (int) high,
 			      NULL, NULL, NULL,
 			      stdrdisp, stdgdisp, stdbdisp, 256);
     }
@@ -2046,14 +2046,14 @@ XImage *Pic24ToXImage(pic24, wide, high)
     case 8: {
       byte  *imagedata, *ip, *pp;
       int   j, imWIDE, nullCount;
-  
+
       nullCount = (4 - (wide % 4)) & 0x03;  /* # of padding bytes per line */
       imWIDE = wide + nullCount;
- 
+
       /* Now create the image data - pad each scanline as necessary */
       imagedata = (byte *) malloc((size_t) (imWIDE * high));
       if (!imagedata) FatalError("couldn't malloc imagedata");
-      
+
       for (i=0, pp=pic8, ip=imagedata; i<high; i++) {
 	if (((i+1)&0x7f) == 0) WaitCursor();
 
@@ -2066,7 +2066,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
       }
 
       xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0,
-			 (char *) imagedata,  wide,  high, 
+			 (char *) imagedata,  wide,  high,
 			 32, imWIDE);
       if (!xim) FatalError("couldn't create xim!");
     }
@@ -2074,14 +2074,14 @@ XImage *Pic24ToXImage(pic24, wide, high)
 
 
       /*********************************/
-      
+
     case 4: {
       byte         *imagedata, *ip, *pp;
       byte         *lip;
       int           bperline, half, j;
       unsigned long xcol;
-      
-      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
+
+      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
 			  wide,  high, 32, 0);
       if (!xim) FatalError("couldn't create xim!");
 
@@ -2123,14 +2123,14 @@ XImage *Pic24ToXImage(pic24, wide, high)
       else FatalError("This display's too bizarre.  Can't create XImage.");
     }
       break;
-      
+
 
 
       /*********************************/
-      
+
     case 2: {  /* by M.Kossa@frec.bull.fr (Marc Kossa) */
-               /* MSBFirst mods added by dale@ntg.com (Dale Luck) */
-               /* additional fixes by  evol@infko.uni-koblenz.de 
+	       /* MSBFirst mods added by dale@ntg.com (Dale Luck) */
+	       /* additional fixes by  evol@infko.uni-koblenz.de
 		  (Randolf Werner) for NeXT 2bit grayscale with MouseX */
 
       byte  *imagedata, *ip, *pp;
@@ -2138,7 +2138,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
       int  bperline, half, j;
       unsigned long xcol;
 
-      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
+      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
 			  wide,  high, 32, 0);
       if (!xim) FatalError("couldn't create xim!");
 
@@ -2201,22 +2201,22 @@ XImage *Pic24ToXImage(pic24, wide, high)
 	  }
 	}
       }
-      
+
       else FatalError("This display's too bizarre.  Can't create XImage.");
     }
       break;
-      
+
 
       /*********************************/
-    
+
     case 6: {
       byte  *imagedata, *lip, *ip, *pp;
       int  bperline;
-    
-      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL, 
+
+      xim = XCreateImage(theDisp, theVisual, dispDEEP, ZPixmap, 0, NULL,
 			  wide,  high, 32, 0);
       if (!xim) FatalError("couldn't create xim!");
-      
+
       if (xim->bits_per_pixel != 8)
 	FatalError("This display's too bizarre.  Can't create XImage.");
 
@@ -2238,7 +2238,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
     }
       break;
 
-      
+
       /*********************************/
 
     case 15:
@@ -2282,7 +2282,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
     }
       break;
 
-      
+
       /*********************************/
 
       /* this wouldn't seem likely to happen, but what the heck... */
@@ -2295,7 +2295,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
 
       imagedata = (byte *) malloc((size_t) (4*wide*high));
       if (!imagedata) FatalError("couldn't malloc imagedata");
-      
+
       xim = XCreateImage(theDisp,theVisual,dispDEEP,ZPixmap,0,
 			 (char *) imagedata, wide, high, 32, 0);
       if (!xim) FatalError("couldn't create xim!");
@@ -2303,7 +2303,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
       bperpix = xim->bits_per_pixel;
 
       pp = pic8;
-      
+
       if (xim->byte_order == MSBFirst) {
 	for (i=wide*high, ip=imagedata; i>0; i--,pp++) {
 	  if (((i+1)&0x1ffff) == 0) WaitCursor();
@@ -2327,7 +2327,7 @@ XImage *Pic24ToXImage(pic24, wide, high)
 	  if (bperpix == 32) *ip++ = 0;
 	}
       }
-    }     
+    }
       break;
 
     }   /* end of the switch */
@@ -2346,7 +2346,7 @@ void Set824Menus(mode)
      int mode;
 {
   /* move checkmark */
-  conv24MB.flags[CONV24_8BIT]  = (mode==PIC8);  
+  conv24MB.flags[CONV24_8BIT]  = (mode==PIC8);
   conv24MB.flags[CONV24_24BIT] = (mode==PIC24);
 
   if (mode == PIC24) {
@@ -2391,7 +2391,7 @@ void Change824Mode(mode)
 
   if (!pic) {  /* done all we wanna do when there's no pic */
     picType = mode;
-    return;  
+    return;
   }
 
   /* should probably actually *do* something involving colors, regenrating
@@ -2474,7 +2474,7 @@ byte *XVGetSubImage(pic, ptype, w,h, sx,sy,sw,sh)
      int   ptype, w,h, sx,sy,sw,sh;
 {
   /* mallocs and returns the selected subimage (sx,sy,sw,sh) of pic.
-     selection is guaranteed to be within pic boundaries.  
+     selection is guaranteed to be within pic boundaries.
      NEVER RETURNS NULL */
 
   byte *rpic, *sp, *dp;
@@ -2531,7 +2531,7 @@ int DoPad(mode, str, wide, high, opaque, omode)
   rv = 1;
 
   if ((mode != PAD_LOAD) && (wide == pWIDE && high == pHIGH && opaque==100)) {
-    ErrPopUp("Padding to same size as pic while fully opaque has no effect.", 
+    ErrPopUp("Padding to same size as pic while fully opaque has no effect.",
 	     "\nI see");
     return 0;
   }
@@ -2539,8 +2539,8 @@ int DoPad(mode, str, wide, high, opaque, omode)
   WaitCursor();
 
   if      (mode == PAD_SOLID) rv = doPadSolid(str, wide, high, opaque,omode);
-  else if (mode == PAD_BGGEN) rv = doPadBggen(str, wide, high, opaque,omode); 
-  else if (mode == PAD_LOAD)  rv = doPadLoad (str, wide, high, opaque,omode); 
+  else if (mode == PAD_BGGEN) rv = doPadBggen(str, wide, high, opaque,omode);
+  else if (mode == PAD_LOAD)  rv = doPadLoad (str, wide, high, opaque,omode);
 
   SetCursors(-1);
 
@@ -2556,7 +2556,7 @@ int DoPad(mode, str, wide, high, opaque, omode)
 
   return 1;
 }
-	      
+
 
 /***********************************/
 int LoadPad(pinfo, fname)
@@ -2636,8 +2636,8 @@ static int doPadSolid(str, wide, high, opaque,omode)
     XColor ecdef, sdef;
     if (XLookupColor(theDisp, theCmap, str, &ecdef, &sdef)) {
       solidRGB = (((ecdef.red  >>8)&0xff) << 16) |
-	         (((ecdef.green>>8)&0xff) <<  8) |
-	         (((ecdef.blue >>8)&0xff));
+		 (((ecdef.green>>8)&0xff) <<  8) |
+		 (((ecdef.blue >>8)&0xff));
     }
     else {
       sprintf(errstr, "Error:  Color specification '%s' not recognized.",str);
@@ -2645,7 +2645,7 @@ static int doPadSolid(str, wide, high, opaque,omode)
       return 0;
     }
   }
-  
+
 
 
   pic24 = (byte *) malloc(wide * high * 3 * sizeof(byte));
@@ -2656,7 +2656,7 @@ static int doPadSolid(str, wide, high, opaque,omode)
     return 0;
   }
 
-  
+
   /* fill pic24 with solidRGB */
   for (i=0,pp=pic24; i<wide*high; i++, pp+=3) {
     pp[0] = (solidRGB>>16) & 0xff;
@@ -2713,7 +2713,7 @@ static int doPadBggen(str, wide, high, opaque,omode)
     ErrPopUp(errstr, "\nDoh!");
     return 0;
   }
-    
+
 
   /* read the file that's been created */
   if (!ReadImageFile1(fname, &pinfo)) {
@@ -2791,7 +2791,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
      int   wide, high, opaque,omode;
 {
   /* copies 'pic' onto the given 24-bit background image, converts back to
-     8-bit (if necessary), and loads up pad* variables.  
+     8-bit (if necessary), and loads up pad* variables.
      frees pic24 if necessary */
 
   byte *pp, *p24;
@@ -2808,7 +2808,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 
   sx = (wide - pWIDE) / 2;
   sy = (high - pHIGH) / 2;
-  
+
   for (py = 0; py<pHIGH; py++) {
     ProgressMeter(0, pHIGH-1, py, "Pad");
     if ((py & 0x1f)==0) WaitCursor();
@@ -2819,8 +2819,8 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 	p24x = sx + px;
 	if (p24x >= 0 && p24x < wide) {
 	  p24 = pic24 + (p24y*wide  + p24x)*3;
-	  
-	  
+
+
 	  if (picType == PIC24) {                       /* src is PIC24 */
 	    pp  = pic + (py * pWIDE + px)  *3;
 	    r = pp[0];  g = pp[1];  b = pp[2];
@@ -2829,7 +2829,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 	    pp  = pic + (py*pWIDE + px);
 	    r = rMap[*pp];  g = gMap[*pp];  b = bMap[*pp];
 	  }
-	  
+
 	  if (omode == PAD_ORGB) {
 	    rval = (r * fg) / 100 + ((int) p24[0] * bg) / 100;
 	    gval = (g * fg) / 100 + ((int) p24[1] * bg) / 100;
@@ -2845,7 +2845,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 
 	    if (omode == PAD_OINT) {
 	      h = fh;
-	      s = fs;  
+	      s = fs;
 	      /* v = (fv * fg) / 100.0 + (bv * bg) / 100.0; */
 	      v = (fv * bv * bw) + (fv * fw);
 	    }
@@ -2855,18 +2855,18 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 	      h = fh;
 	      /* s = (fs * fg) / 100.0 + (bs * bg) / 100.0; */
 	      s = (fs * bs * bw) + (fs * fw);
-	      v = fv;  
+	      v = fv;
 	    }
 	    else if (omode == PAD_OHUE) {   /* the hard one! */
 	      int fdeg,bdeg,len1,len2;
-		
+
 	      fdeg = (fh<0) ? -1 : (int) floor(fh + 0.5);
 	      bdeg = (bh<0) ? -1 : (int) floor(bh + 0.5);
 
 	      if (fdeg>=0 && bdeg>=0) {           /* both are colors */
 		/* convert H,S onto x,y coordinates on the colorwheel for
 		   constant V */
-		
+
 		double fx,fy, bx,by, ox,oy;
 
 		if (fg == 100 || bg == 100) {   /* E-Z special case */
@@ -2874,17 +2874,17 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 		  else         { h = bh;  s = fs;  v=fv; }
 		}
 		else {  /* general case */
-		  
+
 		  fh *= (3.14159 / 180.0);    /* -> radians */
 		  bh *= (3.14159 / 180.0);
-		  
+
 		  fx = fs * cos(fh);  fy = fs * sin(fh);
 		  bx = bs * cos(bh);  by = bs * sin(bh);
-		  
+
 		  /* compute pt. on line between fx,fy and bx,by */
 		  ox = (fx * (fg/100.0)) + (bx * (bg/100.0));
 		  oy = (fy * (fg/100.0)) + (by * (bg/100.0));
-		  
+
 		  /* convert ox,oy back into hue,sat */
 		  s = sqrt((ox * ox) + (oy * oy));
 		  if (ox == 0.0) {
@@ -2897,7 +2897,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 		    while (h<0.0) h += 360.0;
 		    while (h>=360.0) h -= 360.0;
 		  }
-		  
+
 		  v = fv;
 		}
 	      }
@@ -2924,7 +2924,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 	    v = (fv * bv * bw) + (fv * fw);
 	    hsv2rgb(h,s,v, &rval,&gval,&bval);
 	  }
-	  
+
 	  RANGE(rval, 0, 255);  RANGE(gval, 0, 255);  RANGE(bval, 0, 255);
 	  *p24++ = rval;  *p24++ = gval;  *p24++ = bval;
 	}
@@ -2958,7 +2958,7 @@ static int doPadPaste(pic24, wide, high, opaque,omode)
 
 
 /*******************************/
-static int ReadImageFile1(name, pinfo) 
+static int ReadImageFile1(name, pinfo)
      char    *name;
      PICINFO *pinfo;
 {
@@ -2976,7 +2976,7 @@ static int ReadImageFile1(name, pinfo)
 #else
     uncName = name;
 #endif
-    
+
     if (UncompressFile(uncName, uncompname)) {
       ftype = ReadFileType(uncompname);
       readname = uncompname;
@@ -3004,7 +3004,7 @@ static int ReadImageFile1(name, pinfo)
     KillPageFiles(pinfo->pagebname, pinfo->numpages);
 
     if (!i || (i && (pinfo->w<=0 || pinfo->h<=0))) {
-      if (i) { 
+      if (i) {
 	if (pinfo->pic)     free(pinfo->pic);
 	if (pinfo->comment) free(pinfo->comment);
       }
@@ -3021,6 +3021,6 @@ static int ReadImageFile1(name, pinfo)
 
 
 
-    
+
 
 

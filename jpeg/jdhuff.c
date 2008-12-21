@@ -167,7 +167,7 @@ fix_huff_tbl (j_decompress_ptr cinfo, JHUFF_TBL * htbl, D_DERIVED_TBL ** pdtbl)
 				  SIZEOF(D_DERIVED_TBL));
   dtbl = *pdtbl;
   dtbl->pub = htbl;		/* fill in back link */
-  
+
   /* Figure C.1: make table of Huffman code length for each symbol */
   /* Note that this is in code-length order. */
 
@@ -177,10 +177,10 @@ fix_huff_tbl (j_decompress_ptr cinfo, JHUFF_TBL * htbl, D_DERIVED_TBL ** pdtbl)
       huffsize[p++] = (char) l;
   }
   huffsize[p] = 0;
-  
+
   /* Figure C.2: generate the codes themselves */
   /* Note that this is in code-length order. */
-  
+
   code = 0;
   si = huffsize[0];
   p = 0;
@@ -417,7 +417,7 @@ fill_bit_buffer (working_state * state, int nbits)
 donelabel:;  \
 }
 
-  
+
 LOCAL int
 slow_DECODE (working_state * state, D_DERIVED_TBL * htbl, int min_bits)
 {
@@ -607,10 +607,10 @@ decode_mcu (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
       /* Since zeroes are skipped, output area must be cleared beforehand */
       for (k = 1; k < DCTSIZE2; k++) {
 	huff_DECODE(s, state, actbl, label2);
-      
+
 	r = s >> 4;
 	s &= 15;
-      
+
 	if (s) {
 	  k += r;
 	  check_bit_buffer(state, s, return FALSE);
@@ -632,10 +632,10 @@ skip_ACs:
       /* In this path we just discard the values */
       for (k = 1; k < DCTSIZE2; k++) {
 	huff_DECODE(s, state, actbl, label3);
-      
+
 	r = s >> 4;
 	s &= 15;
-      
+
 	if (s) {
 	  k += r;
 	  check_bit_buffer(state, s, return FALSE);
