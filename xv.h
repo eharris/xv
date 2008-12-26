@@ -340,7 +340,7 @@
 
 #define PROGNAME  "xv"             /* used in resource database */
 
-#define MAXNAMES 4096              /* max # of files in ctrlW list */
+#define MAXNAMES   65535           /* max # of files in ctrlW list */
 
 #define MAXBRWIN   4               /* max # of vis browser windows */
 
