@@ -62,7 +62,7 @@
 #endif
 
 
-#ifdef LINUX
+#ifdef __linux__
 #  ifndef _LINUX_LIMITS_H
 #    include <linux/limits.h>
 #  endif
@@ -116,7 +116,7 @@
 #ifndef VMS
 #  include <errno.h>
    extern int   errno;             /* SHOULD be in errno.h, but often isn't */
-#  if !defined(__NetBSD__) && !defined(LINUX)
+#  if !defined(__NetBSD__) && !defined(__linux__)
      extern char *sys_errlist[];     /* this too... */
 #  endif
 #endif
@@ -309,7 +309,7 @@
 
 #ifndef VMS       /* VMS hates multi-line definitions */
 #  if defined(SVR4)  || defined(SYSV) || defined(sco) || \
-      defined(XENIX) || defined(__osf__)
+      defined(XENIX) || defined(__osf__) || defined(__linux__)
 #    undef  USE_GETCWD
 #    define USE_GETCWD          /* use 'getcwd()' instead of 'getwd()' */
 #  endif

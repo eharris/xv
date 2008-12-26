@@ -109,10 +109,6 @@ PDS = -DDOPDS
 # include files in a non-standard place...
 
 
-### for LINUX, uncomment the following line
-MCHN = -DLINUX
-
-
 # For SCO 1.1 (UNIX 3.2v2) machines, uncomment the following:
 #MCHN = -Dsco -DPOSIX
 #
