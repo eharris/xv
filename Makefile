@@ -1,7 +1,7 @@
 # Makefile for xv
 
 # your C compiler (and options) of choice
-CC = cc
+CC = gcc
 # CC = gcc -ansi
 
 # use this if you're using 'cc' on a DEC Alpha (OSF/1) or MIPS (Ultrix) system:
@@ -14,7 +14,7 @@ CC = cc
 #       -Wuninitialized -Wparentheses
 
 
-CCOPTS = -O
+CCOPTS = -O2 -Wall -D_FORTIFY_SOURCE=2
 
 
 ### NOTE: Sun running OpenWindows:
