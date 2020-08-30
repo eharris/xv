@@ -140,7 +140,7 @@ int main(argc, argv)
   int    i;
   XColor ecdef;
   Window rootReturn, parentReturn, *children;
-  unsigned int numChildren, rootDEEP;
+  unsigned int numChildren;
 
 
 #ifdef VMS
@@ -326,8 +326,6 @@ int main(argc, argv)
   maxWIDE   = vrWIDE  = dispWIDE  = DisplayWidth(theDisp,theScreen);
   maxHIGH   = vrHIGH  = dispHIGH  = DisplayHeight(theDisp,theScreen);
 
-
-  rootDEEP = dispDEEP;
 
   /* things dependant on theVisual:
    *    dispDEEP, theScreen, rootW, ncells, theCmap, theGC,
@@ -644,10 +642,11 @@ int main(argc, argv)
        (mfinfo = XLoadQueryFont(theDisp,FONT3))==NULL &&
        (mfinfo = XLoadQueryFont(theDisp,FONT4))==NULL &&
        (mfinfo = XLoadQueryFont(theDisp,FONT5))==NULL) {
-    sprintf(str,
+    char err_str[1024];
+    sprintf(err_str,
 	    "couldn't open the following fonts:\n\t%s\n\t%s\n\t%s\n\t%s\n\t%s",
 	    FONT1, FONT2, FONT3, FONT4, FONT5);
-    FatalError(str);
+    FatalError(err_str);
   }
   mfont=mfinfo->fid;
   XSetFont(theDisp,theGC,mfont);
@@ -2007,10 +2006,9 @@ static int openPic(filenum)
 #else /* it is VMS */
       sprintf(filename, "[]xvXXXXXX");
 #endif
-      mktemp(filename);
 
       clearerr(stdin);
-      fp = fopen(filename,"w");
+      fp = fdopen(mkstemp(filename), "w");
       if (!fp) FatalError("openPic(): can't write temporary file");
 
       while ( (i=getchar()) != EOF) putc(i,fp);
@@ -2055,7 +2053,7 @@ static int openPic(filenum)
 
 
   if (filetype == RFT_ERROR) {
-    char  foostr[512];
+    char  foostr[1024];
     sprintf(foostr,"Can't open file '%s'\n\n  %s.",filename, ERRSTR(errno));
 
     if (!polling) ErrPopUp(foostr, "\nBummer!");
@@ -2114,8 +2112,8 @@ static int openPic(filenum)
   if (pinfo.w==0 || pinfo.h==0) {  /* shouldn't happen, but let's be safe */
     SetISTR(ISTR_INFO,"Image size '0x0' not allowed.");
     Warning();
-    if (pinfo.pic)     free(pinfo.pic);      pinfo.pic     = (byte *) NULL;
-    if (pinfo.comment) free(pinfo.comment);  pinfo.comment = (char *) NULL;
+    CLEAR(pinfo.pic);
+    CLEAR(pinfo.comment);
     goto FAILED;
   }
 
@@ -2163,7 +2161,7 @@ static int openPic(filenum)
   if (!pinfo.pic) {  /* must've failed in the 8-24 or 24-8 conversion */
     SetISTR(ISTR_INFO,"Couldn't do %s conversion.",
 	    (picType==PIC24) ? "8->24" : "24->8");
-    if (pinfo.comment) free(pinfo.comment);  pinfo.comment = (char *) NULL;
+    CLEAR(pinfo.comment);
     Warning();
     goto FAILED;
   }
@@ -2271,9 +2269,8 @@ static int openPic(filenum)
     SetCropString();
   }
   else {
-    int w,h,aspWIDE,aspHIGH,oldemode;
+    int w,h,aspWIDE,aspHIGH;
 
-    oldemode = epicMode;
     epicMode = EM_RAW;   /* be in raw mode for all intermediate conversions */
     cpic = pic;  cWIDE = pWIDE;  cHIGH = pHIGH;  cXOFF = cYOFF = 0;
     epic = cpic; eWIDE = cWIDE;  eHIGH = cHIGH;
@@ -2945,7 +2942,7 @@ static int readpipe(cmd, fname)
    * returns '0' if everything's cool, '1' on error
    */
 
-  char fullcmd[512], tmpname[64], str[512];
+  char fullcmd[512], tmpname[64], str[1024];
   int i;
 
   if (!cmd || (strlen(cmd) < (size_t) 2)) return 1;
@@ -3665,7 +3662,7 @@ int DeleteCmd()
      different, and should be auto-loaded, or something */
 
   static char *bnames[] = { "\004Disk File", "\nList Entry", "\033Cancel" };
-  char str[512];
+  char str[1024];
   int  del, i, delnum, rv;
 
   /* failsafe */
@@ -3767,7 +3764,6 @@ void HandleDispMode()
 
   static int haveoldinfo = 0;
   static Window            oldMainW;
-  static int               oldCmapMode;
   static XSizeHints        oldHints;
   static XWindowAttributes oldXwa;
   int i;
@@ -3898,7 +3894,6 @@ void HandleDispMode()
       /* save current window stuff */
       haveoldinfo = 1;
       oldMainW = mainW;
-      oldCmapMode = colorMapMode;
 
       GetWindowPos(&oldXwa);
       if (!XGetNormalHints(theDisp, mainW, &oldHints)) oldHints.flags = 0;

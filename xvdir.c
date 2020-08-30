@@ -395,7 +395,7 @@ int x,y;
 {
   BUTT  *bp;
   int    bnum,i,maxbut,v;
-  char   buf[1024];
+  char   buf[8192];
 
   if (savemode) {                           /* check format/colors MBUTTS */
     i = v = 0;
@@ -574,7 +574,7 @@ static void changedDirMB(sel)
 #endif
 
     if (chdir(tmppath)) {
-      char str[512];
+      char str[8192];
       sprintf(str,"Unable to cd to '%s'\n", tmppath);
       *trunc_point = '/';  /* restore the path */
       MBRedraw(&dirMB);
@@ -1279,8 +1279,12 @@ char *GetDirFName()
 char *GetDirFullName()
 {
   static char globname[MAXFNLEN+100];   /* the +100 is for ~ expansion */
+#if 0
   static char fullname[MAXPATHLEN+2];
-
+#else
+  static char fullname[8192];
+#endif
+  
   if (ISPIPE(filename[0])) strcpy(fullname, filename);
   else {
     strcpy(globname, filename);
@@ -2007,7 +2011,7 @@ void InitPoll()
 
     if (stat(namelist[curname], &origStat)==0) {
       haveStat = 1;
-      if (DEBUG) fprintf(stderr," origStat.size=%ld,  origStat.mtime=%d\n",
+      if (DEBUG) fprintf(stderr," origStat.size=%ld,  origStat.mtime=%ld\n",
 			 origStat.st_size, origStat.st_mtime);
     }
   }
@@ -2032,7 +2036,7 @@ int CheckPoll(del)
       (strcmp(namelist[curname], STDINSTR)!=0)) {
 
     if (stat(namelist[curname], &st)==0) {
-      if (DEBUG) fprintf(stderr," st.size=%ld,  st.mtime=%d\n",
+      if (DEBUG) fprintf(stderr," st.size=%ld,  st.mtime=%ld\n",
 			 st.st_size, st.st_mtime);
 
       if ((st.st_size  == origStat.st_size) &&

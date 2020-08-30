@@ -20,6 +20,7 @@
 
 #include "xv.h"
 
+#define NO_ICON_BITS
 #include "bits/icon"
 
 #define PUWIDE 400

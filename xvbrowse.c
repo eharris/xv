@@ -748,9 +748,7 @@ static int brChkEvent(br, xev)
   if (!hasBeenSized) return 0;  /* ignore evrythng until we get 1st Resize */
 
   if (xev->type == Expose) {
-    int x,y,w,h;
     XExposeEvent *e = (XExposeEvent *) xev;
-    x = e->x;  y = e->y;  w = e->width;  h = e->height;
 
     /* throw away excess redraws for 'dumb' windows */
     if (e->count > 0 && (e->window == br->scrl.win)) {}
@@ -805,15 +803,15 @@ static int brChkEvent(br, xev)
 
   else if (xev->type == ButtonPress) {
     XButtonEvent *e = (XButtonEvent *) xev;
-    int i,x,y;
+    int x,y;
     x = e->x;  y = e->y;
 
     if (e->button == Button1) {
       if      (e->window == br->win)      clickBrow(br,x,y);
       else if (e->window == br->scrl.win) SCTrack(&(br->scrl),x,y);
       else if (e->window == br->iconW) {
-	i = clickIconWin(br, x,y,(unsigned long) e->time,
-			 (e->state&ControlMask) || (e->state&ShiftMask));
+	clickIconWin(br, x,y,(unsigned long) e->time,
+		     (e->state&ControlMask) || (e->state&ShiftMask));
 
       }
       else rv = 0;
@@ -1288,7 +1286,7 @@ static void setSelInfoStr(br, sel)
    */
 
   int  i;
-  char buf[256], buf1[256];
+  char buf[8192], buf1[256];
   BFIL *bf;
 
 
@@ -1751,7 +1749,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
     int          x, y, rootx, rooty, iwx, iwy, bwx, bwy;
     unsigned int mask;
     Cursor       curs;
-    int          samepos, oldx, oldy, oldbrnum, destic, origsval, first;
+    int          oldx, oldy, oldbrnum, destic, origsval, first;
     int          hasrect, rx, ry, rw, rh;
 
     rx = ry = rw = rh = 0;
@@ -1774,8 +1772,6 @@ static int clickIconWin(br, mx, my, mtime, multi)
 	/* change cursors */
 	for (i=0; i<MAXBRWIN; i++)
 	  XDefineCursor(theDisp,binfo[i].iconW, curs);
-
-	samepos = oldx = oldy = oldbrnum = 0;
 
 	while (1) {  /* wait for button 1 to be released */
 	  while (!XQueryPointer(theDisp,rootW,&rW,&win,&rootx,&rooty,
@@ -1845,7 +1841,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
 	       a rect drag */
 
 	    if (sel>=0 && (oldx!=x || oldy!=y || oldbrnum!=i)) {  /* moved */
-	      samepos = 0;  oldx = x;  oldy = y;  oldbrnum = i;
+	      oldx = x;  oldy = y;  oldbrnum = i;
 	    }
 	    else {
 	      int scamt = 0;
@@ -2105,7 +2101,7 @@ static void doubleClick(br, sel)
      int       sel;
 {
   int i, j, k;
-  char buf[512];
+  char buf[8192];
   BFIL *bf;
 
   /* called to 'open' icon #sel, which could be a file or a dir */
@@ -2300,7 +2296,7 @@ static void keyIconWin(br, kevt)
   case '\177':   /* SPACE = load next, BS/DEL = load prev */
     if (br->bfLen && br->numlit >= 1) {
       int i, j, viewsel;
-      char fname[MAXPATHLEN];
+      char fname[MAXPATHLEN+2];
 
       /* if 'shift-space' find last lit icon, select the next one after it,
 	 and load it.  If 'space' do the same, but lose prior lit.  These
@@ -2334,7 +2330,7 @@ static void keyIconWin(br, kevt)
 	/* load this file, stick it in ctrlList, etc. */
 
 	if (ISLOADABLE(br->bfList[i].ftype)) {
-	  char foo[256];
+	  char foo[8192];
 
 	  j = numnames;
 	  AddFNameToCtrlList(br->path, br->bfList[i].name);
@@ -2552,7 +2548,7 @@ static void changedBrDirMB(br, sel)
 #endif
 
     if (chdir(tmppath)) {
-      char str[512];
+      char str[MAXPATHLEN+512];
       sprintf(str,"Unable to cd to '%s'\n", tmppath);
       MBRedraw(&(br->dirMB));
       setBrowStr(br,str);
@@ -2581,7 +2577,7 @@ static int cdBrow(br)
 
   rv = chdir(br->path);
   if (rv) {
-    char str[512];
+    char str[MAXPATHLEN+512];
     sprintf(str, "Unable to cd to '%s'\n", br->path);
     setBrowStr(br, str);
     XBell(theDisp, 50);
@@ -3404,13 +3400,12 @@ static void genIcon(br, bf)
   double  wexpand,hexpand;
   int     iwide, ihigh;
   byte   *icon24, *icon8;
-  char    str[256], str1[256], *readname, uncompname[128];
-  char    basefname[128], *uncName;
+  char    str[256], str1[512], *readname, uncompname[128];
+  char    *uncName;
 
 
   if (!bf || !bf->name || bf->name[0] == '\0') return;   /* shouldn't happen */
   str[0] = '\0';
-  basefname[0] = '\0';
   pinfo.pic = (byte *) NULL;
   pinfo.comment = (char *) NULL;
   readname = bf->name;
@@ -3432,6 +3427,8 @@ static void genIcon(br, bf)
 
   if (filetype == RFT_COMPRESS) {
 #if (defined(VMS) && !defined(GUNZIP))
+  char basefname[128];
+  basefname[0] = '\0';
     /* VMS decompress doesn't like the file to have a trailing .Z in fname
        however, GUnZip is OK with it, which we are calling UnCompress */
     strcpy (basefname, bf->name);
@@ -3453,7 +3450,7 @@ static void genIcon(br, bf)
   }
 
   /* get rid of comments.  don't need 'em */
-  if (pinfo.comment) free(pinfo.comment);  pinfo.comment = (char *) NULL;
+  CLEAR(pinfo.comment);
 
   if (filetype == RFT_ERROR) {
     sprintf(str,"Couldn't open file '%s'", bf->name);
@@ -3660,7 +3657,7 @@ static void loadThumbFile(br, bf)
      and create the ximage, and such */
 
   FILE *fp;
-  char  thFname[512];
+  char  thFname[MAXPATHLEN+512];
   char  buf[256], *st, *info;
   int   w,h,mv,i,builtin;
   byte *icon8;
@@ -3766,7 +3763,7 @@ static void writeThumbFile(br, bf, icon8, w, h, info)
      char *info;
 {
   FILE *fp;
-  char  thFname[512], buf[256];
+  char  thFname[MAXPATHLEN+512], buf[MAXPATHLEN+1024];
   int   i, perm;
   struct stat st;
 
@@ -3839,7 +3836,7 @@ static void writeThumbFile(br, bf, icon8, w, h, info)
 static void makeThumbDir(br)
      BROWINFO *br;
 {
-  char  thFname[512];
+  char  thFname[MAXPATHLEN+512];
   int i, perm;
   struct stat st;
 
@@ -3926,7 +3923,7 @@ static void updateIcons(br)
 	if (bf->ftype != BF_EXE) {
 	  iconsBuilt++;
 	  if (DEBUG)
-	    fprintf(stderr,"icon made:fname='%s' thfname='%s' %d,%d,%d,%d\n",
+	    fprintf(stderr,"icon made:fname='%s' thfname='%s' %d,%d,%ld,%ld\n",
 		    bf->name, thfname, s1,s2,filest.st_mtime,thumbst.st_mtime);
 	}
       }
@@ -3956,7 +3953,7 @@ static void updateIcons(br)
   dirp = opendir(THUMBDIR);
   if (dirp) {
     while ( (dp = readdir(dirp)) != NULL) {
-      char thfname[256];
+      char thfname[512];
       struct stat filest, thumbst;
 
       /* stat this directory entry to make sure it's a plain file */
@@ -4178,7 +4175,7 @@ static void doChdirCmd(br)
   int          i;
   static char  buf[MAXPATHLEN+100];
   static char *labels[] = { "\nOk", "\033Cancel" };
-  char str[512];
+  char str[MAXPATHLEN+512];
 
   buf[0] = '\0';
   i = GetStrPopUp("Change to directory:", labels, 2, buf, MAXPATHLEN, " ", 0);
@@ -4441,7 +4438,7 @@ static void recurseUpdate(br, subdir)
 
   sprintf(curDir, "%s%s", br->path, subdir);
   if (chdir(curDir)) {
-    char str[512];
+    char str[MAXPATHLEN+512];
     sprintf(str, "Unable to cd to '%s'\n", curDir);
     setBrowStr(br, str);
     return;
@@ -4508,7 +4505,7 @@ static void rm_file(br, name)
   /* unlinks specified file.  br only needed to display potential err msg */
 
   int   i;
-  char buf[512], buf1[512], *tmp;
+  char buf[8129], buf1[512], *tmp;
 
   if (DEBUG) fprintf(stderr,"rm %s", name);
 
@@ -4549,7 +4546,7 @@ static void rm_dir1(br)
   /* recursively delete this directory, and all things under it */
 
   int    i, dirlen, longpath, oldpathlen;
-  char **names, *name, buf[512];
+  char **names, *name, buf[8192];
   struct stat st;
 
   if (DEBUG) fprintf(stderr,"rm %s\n", rmdirPath);
@@ -4658,7 +4655,7 @@ static void dragFiles(srcBr, dstBr, srcpath, dstpath, dstdir,
 
   int  i, j, dothumbs, fail;
   char dstp[MAXPATHLEN + 1];
-  char src[MAXPATHLEN+1], dst[MAXPATHLEN+1];
+  char src[(MAXPATHLEN+1)*2], dst[8192];
   char buf[128];
   struct stat st;
 
@@ -5416,6 +5413,3 @@ static int selmatch1(name, arg)
 
   return 0;
 }
-
-
-

@@ -1537,9 +1537,8 @@ int LoadPS(fname, pinfo, quick)
      the first one is loaded (but not deleted) */
 
 
-  char tmp[512], gscmd[512], cmdstr[512], tmpname[64];
+  char tmp[1024], gscmd[512], cmdstr[512], tmpname[64];
   int  gsresult, nump, i, filetype, doalert, epsf;
-  char *rld;
 
   pinfo->pic     = (byte *) NULL;
   pinfo->comment = (char *) NULL;

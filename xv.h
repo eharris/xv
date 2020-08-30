@@ -292,7 +292,7 @@
 
 
 #ifndef MAXPATHLEN
-#  define MAXPATHLEN 256
+#  define MAXPATHLEN 4096
 #endif
 
 

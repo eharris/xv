@@ -200,11 +200,9 @@ void TextView(fname)
   /* given a filename, attempts to read in the file and open a textview win */
 
   long  textlen;
-  char *text, buf[512], title[128], rfname[MAXPATHLEN+1];
-  char *basefname[128];  /* just current fname, no path */
+  char *text, buf[MAXPATHLEN+128], title[128], rfname[MAXPATHLEN+1];
   FILE *fp;
 
-  basefname[0] = '\0';
   strcpy(rfname, fname);
 
   /* see if this file is compressed.  if it is, uncompress it, and view
@@ -214,6 +212,8 @@ void TextView(fname)
 #ifndef VMS
     if (!UncompressFile(fname, rfname)) return;    /* failed to uncompress */
 #else
+    char *basefname[128];  /* just current fname, no path */
+    basefname[0] = '\0';
     /* chop off trailing '.Z' from friendly displayed basefname, if any */
     strcpy (basefname, fname);
     *rindex (basefname, '.') = '\0';
@@ -522,9 +522,7 @@ static int tvChkEvent(tv, xev)
   if (!hasBeenSized) return 0;  /* ignore evrythng until we get 1st Resize */
 
   if (xev->type == Expose) {
-    int x,y,w,h;
     XExposeEvent *e = (XExposeEvent *) xev;
-    x = e->x;  y = e->y;  w = e->width;  h = e->height;
 
     /* throw away excess redraws for 'dumb' windows */
     if (e->count > 0 && (e->window == tv->vscrl.win ||

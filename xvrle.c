@@ -27,6 +27,8 @@
 
 #define GETINT(fp) (c=getc(fp), c1=getc(fp), (c1<<8) + c )
 
+#define CLEAR(p) if (p) free(p); p = NULL
+
 static void read_rle PARM((FILE *, byte *, int, int, int, int));
 static int  rleError PARM((char *, char *));
 
@@ -159,7 +161,7 @@ int LoadRLE(fname, pinfo)
 
   if (ferror(fp) || feof(fp)) {
     fclose(fp);
-    if (pinfo->comment) free(pinfo->comment);  pinfo->comment = (char *) NULL;
+    CLEAR(pinfo->comment);
     return rleError(bname, "EOF reached in RLE header.\n");
   }
 
@@ -190,7 +192,7 @@ int LoadRLE(fname, pinfo)
 
   if (errstr) {
     fclose(fp);
-    if (pinfo->comment) free(pinfo->comment);  pinfo->comment = (char *) NULL;
+    CLEAR(pinfo->comment);
     return rleError(bname, errstr);
   }
 
@@ -200,7 +202,7 @@ int LoadRLE(fname, pinfo)
 	       else img = (byte *) calloc((size_t) w * h * 3, (size_t) 1);
   if (!img) {
     fclose(fp);
-    if (pinfo->comment) free(pinfo->comment);  pinfo->comment = (char *) NULL;
+    CLEAR(pinfo->comment);
     return rleError(bname, "unable to allocate image data.\n");
   }
 

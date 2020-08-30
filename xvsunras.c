@@ -202,7 +202,7 @@ int LoadSunRas(fname, pinfo)
 	ip = line;
 	op = (byte *) (image + w * i * 3);
 	for (k = 0; k<w; k++) {
-	  *ip++;           /* skip 'alpha' */
+	  ip++;           /* skip 'alpha' */
 	  *op++ = *ip++;   /* red   */
 	  *op++ = *ip++;   /* green */
 	  *op++ = *ip++;   /* blue  */

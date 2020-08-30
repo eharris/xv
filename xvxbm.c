@@ -120,7 +120,8 @@ int LoadXBM(fname, pinfo)
   /* read/convert the image data */
 
   for (i=0, pix=pic8; i<h; i++)
-    for (j=0,bit=0; j<w; j++, pix++, bit = (++bit)&7) {
+    /* for (j=0,bit=0; j<w; j++, pix++, bit = (++bit)&7) { */
+    for (j=0,bit=0; j<w; j++, pix++, bit++, bit &= 7) {
 
       if (!bit) {
 	/* get next byte from file.  we're already positioned at it */

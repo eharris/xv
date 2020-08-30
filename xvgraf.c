@@ -402,7 +402,7 @@ int mx,my;
       }
 
       else {  /* track handle */
-	int origx, origy, orighx, orighy, dx, dy, olddx, olddy, grab;
+	int origx, origy, orighx, orighy, dx, dy, grab;
 
 	drawHandPos(gp, h);
 
@@ -421,8 +421,6 @@ int mx,my;
 	offy = gp->hands[h].y - origy;
 
 	vertonly = (h==0 || h==(gp->nhands-1));
-
-	olddx = 0;  olddy = 0;
 
 	while (XQueryPointer(theDisp,rootW,&rW,&cW,&rx,&ry,&x,&y,&mask)) {
 	  int newx, newy;
@@ -457,7 +455,6 @@ int mx,my;
 	    drawGraf(gp,0);
 	    drawHandPos(gp, h);
 	    rv = 1;
-	    olddx = dx;  olddy = dy;
 
 	    if (gp->drawobj) (gp->drawobj)();
 	  }

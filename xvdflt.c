@@ -271,7 +271,8 @@ void xbm2pic(bits, bwide, bhigh, pic, pwide, phigh, cx, cy, col)
       x = cx - bwide/2;
 
       k = *bptr;
-      for (j=0,bit=0; j<bwide; j++, bit = (++bit)&7, x++) {
+      /* for (j=0,bit=0; j<bwide; j++, bit = (++bit)&7, x++) { */
+      for (j=0,bit=0; j<bwide; j++, bit++, bit &= 7, x++) {
 	if (!bit) k = *bptr++;
 	if ( (k&1) && (x>=0) && (x<pwide))
 	  pptr[x] = col;

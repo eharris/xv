@@ -796,7 +796,7 @@ int LoadPDS(fname, pinfo)
 
   pinfo->comment = (char *) malloc((size_t) 2000);
   if (pinfo->comment) {
-    char tmp[256];
+    char tmp[1024];
     *(pinfo->comment) = '\0';
 
     sprintf(tmp, "Spacecraft: %-28sTarget: %-32s\n", spacecraft, target);

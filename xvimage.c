@@ -36,7 +36,9 @@ static void crop1             PARM((int, int, int, int, int));
 static int  doAutoCrop24      PARM((void));
 static void floydDitherize1   PARM((XImage *, byte *, int, int, int,
 				    byte *, byte *,byte *));
+#if 0	/* nothing uses highbit() */
 static int  highbit           PARM((unsigned long));
+#endif
 
 static int  doPadSolid        PARM((char *, int, int, int, int));
 static int  doPadBggen        PARM((char *, int, int, int, int));
@@ -715,15 +717,13 @@ static void do_pan_calc(offx, offy, xp,yp)
      coords (returned in xp,yp) such that the 'pan window' remains entirely
      within the image boundaries */
 
-  int mx, my, eprx, epry, eprw, eprh, pprx, ppry, pprw, pprh;
+  int mx, my, eprx, epry, pprx, ppry, pprw, pprh;
 
   mx = *xp;  my = *yp;
 
   /* compute corners of pan rect in eWIDE,eHIGH coords */
   eprx = offx - mx;
   epry = offy - my;
-  eprw = eWIDE;
-  eprh = eHIGH;
 
   /* compute corners of pan rect in pWIDE,pHIGH coords */
   CoordE2P(eprx, epry, &pprx, &ppry);
@@ -2702,6 +2702,7 @@ void InvertPic24(pic24, w, h)
 
 
 /***********************/
+#if 0	/* nothing uses highbit() */
 static int highbit(ul)
 unsigned long ul;
 {
@@ -2714,7 +2715,7 @@ unsigned long ul;
   for (i=31; ((ul & hb) == 0) && i>=0;  i--, ul<<=1);
   return i;
 }
-
+#endif
 
 
 /***********************************************************/
@@ -2926,7 +2927,7 @@ static int doPadBggen(str, wide, high, opaque,omode)
 {
   int i;
   byte *bgpic24;
-  char syscmd[512], fname[128], errstr[512];
+  char syscmd[512], fname[128], errstr[1024];
   PICINFO pinfo;
 
   /* returns 0 on error, 1 if successful */
@@ -3211,7 +3212,7 @@ static int ReadImageFile1(name, pinfo)
      PICINFO *pinfo;
 {
   int  i, ftype;
-  char uncompname[128], errstr[256], *uncName, *readname;
+  char uncompname[128], errstr[256], *uncName;
 
   ftype = ReadFileType(name);
 
@@ -3227,7 +3228,6 @@ static int ReadImageFile1(name, pinfo)
 
     if (UncompressFile(uncName, uncompname)) {
       ftype = ReadFileType(uncompname);
-      readname = uncompname;
     }
     else {
       sprintf(errstr, "Error:  Couldn't uncompress file '%s'", name);

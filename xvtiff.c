@@ -72,7 +72,7 @@ int LoadTIFF(fname, pinfo, quick)
   FILE  *fp;
   byte  *pic8;
   char  *desc, oldpath[MAXPATHLEN+1], tmppath[MAXPATHLEN+1], *sp;
-  char   tmp[256], tmpname[256];
+  char   tmp[512], tmpname[256];
   int    i, nump;
 
   error_occurred = 0;
@@ -1307,7 +1307,7 @@ static void put8bitcmaptile(cp, pp, Map, w, h, fromskew, toskew)
      int fromskew, toskew;
 {
   while (h-- > 0) {
-    UNROLL8(w,0, *cp++ = PALmap[*pp++][0]);
+    UNROLL8(w,, *cp++ = PALmap[*pp++][0]);
     cp += toskew;
     pp += fromskew;
   }
@@ -1503,7 +1503,7 @@ static void putRGBcontig8bittile(cp, pp, Map, w, h, fromskew, toskew)
     }
   } else {
     while (h-- > 0) {
-      UNROLL8(w,0,
+      UNROLL8(w,,
 	      *cp++ = pp[0];
 	      *cp++ = pp[1];
 	      *cp++ = pp[2];
@@ -1576,7 +1576,7 @@ static void putRGBseparate8bittile(cp, r, g, b, Map, w, h, fromskew, toskew)
     }
   } else {
     while (h-- > 0) {
-      UNROLL8(w,0,
+      UNROLL8(w,,
 	      *cp++ = *r++;
 	      *cp++ = *g++;
 	      *cp++ = *b++;

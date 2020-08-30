@@ -69,10 +69,10 @@ int LoadIFF(fname, pinfo)
   register long col, colbit;
   FILE          *fp;
   int           rv;
-  int           BMHDok, CMAPok, CAMGok;
-  int           bmhd_width, bmhd_height, bmhd_bitplanes, bmhd_transcol;
+  int           BMHDok, CAMGok;
+  int           bmhd_width, bmhd_height, bmhd_bitplanes;
   int           i, j, k, lineskip, colors, fmt;
-  byte          bmhd_masking, bmhd_compression;
+  byte          bmhd_compression;
   long          chunkLen, camg_viewmode, decomp_bufsize;
   byte          *databuf, *dataptr, *cmapptr, *picptr, *pic, *bodyptr;
   byte          *workptr, *workptr2, *workptr3, *decomp_mem;
@@ -143,9 +143,13 @@ int LoadIFF(fname, pinfo)
       bmhd_width       = iff_getword(dataptr + 8);      /* width of picture */
       bmhd_height      = iff_getword(dataptr + 8 + 2);  /* height of picture */
       bmhd_bitplanes   = *(dataptr + 8 + 8);            /* # of bitplanes */
+#if 0 /* set but not used */
       bmhd_masking     = *(dataptr + 8 + 9);
+#endif
       bmhd_compression = *(dataptr + 8 + 10);           /* get compression */
+#if 0 /* are there side-effects of calling iff_getword() ? */
       bmhd_transcol    = iff_getword(dataptr + 8 + 12);
+#endif
       BMHDok = 1;                                       /* got BMHD */
       dataptr += 8 + chunkLen;                          /* to next chunk */
     }
@@ -162,7 +166,9 @@ int LoadIFF(fname, pinfo)
 	pinfo->b[i] = *cmapptr++;
       }
 
+#if 0 /* set but not used */
       CMAPok = 1;                                       /* got CMAP */
+#endif
       dataptr += 8 + chunkLen;                          /* to next chunk */
     }
 

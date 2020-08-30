@@ -1358,10 +1358,8 @@ static int dragHandle(ev)
 		     else { chwide=1;  newwide = seh; }
       }
       else {         /* constrain to same aspect ratio */
-	double asp;
 	if (seh==0) { chwide=1; newwide=0; }
 	else {
-	  asp = (double) sew / (double) seh;
 	  if (islf || isrt) { chhigh=1;  newhigh = (int) (sew/orgaspect); }
 		       else { chwide=1;  newwide = (int) (seh*orgaspect); }
 	}

@@ -159,7 +159,7 @@ static void ls3d         PARM((LIST *));
 void CreateCtrl(geom)
      char *geom;
 {
-  int listh, topskip;
+  int topskip;
   double skip;
   XSetWindowAttributes xswa;
   Pixmap oicon1Pix, oicon2Pix;
@@ -230,8 +230,6 @@ void CreateCtrl(geom)
 
   if (ctrlColor) XSetWindowBackground(theDisp, ctrlW, locol);
 	    else XSetWindowBackgroundPixmap(theDisp, ctrlW, grayTile);
-
-  listh = LINEHIGH * NLINES;
 
   LSCreate(&nList, ctrlW, 5, 52, (CTRLWIDE-BUTTW-18),
 	   LINEHIGH*NLINES, NLINES, dispnames, numnames,

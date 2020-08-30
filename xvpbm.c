@@ -608,8 +608,8 @@ int WritePBM(fp,pic,ptype,w,h,rmap,gmap,bmap,numcols,colorstyle,raw,comment)
 	  }
 	}
 	else {
-	  if (*pix) fprintf(fp,str1);
-	       else fprintf(fp,str0);
+	  if (*pix) fputs(str1,fp);
+	       else fputs(str0,fp);
 	  len+=2;
 	  if (len>68) { fprintf(fp,"\n"); len=0; }
 	}

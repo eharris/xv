@@ -246,12 +246,8 @@ int Grab()
 
 
   else {  /* Button2:  TRACK A RECTANGLE */
-    int    origrx, origry;
-    Window origcW;
 
     clickWin = rootW;
-    origrx = ix = x2 = rx;
-    origry = iy = y2 = ry;
     iw = ih = 0;
 
     XGrabServer(theDisp);
@@ -461,7 +457,6 @@ static int getxcolors(win_info, colors)
      XColor **colors;
 {
   int i, ncolors;
-  Colormap cmap;
 
   *colors = (XColor *) NULL;
 
@@ -576,12 +571,8 @@ static int grabRootRegion(x, y, w, h)
   /* attempts to grab the specified rectangle of the root window
      returns '1' on success */
 
-  XImage		    *image;
   XWindowAttributes  xwa;
-  XColor		    *colors;
-  int			     ncolors, i, ix, iy;
-  char			     str[256];
-  Window		     win;
+  int		     i;
 
   regrabList = (struct rectlist *) NULL;
 
@@ -692,7 +683,6 @@ static int grabWinImage(win, parentVid, parentCmap, toplevel)
   u_int		    nchildren;
   Window		    root, parent, *children;
   XWindowAttributes xwa;
-  int			    xr, yr;
 
   /* first, quick checks to avoid recursing down useless branches */
 
@@ -1107,7 +1097,7 @@ static int CountColors24(pic, pwide, phigh, x, y, w, h)
   /* counts the # of unique colors in a selected rect of a PIC24
      returns '0-256' or >256 */
 
-  int	 i, j, k, nc;
+  int	 i, j, nc;
   int	 low, high, mid;
   u_int  colors[257], col;
   byte	 *pp;
