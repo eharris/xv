@@ -230,7 +230,7 @@ int LoadPM(fname, pinfo)
   pinfo->frmType = F_PM;
   pinfo->colType = (thePic.pm_form==PM_I || thePic.pm_np>1)
 			 ? F_FULLCOLOR : F_GREYSCALE;
-  sprintf(pinfo->fullInfo,"PM, %s.  (%d plane %s)  (%ld bytes)",
+  sprintf(pinfo->fullInfo,"PM, %s.  (%d plane %s)  (%lu bytes)",
 	  (thePic.pm_form==PM_I || thePic.pm_np>1)
 		? "24-bit color" : "8-bit greyscale",
 	  thePic.pm_np, (thePic.pm_form==PM_I) ? "PM_I" : "PM_C",
