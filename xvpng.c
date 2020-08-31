@@ -907,10 +907,6 @@ int LoadPNG(fname, pinfo)
       for(i = 0; i < 256; i++)
 	pinfo->r[i] = pinfo->g[i] = pinfo->b[i] = i;
     } else {
-#if 0
-      png_uint_32 png_get_PLTE (png_const_structrp png_ptr,
-				png_inforp info_ptr, png_colorp *palette, int *num_palette);
-#endif
       if (png_get_PLTE(png_ptr, info_ptr, &png_palette, &num_palette)) {
 	pinfo->colType = F_FULLCOLOR;
 	for(i = 0; i < num_palette; i++) {
@@ -928,8 +924,6 @@ int LoadPNG(fname, pinfo)
   if(!pinfo->pic) {
     png_error(png_ptr, "can't allocate space for PNG image");
   }
-
-  png_start_read_image(png_ptr);
 
   for(i = 0; i < pass; i++) {
     byte *p = pinfo->pic;
