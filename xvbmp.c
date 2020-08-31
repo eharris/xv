@@ -114,12 +114,12 @@ int LoadBMP(fname, pinfo)
   }
 
   if (DEBUG>1) {
-    fprintf(stderr,"\nLoadBMP:\tbfSize=%d, bfOffBits=%d\n",bfSize,bfOffBits);
-    fprintf(stderr,"\t\tbiSize=%d, biWidth=%d, biHeight=%d, biPlanes=%d\n",
+    fprintf(stderr,"\nLoadBMP:\tbfSize=%u, bfOffBits=%u\n", bfSize, bfOffBits);
+    fprintf(stderr,"\t\tbiSize=%u, biWidth=%u, biHeight=%u, biPlanes=%u\n",
 	    biSize, biWidth, biHeight, biPlanes);
-    fprintf(stderr,"\t\tbiBitCount=%d, biCompression=%d, biSizeImage=%d\n",
+    fprintf(stderr,"\t\tbiBitCount=%u, biCompression=%u, biSizeImage=%u\n",
 	    biBitCount, biCompression, biSizeImage);
-    fprintf(stderr,"\t\tbiX,YPelsPerMeter=%d,%d  biClrUsed=%d, biClrImp=%d\n",
+    fprintf(stderr,"\t\tbiX,YPelsPerMeter=%u,%u  biClrUsed=%u, biClrImp=%u\n",
 	    biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
   }
 
@@ -131,7 +131,7 @@ int LoadBMP(fname, pinfo)
        biBitCount!=24 && biBitCount!=32) ||
       biPlanes!=1 || biCompression>BI_RLE4) {
 
-    sprintf(buf,"Bogus BMP File!  (bitCount=%d, Planes=%d, Compression=%d)",
+    sprintf(buf,"Bogus BMP File!  (bitCount=%u, Planes=%u, Compression=%u)",
 	    biBitCount, biPlanes, biCompression);
 
     bmpError(bname, buf);
@@ -143,7 +143,7 @@ int LoadBMP(fname, pinfo)
       (biBitCount==4 && biCompression==BI_RLE8) ||
       (biBitCount==8 && biCompression==BI_RLE4)) {
 
-    sprintf(buf,"Bogus BMP File!  (bitCount=%d, Compression=%d)",
+    sprintf(buf,"Bogus BMP File!  (bitCount=%u, Compression=%ux)",
 	    biBitCount, biCompression);
 
     bmpError(bname, buf);
@@ -242,13 +242,13 @@ int LoadBMP(fname, pinfo)
   pinfo->frmType = F_BMP;
   pinfo->colType = F_FULLCOLOR;
 
-  sprintf(pinfo->fullInfo, "%sBMP, %d bit%s per pixel%s.  (%ld bytes)",
+  sprintf(pinfo->fullInfo, "%sBMP, %u bit%s per pixel%s.  (%ld bytes)",
 	  ((biSize==WIN_OS2_OLD) ? "Old OS/2 " :
 	   (biSize==WIN_NEW)     ? "Windows "  : ""),
 	  biBitCount,  (biBitCount == 1) ? "" : "s",
 	  cmpstr, filesize);
 
-  sprintf(pinfo->shrtInfo, "%dx%d BMP.", biWidth, biHeight);
+  sprintf(pinfo->shrtInfo, "%ux%u BMP.", biWidth, biHeight);
   pinfo->comment = (char *) NULL;
 
   return 1;

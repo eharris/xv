@@ -406,7 +406,7 @@ static void DrawPixValue(x,y)
     lastpix = def.pixel = pix;
     if (pix<dispcells) {
       XQueryColor(theDisp, theCmap, &def);
-      sprintf(tmpstr, "Pix %3ld = ($%04x, $%04x, $%04x)",
+      sprintf(tmpstr, "Pix %3lu = ($%04x, $%04x, $%04x)",
 	      pix, def.red, def.green, def.blue);
 
       /* make the hex uppercase */

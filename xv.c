@@ -408,7 +408,7 @@ int main(argc, argv)
     else if (!strcmp(visualstr,"directcolor")) vclass = DirectColor;
     else if (!strcmp(visualstr,"default"))     {}   /* recognize it as valid */
     else if (!strncmp(visualstr,"0x",(size_t) 2)) {  /* specified visual id */
-      if (sscanf(visualstr, "0x%x", &vid) != 1) vid = -1;
+      if (sscanf(visualstr, "0x%x", (unsigned int *)&vid) != 1) vid = -1;
     }
     else {
       fprintf(stderr,"%s: Unrecognized visual type '%s'.  %s\n",
