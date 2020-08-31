@@ -3481,7 +3481,6 @@ static void makeDispNames()
 
   suffix = namelist[0];
   prelen = 0;   /* length of prefix to be removed */
-  n = i = 0;    /* shut up pesky compiler warnings */
 
   done = 0;
   while (!done) {
