@@ -897,8 +897,15 @@ void SelectWindowMB(i)
 
   switch (i) {
   case WMB_BROWSE:
-    if (strlen(searchdir)) chdir(searchdir);
-    else chdir(initdir);
+    if (strlen(searchdir)) {
+      if (chdir(searchdir) != 0) {
+	FatalError("chdir in SelectWindowMB() failed");
+      }
+    } else {
+      if (chdir(initdir) != 0) {
+	FatalError("chdir in SelectWindowMB() failed");
+      }
+    }
     OpenBrowse();
     break;
 

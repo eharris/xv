@@ -638,7 +638,7 @@ void LoadCurrentDirectory()
   xv_getwd(path, sizeof(path));
 #endif
 
-  if (chdir(path)) {
+  if (chdir(path) != 0) {
     ErrPopUp("Current load/save directory seems to have gone away!",
 	     "\nYikes!");
 #ifdef apollo
@@ -646,7 +646,8 @@ void LoadCurrentDirectory()
 #else
     strcpy(path,"/");
 #endif
-    chdir(path);
+    if (chdir(path) != 0)
+      FatalError("chdir in LoadCurrentDirector() failed");
   }
 
   changedDir = strcmp(path, oldpath);
@@ -1617,7 +1618,10 @@ FILE *OpenOutFile(filename)
   dopipe = 0;
 
   /* make sure we're in the correct directory */
-  if (strlen(path)) chdir(path);
+  if (strlen(path)) {
+    if (chdir(path) != 0)
+      FatalError("chdir in OpenOutFile() failed");
+  }
 
   if (ISPIPE(filename[0])) {   /* do piping */
     /* make up some bogus temp file to put this in */

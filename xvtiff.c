@@ -218,8 +218,10 @@ int LoadTIFF(fname, pinfo, quick)
   TIFFClose(tif);
 
   /* un-kludge */
-  if (oldpath[0] != '\0') chdir(oldpath);
-
+  if (oldpath[0] != '\0') {
+    if (chdir(oldpath) != 0)
+      FatalError("chdir in LoadTIFF() failed");
+  }
 
   if (error_occurred) {
     if (pic8) free(pic8);

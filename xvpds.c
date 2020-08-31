@@ -323,7 +323,7 @@ int LoadPDS(fname, pinfo)
   case VICAR:
   case VIKINGFIXED:     isfixed=TRUE;
 			sprintf(pinfo->fullInfo,
-				"PDS/VICAR, 8 bits per pixel. (%ld bytes)",
+				"PDS/VICAR, 8 bits per pixel. (%lu bytes)",
 				filesize);
 			break;
   case PDSVARIABLE:

@@ -1744,7 +1744,7 @@ XImage *Pic8ToXImage(pic8, wide, high, xcolors, rmap, gmap, bmap)
   if (!pic8) return xim;  /* shouldn't happen */
 
   if (DEBUG > 1)
-    fprintf(stderr,"Pic8ToXImage(): creating a %dx%d Ximage, %d bits deep\n",
+    fprintf(stderr, "Pic8ToXImage(): creating a %ux%u Ximage, %u bits deep\n",
 	    wide, high, dispDEEP);
 
 

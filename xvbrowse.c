@@ -4449,14 +4449,16 @@ static void recurseUpdate(br, subdir)
   /* have we looped? */
   for (i=0; i<dirStackLen && strcmp(curDir, dirStack[i]); i++);
   if (i<dirStackLen) {   /* YES */
-    chdir(orgDir);
+    if (chdir(orgDir) != 0)
+      FatalError("chdir in recurseUpdate() failed");
     return;
   }
 
   sp = (char *) malloc((size_t) strlen(curDir) + 1);
   if (!sp) {
     setBrowStr(br, "malloc() error in recurseUpdate()\n");
-    chdir(orgDir);
+    if (chdir(orgDir) != 0)
+      FatalError("chdir in recurseUpdate() failed");
     return;
   }
 
@@ -4491,7 +4493,9 @@ static void recurseUpdate(br, subdir)
 
   xv_getwd(curDir, sizeof(curDir));
   if (strcmp(orgDir, curDir)) {   /* change back to orgdir */
-    chdir(orgDir);
+    if (chdir(orgDir) != 0) {
+      FatalError("chdir in recurseUpdate() failed");
+    }
     scanDir(br);
   }
 }
