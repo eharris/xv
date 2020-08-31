@@ -37,7 +37,7 @@
 #  define const
 #endif
 
-
+#define CLEAR(p) if (p) free(p); p = NULL
 
 /*************************************************/
 /* START OF MACHINE-DEPENDENT CONFIGURATION INFO */

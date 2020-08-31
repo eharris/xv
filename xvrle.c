@@ -27,8 +27,6 @@
 
 #define GETINT(fp) (c=getc(fp), c1=getc(fp), (c1<<8) + c )
 
-#define CLEAR(p) if (p) free(p); p = NULL
-
 static void read_rle PARM((FILE *, byte *, int, int, int, int));
 static int  rleError PARM((char *, char *));
 

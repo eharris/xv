@@ -385,7 +385,7 @@ int mx,my;
 
 
     else if (cW == gp->gwin) {  /* clicked in graph */
-      int h, vertonly, offx, offy;
+      int h, vertonly;
 
       XTranslateCoordinates(theDisp, gp->win, gp->gwin,mx,my,&mx,&my,&cW);
 
@@ -417,8 +417,6 @@ int mx,my;
 	orighx = gp->hands[h].x;  orighy = gp->hands[h].y;
 
 	gp->gammamode = 0;
-	offx = gp->hands[h].x - origx;
-	offy = gp->hands[h].y - origy;
 
 	vertonly = (h==0 || h==(gp->nhands-1));
 
