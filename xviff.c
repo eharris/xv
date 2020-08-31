@@ -98,7 +98,6 @@ int LoadIFF(fname, pinfo)
 
   /* allocate memory for complete file */
   if((databuf = (byte *) malloc((size_t) filesize)) == NULL) {
-    fclose(fp);
     FatalError("xviff: cannot malloc file buffer");
   }
 

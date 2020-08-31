@@ -824,6 +824,7 @@ static byte *getFromClip()
   data = (byte *) malloc((size_t) len);
   if (!data) {
     ErrPopUp("Insufficient memory to retrieve clipboard!", "\nShucks!");
+    fclose(fp);
     return (byte *) NULL;
   }
 

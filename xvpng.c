@@ -786,14 +786,12 @@ int LoadPNG(fname, pinfo)
   png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL,
 				   png_xv_error, png_xv_warning);
   if(!png_ptr) {
-    fclose(fp);
     FatalError("malloc failure in LoadPNG");
   }
 
   info_ptr = png_create_info_struct(png_ptr);
 
   if(!info_ptr) {
-    fclose(fp);
     png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
     FatalError("malloc failure in LoadPNG");
   }
