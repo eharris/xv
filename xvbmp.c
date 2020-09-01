@@ -53,7 +53,7 @@ int LoadBMP(fname, pinfo)
 /*******************************************/
 {
   FILE         *fp;
-  int          i, c, c1, rv;
+  int          c, c1, rv;
   unsigned int bfSize, bfOffBits, biSize, biWidth, biHeight, biPlanes;
   unsigned int biBitCount, biCompression, biSizeImage, biXPelsPerMeter;
   unsigned int biYPelsPerMeter, biClrUsed, biClrImportant;
@@ -70,9 +70,9 @@ int LoadBMP(fname, pinfo)
   fp = xv_fopen(fname,"r");
   if (!fp) return (bmpError(bname, "couldn't open file"));
 
-  fseek(fp, 0L, 2);      /* figure out the file size */
+  fseek(fp, 0L, SEEK_END);      /* figure out the file size */
   filesize = ftell(fp);
-  fseek(fp, 0L, 0);
+  fseek(fp, 0L, SEEK_SET);
 
 
   /* read the file type (first two bytes) */
@@ -155,8 +155,7 @@ int LoadBMP(fname, pinfo)
   if (biSize != WIN_OS2_OLD) {
     /* skip ahead to colormap, using biSize */
     c = biSize - 40;    /* 40 bytes read from biSize to biClrImportant */
-    for (i=0; i<c; i++) getc(fp);
-
+    fseek(fp, c, SEEK_CUR);
     bPad = bfOffBits - (biSize + 14);
   }
 
