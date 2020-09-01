@@ -1712,14 +1712,14 @@ void buildCmdStr(str, gscmd, fname, quick, espf)
 #ifdef GS_PATH
 #ifndef VMS
 
-  if	  (espf)  sprintf(str, "echo '\n showpage ' | cat '%s' - | %s -",
+  if	  (espf)  snprintf(str, 512, "echo '\n showpage ' | cat '%s' - | %s -",
 			  fname, gscmd);
 
-  else if (quick) sprintf(str, "echo '%s' | cat - '%s' | %s -",
+  else if (quick) snprintf(str, 512, "echo '%s' | cat - '%s' | %s -",
 			  "/showpage { showpage quit } bind def",
 			  fname,  gscmd);
 
-  else			  sprintf(str, "%s -- %s", gscmd, fname);
+  else			  snprintf(str, 512, "%s -- %s", gscmd, fname);
 
 #else /* VMS */
   /* VMS doesn't have pipes or an 'echo' command and GS doesn't like
