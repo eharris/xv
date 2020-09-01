@@ -4095,7 +4095,7 @@ static void doRenameCmd(br)
 
 
   free(br->bfList[num].name);
-  br->bfList[num].name = (char *) malloc(strlen(buf) + 1);
+  br->bfList[num].name = (char *) malloc(strnlen(buf, 128) + 1);
   if (br->bfList[num].name) strcpy(br->bfList[num].name, buf);
 		       else FatalError("out of memory in doRenameCmd");
 
@@ -4133,7 +4133,7 @@ static void doMkdirCmd(br)
 		  buf, 128, "/ |\'\"<>,", 0);
   if (i) return;     /* cancelled */
 
-  if (strlen(buf)==0) return;    /* no name entered */
+  if (strnlen(buf, 128)==0) return;    /* no name entered */
 
   /* make sure they haven't tried to create '.' or '..' (can't be filtered) */
   /* see if the file exists already, complain and abort if it does */
