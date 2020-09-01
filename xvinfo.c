@@ -263,7 +263,7 @@ va_dcl
   }
 
   if (stnum == ISTR_WARNING && !ctrlUp && !infoUp && !anyBrowUp &&
-      strlen(istrs[stnum])) {
+      (strnlen(istrs[stnum], 1) > 0)) {
     OpenAlert(istrs[stnum]);
     sleep(3);
     CloseAlert();

@@ -1868,8 +1868,12 @@ void NewCutBuffer(str)
   XSetSelectionOwner(theDisp, XA_PRIMARY, ctrlW, lastEventTime);
 
   if (xevPriSel) free(xevPriSel);
+#if 0
   xevPriSel = (char *) malloc(strlen(str) + 1);
   if (xevPriSel) strcpy(xevPriSel, str);
+#else
+  xevPriSel = strndup(str, 256);
+#endif
 }
 
 /***********************************/

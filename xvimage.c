@@ -2796,8 +2796,7 @@ int DoPad(mode, str, wide, high, opaque, omode)
   if (!rv) return 0;
 
   if (picComments) {
-    holdcomment = (char *) malloc(strlen(picComments) + 1);
-    if (holdcomment) strcpy(holdcomment, picComments);
+    holdcomment = strndup(picComments, 4096);
   }
 
   holdfname = (char *) malloc(strlen(fullfname) + 1);

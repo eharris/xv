@@ -616,7 +616,7 @@ static void allocRWColors()
 	    *foo = "No r/w cells available.  Using r/o color.";
 
 	tmp = GetISTR(ISTR_WARNING);
-	if (strlen(tmp) > (size_t) 0) sprintf(tstr, "%s  %s", tmp, foo);
+	if (strnlen(tmp, 1) > (size_t) 0) sprintf(tstr, "%s  %s", tmp, foo);
 	else sprintf(tstr, "%s", foo);
 	SetISTR(ISTR_WARNING,tstr);
 
