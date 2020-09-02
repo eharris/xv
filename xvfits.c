@@ -244,7 +244,7 @@ static int splitfits(image, comment, nx, ny, nz, basename)
   error = NULL;
 
   for (i=0; i < nz && !error; i++) {
-    sprintf(filename, "%s%d", basename, i+1);
+    snprintf(filename, 70, "%s%d", basename, i+1);
     fp = xv_fopen(filename, "w");
     if (!fp) {
       error = "Unable to open temporary file";
@@ -464,7 +464,7 @@ static char *rdheader(fs)
       i = 0;
     }
 
-    sprintf(name, "NAXIS%d", j+1);
+    snprintf(name, 9, "NAXIS%d", j+1);
     error = rdcard(&block[i*80], name, T_INT, &val);
     if (error)    return error;
     if (val < 0)  return "Bad NAXISn value in FITS file";
