@@ -1900,17 +1900,18 @@ static int openPic(filenum)
 
 
   /* chop off trailing ".Z", ".z", or ".gz" from displayed basefname, if any */
-  if (strlen(basefname) > (size_t) 2     &&
-      strcmp(basefname+strlen(basefname)-2,".Z")==0)
-    basefname[strlen(basefname)-2]='\0';
+  if (strnlen(basefname, 3) > (size_t) 2     &&
+      strcmp(basefname+strnlen(basefname,128)-2,".Z")==0)
+    basefname[strnlen(basefname,128)-2]='\0';
   else {
 #ifdef GUNZIP
-    if (strlen(basefname)>2 && strcmp(basefname+strlen(basefname)-2,".Z")==0)
-      basefname[strlen(basefname)-2]='\0';
+    if (strnlen(basefname,3)>2 &&
+	strcmp(basefname+strnlen(basefname,128)-2,".Z")==0)
+      basefname[strnlen(basefname,128)-2]='\0';
 
-    else if (strlen(basefname)>3 &&
-	     strcmp(basefname+strlen(basefname)-3,".gz")==0)
-      basefname[strlen(basefname)-3]='\0';
+    else if (strnlen(basefname,4)>3 &&
+	     strcmp(basefname+strnlen(basefname,128)-3,".gz")==0)
+      basefname[strnlen(basefname,128)-3]='\0';
 #endif /* GUNZIP */
   }
 
