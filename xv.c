@@ -1138,7 +1138,7 @@ static void parseResources(argc, argv)
   if (rd_flag("perfect"))        perfect     = def_int;
   if (rd_flag("popupKludge"))    winCtrPosKludge = def_int;
   if (rd_str ("print"))          strncpy(printCmd, def_str,
-					 (size_t) PRINTCMDLEN);
+					 (size_t) PRINTCMDLEN-1);
   if (rd_flag("pscompress"))     pscomp      = def_int;
   if (rd_flag("pspreview"))      preview     = def_int;
   if (rd_flag("quick24") && def_int)  conv24 = CONV24_FAST;
