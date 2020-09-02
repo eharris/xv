@@ -83,8 +83,11 @@ void CreateGraf(gp, parent, x, y, fg, bg, title)
   gp->entergamma = 0;
   gp->drawobj = NULL;
 
-  sprintf(gp->gvstr, "%.5g", gp->gamma);
-
+  /* CreateGraf() is always called after InitGraf() */
+  /* So gp->gamma is always 1.0 */
+  /* You could just use strcpy(gp->gvstr, "1"); */
+  /* instead of snprintf() */
+  snprintf(gp->gvstr, GVMAX+1, "%.5g", gp->gamma);
   gp->win = XCreateSimpleWindow(theDisp, parent, x,y, GWIDE, GHIGH, 1, fg,bg);
   if (!gp->win) FatalError("can't create graph (main) window");
 
@@ -707,7 +710,7 @@ char *str;
      able to hold it... */
 
   int i;
-  char cstr[16];
+  char cstr[17];
 
   if (gp->gammamode) {
     sprintf(str,"G %g", gp->gamma);
@@ -715,7 +718,7 @@ char *str;
   else {
     sprintf(str, "%c %d", gp->spline ? 'S' : 'L', gp->nhands);
     for (i=0; i<gp->nhands; i++) {
-      sprintf(cstr," : %d,%d", gp->hands[i].x, gp->hands[i].y);
+      snprintf(cstr, 17, " : %d,%d", gp->hands[i].x, gp->hands[i].y);
       strcat(str, cstr);
     }
   }
