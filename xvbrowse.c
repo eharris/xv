@@ -1752,7 +1752,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
     int          oldx, oldy, oldbrnum, destic, origsval, first;
     int          hasrect, rx, ry, rw, rh;
 
-    rx = ry = rw = rh = 0;
+    oldx = oldy = oldbrnum = rx = ry = rw = rh = 0;
     first = 1;  hasrect = 0;  cpymode = 0;
     origsval = br->scrl.val;
 
@@ -4044,7 +4044,7 @@ static void doRenameCmd(br)
 	   origname);
 
   strncpy(buf, origname, 128);
-  buf[128] = '\0';
+  buf[127] = '\0';
   i = GetStrPopUp(txt, labels, 2, buf, 128, "/ |\'\"<>,", 0);
   if (i) return;     /* cancelled */
 
