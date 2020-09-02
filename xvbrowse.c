@@ -2571,8 +2571,8 @@ static int cdBrow(br)
 
   /* temporarily excise trailing '/' char from br->path */
   if ((strnlen(br->path, 3) > (size_t) 2) &&
-      br->path[strlen(br->path)-1] == '/')
-    br->path[strlen(br->path)-1] = '\0';
+      br->path[strnlen(br->path, MAXPATHLEN+2)-1] == '/')
+    br->path[strnlen(br->path, MAXPATHLEN+2)-1] = '\0';
 
   rv = chdir(br->path);
   if (rv) {
@@ -4044,6 +4044,7 @@ static void doRenameCmd(br)
 	   origname);
 
   strncpy(buf, origname, 128);
+  buf[128] = '\0';
   i = GetStrPopUp(txt, labels, 2, buf, 128, "/ |\'\"<>,", 0);
   if (i) return;     /* cancelled */
 
