@@ -1537,7 +1537,7 @@ int LoadPS(fname, pinfo, quick)
      the first one is loaded (but not deleted) */
 
 
-  char tmp[1024], gscmd[512], cmdstr[512], tmpname[64];
+  char tmp[2024], gscmd[512], cmdstr[1024], tmpname[64];
   int  gsresult, nump, i, filetype, doalert, epsf;
 
   pinfo->pic     = (byte *) NULL;
@@ -1566,8 +1566,9 @@ int LoadPS(fname, pinfo, quick)
   /* build 'gscmd' string */
 
 #ifndef VMS  /* VMS needs quotes around mixed case command lines */
-  sprintf(gscmd, "%s -sDEVICE=%s -r%d -q -dNOPAUSE -sOutputFile=%s%%d ",
-	  GS_PATH, gsDev, gsRes, tmpname);
+  snprintf(gscmd, 512,
+	"%s -sDEVICE=%s -r%d -q -dNOPAUSE -dQUIET -dBATCH -sOutputFile=%s%%d ",
+	GS_PATH, gsDev, gsRes, tmpname);
 #else
   sprintf(gscmd,
 	  "%s \"-sDEVICE=%s\" -r%d -q \"-dNOPAUSE\" \"-sOutputFile=%s%%d\" ",
@@ -1712,15 +1713,15 @@ void buildCmdStr(str, gscmd, fname, quick, espf)
 #ifdef GS_PATH
 #ifndef VMS
 
-  if	  (espf)  snprintf(str, 512, "echo '\n showpage ' | cat '%s' - | %s -",
+  if	  (espf)  snprintf(str, 1024, "echo '\n showpage ' | cat '%s' - | %s -",
 			  fname, gscmd);
 
-  else if (quick) snprintf(str, 512, "echo '%s' | cat - '%s' | %s -",
+  else if (quick) snprintf(str, 1024, "echo '%s' | cat - '%s' | %s -",
 			  "/showpage { showpage quit } bind def",
 			  fname,  gscmd);
 
-  else			  snprintf(str, 512, "%s -- %s", gscmd, fname);
-
+  else			  snprintf(str, 1024, "%s %s", gscmd, fname);
+  
 #else /* VMS */
   /* VMS doesn't have pipes or an 'echo' command and GS doesn't like
      Unix-style file names as input files in the VMS version */

@@ -74,7 +74,7 @@ int Grab()
   unsigned int mask;
   XColor       fc, bc;
 
-  pretendGotB1 = 0;
+  x2 = y2 = pretendGotB1 = 0;
 
   if (grabInProgress) return 0;      /* avoid recursive grabs during delay */
 

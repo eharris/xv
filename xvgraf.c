@@ -709,15 +709,14 @@ char *str;
   /* maximum length of string generated is 164 characters.  str better be
      able to hold it... */
 
-  int i;
-  char cstr[17];
-
   if (gp->gammamode) {
     sprintf(str,"G %g", gp->gamma);
   }
   else {
+  int i;
     sprintf(str, "%c %d", gp->spline ? 'S' : 'L', gp->nhands);
-    for (i=0; i<gp->nhands; i++) {
+    for (i=0; i < gp->nhands; i++) {
+      char cstr[17];
       snprintf(cstr, 17, " : %d,%d", gp->hands[i].x, gp->hands[i].y);
       strcat(str, cstr);
     }
