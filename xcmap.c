@@ -418,7 +418,7 @@ static void DrawPixValue(x,y)
     }
 
     XDrawImageString(theDisp,mainW,theGC,5,pvaly+10,tmpstr,
-		     (int) strlen(tmpstr));
+		     (int) strnlen(tmpstr, 128));
   }
 }
 

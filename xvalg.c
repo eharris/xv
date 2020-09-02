@@ -174,7 +174,7 @@ static void Blur()
 	  "Enter mask size (ex. 3, 5, 7, ...)");
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
   n = atoi(buf);
 
   if (n < 1 || (n&1)!=1) {
@@ -217,7 +217,7 @@ static void Sharpen()
 	  "Enter enhancement factor (0-99%)");
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
   n = atoi(buf);
 
   if (n>=100) {
@@ -392,7 +392,7 @@ static void FineRotate(clr)
 	  (clr ? "Clear" : "Copy"));
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789.-", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
   rotval = atof(buf);
 
   if (rotval == 0.0) return;
@@ -426,7 +426,7 @@ static void Pixelize()
 	  "(ex. '3', '5x8')");
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789x", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
 
   pixX = pixY = err = 0;
 
@@ -473,7 +473,7 @@ static void Spread()
 	  "(ex. '10', '1x5')");
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789x", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
 
   pixX = pixY = err = 0;
 
@@ -526,7 +526,7 @@ static void MedianFilter()
 	  "Enter mask size (ex. 3, 5, 7, ...)");
 
   i = GetStrPopUp(txt, labels, 2, buf, 64, "0123456789", 1);
-  if (i==1 || strlen(buf)==0) return;
+  if (i==1 || strnlen(buf, 1)==0) return;
   n = atoi(buf);
 
   if (n < 1 || (n&1)!=1) {

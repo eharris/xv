@@ -1489,7 +1489,7 @@ static void drawIcon(br, num)
     int dotpos;
     strncpy(tmpstr, str, (size_t) 56);
     tmpstr[56] = '\0'; /* MR: otherwise it dies on long file names */
-    dotpos = strlen(tmpstr);
+    dotpos = strnlen(tmpstr, 56);
     strcat(tmpstr,"...");
 
     while(StringWidth(tmpstr) > ISPACE_WIDE-6 && dotpos>0) {
@@ -2031,7 +2031,7 @@ static int clickIconWin(br, mx, my, mtime, multi)
       doDeleteCmd(br);
     }
 
-    else if (!destBr || strlen(destFolderName) == 0) {
+    else if (!destBr || strnlen(destFolderName, 1) == 0) {
       if (DEBUG) fprintf(stderr, "no destination.  Nothing to do!\n");
     }
 
@@ -2051,10 +2051,8 @@ static int clickIconWin(br, mx, my, mtime, multi)
       /* copy names to nlist */
       for (i=ncnt=0, bf=br->bfList;  i<br->bfLen;  i++,bf++) {
 	if (bf->lit == 1 && ncnt < br->numlit) {
-	  nlist[ncnt] = (char *) malloc(strlen(bf->name)+1);
+	  nlist[ncnt] = strdup(bf->name);
 	  if (!nlist[ncnt]) FatalError("out of memory building namelist");
-
-	  strcpy(nlist[ncnt], bf->name);
 	  ncnt++;
 	  if (DEBUG) fprintf(stderr, "%s  ", bf->name);
 	}
@@ -2540,7 +2538,7 @@ static void changedBrDirMB(br, sel)
        *  End 'tmppath' by changing trailing '/' (of dir name) to a '\0'
        */
       *rindex ( tmppath, '/') = '\0';
-      if ( ((br->ndirs-sel) == 2) && (strlen(tmppath) > 1) )
+      if ( ((br->ndirs-sel) == 2) && (strnlen(tmppath, 2) > 1) )
 	strcat ( tmppath, "/000000" ); /* add root dir for device */
       else if  ((br->ndirs-sel) == 1 )
 	strcpy ( tmppath, "/XV_Root_Device/000000" );  /* fake top level */
@@ -2572,7 +2570,8 @@ static int cdBrow(br)
   int rv;
 
   /* temporarily excise trailing '/' char from br->path */
-  if ((strlen(br->path) > (size_t) 2) && br->path[strlen(br->path)-1] == '/')
+  if ((strnlen(br->path, 3) > (size_t) 2) &&
+      br->path[strlen(br->path)-1] == '/')
     br->path[strlen(br->path)-1] = '\0';
 
   rv = chdir(br->path);
@@ -2604,9 +2603,8 @@ static void copyDirInfo(srcbr, dstbr)
   /* copy mblist */
   dstbr->ndirs = srcbr->ndirs;
   for (i=0;  i<dstbr->ndirs;  i++) {
-    dstbr->mblist[i] = (char *) malloc(strlen(srcbr->mblist[i]) + 1);
+    dstbr->mblist[i] = strdup(srcbr->mblist[i]);
     if (!dstbr->mblist[i]) FatalError("unable to malloc brMBlist[]");
-    strcpy(dstbr->mblist[i], srcbr->mblist[i]);
   }
 
   dstbr->dirMB.list  = srcbr->mblist;
@@ -2642,16 +2640,14 @@ static void copyDirInfo(srcbr, dstbr)
     dbf = &(dstbr->bfList[i]);
 
     if (sbf->name) {
-      dbf->name = (char *) malloc(strlen(sbf->name) + 1);
+      dbf->name = strdup(sbf->name);
       if (!dbf->name) FatalError("ran out of memory for dbf->name");
-      strcpy(dbf->name, sbf->name);
     }
     else dbf->name = (char *) NULL;
 
     if (sbf->imginfo) {
-      dbf->imginfo = (char *) malloc(strlen(sbf->imginfo) + 1);
+      dbf->imginfo = strdup(sbf->imginfo);
       if (!dbf->imginfo) FatalError("ran out of memory for dbf->imginfo");
-      strcpy(dbf->imginfo, sbf->imginfo);
     }
     else dbf->imginfo = (char *) NULL;
 
@@ -2771,10 +2767,9 @@ static void scanDir(br)
     size_t stlen = (i<(br->ndirs-1)) ? dirnames[i+1] - dirnames[i]
 				  : strlen(dirnames[i]);
 
-    br->mblist[j] = (char *) malloc(stlen+1);
+    br->mblist[j] = strndup(dirnames[i], stlen);
     if (!br->mblist[j]) FatalError("unable to malloc brMBlist[]");
 
-    strncpy(br->mblist[j], dirnames[i], stlen);
     br->mblist[j][stlen] = '\0';
   }
 
@@ -2858,9 +2853,8 @@ static void scanDir(br)
 	 '..' in root directory, or a hidden file if !showhidden */
 
       if (vmsparent) {     /* first time:  make bogus parent for VMS */
-	bf->name  = (char *) malloc(strlen("..") + 1);
+	bf->name = strdup("..");
 	if (!bf->name) FatalError("out of memory in scanDir()");
-	strcpy(bf->name, "..");
 	bf->ftype  = BF_DIR;
 	bf->w      = br_dir_width;
 	bf->h      = br_chr_width;
@@ -2953,11 +2947,8 @@ static void scanFile(br, bf, name)
 
   struct stat    st;
 
-  /* copy name */
-  bf->name = (char *) malloc(strlen(name) + 1);
-
+  bf->name = strdup(name);
   if (!bf->name) FatalError("ran out of memory for bf->name");
-  strcpy(bf->name, name);
 
   /* default icon values.  (in case 'stat' doesn't work) */
   bf->ftype  = BF_FILE;
@@ -3100,10 +3091,8 @@ static void rescanDir(br)
     bfnames = (char **) malloc(bflen * sizeof(char *));
     if (!bfnames) FatalError("couldn't alloc bfnames in rescanDir()");
     for (i=0; i<bflen; i++) {
-      bfnames[i] = (char *) malloc(strlen(br->bfList[i].name) + 1);
+      bfnames[i] = strdup(br->bfList[i].name);
       if (!bfnames[i]) FatalError("couldn't alloc bfnames in rescanDir()");
-
-      strcpy(bfnames[i], br->bfList[i].name);
     }
   }
 
@@ -3312,10 +3301,8 @@ static char **getDirEntries(dir, lenP, dohidden)
 #endif
     }
 
-    names[i] = (char *) malloc(strlen(dp->d_name) + 1);
+    names[i] = strdup(dp->d_name);
     if (!names[i]) FatalError("malloc failure in getDirEntries()");
-
-    strcpy(names[i], dp->d_name);
     i++;
   }
 
@@ -3539,7 +3526,7 @@ static void genIcon(br, bf)
   case RFT_PBM:      if (xv_strstr(pinfo.fullInfo, "raw")) strcat(str,"Raw ");
 		     else strcat(str,"Ascii ");
 
-		     for (i=0; i<3 && (strlen(pinfo.fullInfo)>(size_t)3); i++){
+                     for (i=0; i<3 && (strnlen(pinfo.fullInfo, 4)>3); i++) {
 		       str1[0] = pinfo.fullInfo[i];  str1[1] = '\0';
 		       strcat(str, str1);
 		     }
@@ -3595,11 +3582,10 @@ static void genIcon(br, bf)
   writeThumbFile(br, bf, icon8, iwide, ihigh, str);
 
   /* have to make a *copy* of str */
-  if (strlen(str)) {
-    bf->imginfo = (char *) malloc(strlen(str)+1);
-    if (bf->imginfo) strcpy(bf->imginfo, str);
+  if (strnlen(str, 1)) {
+    bf->imginfo = strdup(str);
   }
-  else bf->imginfo = (char *) NULL;
+  else bf->imginfo = NULL;
 
   bf->pimage  = icon8;
   bf->w       = iwide;
@@ -3695,8 +3681,7 @@ static void loadThumbFile(br, bf)
 
     else if (!strncmp(buf, "#IMGINFO:", strlen("#IMGINFO:"))) {
       st = (char *) index(buf, ':') + 1;
-      info = (char *) malloc(strlen(st) + 1);
-      if (info) strcpy(info, st);
+      info = strdup(st);
     }
   }
 
@@ -4054,11 +4039,11 @@ static void doRenameCmd(br)
     return;
   }
 
-  sprintf(txt, "Enter a new name for the %s '%s':",
-	  (br->bfList[i].ftype==BF_DIR) ? "directory" : "file",
-	  origname);
+  snprintf(txt, 256, "Enter a new name for the %s '%s':",
+	   (br->bfList[i].ftype==BF_DIR) ? "directory" : "file",
+	   origname);
 
-  strcpy(buf, origname);
+  strncpy(buf, origname, 128);
   i = GetStrPopUp(txt, labels, 2, buf, 128, "/ |\'\"<>,", 0);
   if (i) return;     /* cancelled */
 
@@ -4095,10 +4080,8 @@ static void doRenameCmd(br)
 
 
   free(br->bfList[num].name);
-  br->bfList[num].name = (char *) malloc(strnlen(buf, 128) + 1);
-  if (br->bfList[num].name) strcpy(br->bfList[num].name, buf);
-		       else FatalError("out of memory in doRenameCmd");
-
+  br->bfList[num].name = strndup(buf, 128);
+  if (!br->bfList[num].name) FatalError("out of memory in doRenameCmd");
   eraseIconTitle(br, num);
   drawIcon(br, num);
 
@@ -4258,12 +4241,12 @@ static void doDeleteCmd(br)
      confirmation box */
 
   if (numfiles) {
-    sprintf(buf,"Delete file%s:  ", numfiles>1 ? "s" : "");
-    slen = strlen(buf);
+    slen = snprintf(buf, 512, "Delete file%s:  ", numfiles>1 ? "s" : "");
 
     for (i=0, bf=br->bfList;  i<br->bfLen;  i++,bf++) {
       if (bf->lit && bf->ftype != BF_DIR) {
-	if ( (slen + strlen(bf->name) + 1) > 256) {
+	if ((slen > 511) ||
+	    (slen + strnlen(bf->name, 512-slen)) > 512) {
 	  strcat(buf,"...");
 	  break;
 	}
@@ -4283,12 +4266,13 @@ static void doDeleteCmd(br)
      confirmation box */
 
   if (numdirs) {
-    sprintf(buf,"Recursively delete director%s:  ", numdirs>1 ? "ies" : "y");
-    slen = strlen(buf);
+    slen = snprintf(buf, 512, "Recursively delete director%s:  ",
+		    numdirs>1 ? "ies" : "y");
 
     for (i=0, bf=br->bfList;  i<br->bfLen;  i++,bf++) {
       if (bf->lit && bf->ftype == BF_DIR) {
-	if ( (slen + strlen(bf->name) + 1) > 256) {
+	  if ((slen > 511) ||
+	      (slen + strnlen(bf->name, 512-slen)) > 512) {
 	  strcat(buf,"...");
 	  break;
 	}
@@ -4454,7 +4438,7 @@ static void recurseUpdate(br, subdir)
     return;
   }
 
-  sp = (char *) malloc((size_t) strlen(curDir) + 1);
+  sp = strdup(curDir);
   if (!sp) {
     setBrowStr(br, "malloc() error in recurseUpdate()\n");
     if (chdir(orgDir) != 0)
@@ -4462,7 +4446,6 @@ static void recurseUpdate(br, subdir)
     return;
   }
 
-  strcpy(sp, curDir);
   dirStack[dirStackLen++] = sp;
 
   if (DEBUG) {
@@ -4556,7 +4539,7 @@ static void rm_dir1(br)
   if (DEBUG) fprintf(stderr,"rm %s\n", rmdirPath);
 
   longpath = 0;
-  oldpathlen = strlen(rmdirPath);
+  oldpathlen = strnlen(rmdirPath, MAXPATHLEN+1);
 
   /* delete all plain files under this directory */
   names = getDirEntries(rmdirPath, &dirlen, 1);

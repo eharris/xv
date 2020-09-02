@@ -225,9 +225,8 @@ int main(argc, argv)
   tmpstr = (char *) getenv("TMPDIR");
   if (!tmpstr) tmpdir = "/tmp";
   else {
-    tmpdir = (char *) malloc(strlen(tmpstr) + 1);
+    tmpdir = strdup(tmpstr);
     if (!tmpdir) FatalError("can't malloc 'tmpdir'\n");
-    strcpy(tmpdir, tmpstr);
   }
 
   /* init command-line options flags */
@@ -695,9 +694,8 @@ int main(argc, argv)
   if (numnames==0) {
     if (stdinflag) {
       /* have to malloc namelist[0] so we can free it in deleteFromList() */
-      namelist[0] = (char *) malloc(strlen(STDINSTR) + 1);
+      namelist[0] = strdup(STDINSTR);
       if (!namelist[0]) FatalError("unable to to build namelist[0]");
-      strcpy(namelist[0], STDINSTR);
       numnames = 1;
     }
     else namelist[0] = NULL;
