@@ -2170,8 +2170,8 @@ static int openPic(filenum)
   /* ABSOLUTELY no failures from here on out... */
 
 
-  if (strlen(pinfo.pagebname)) {
-    strcpy(pageBaseName, pinfo.pagebname);
+  if (strnlen(pinfo.pagebname, 1)) {
+    strncpy(pageBaseName, pinfo.pagebname, PAGEBNAMELEN);
     numPages = pinfo.numpages;
     curPage = 0;
   }

@@ -889,7 +889,8 @@ typedef struct { byte *pic;                  /* image data */
 		 char *comment;              /* comment text */
 
 		 int   numpages;             /* # of page files, if >1 */
-		 char  pagebname[64];        /* basename of page files */
+#define PAGEBNAMELEN 64
+		 char  pagebname[PAGEBNAMELEN]; /* basename of page files */
 	       } PICINFO;
 
 #define MAX_GHANDS 16   /* maximum # of GRAF handles */
